@@ -1,4 +1,4 @@
-#!/Users/samihalawa/Documents/GitHub/email-crawler/bin/python3.12
+#!/Users/samihalawa/Documents/GitHub/email-crawler/bin/python3
 # -*- coding: utf-8 -*-
 import re
 import sys

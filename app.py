@@ -66,4 +66,6 @@ def handle_start_search(json):
     threading.Thread(target=background_search, args=(search_query,)).start()
 
 if __name__ == '__main__':
-    socketio.run(app, host='0.0.0.0', debug=True, port=5050)
+    # Elimina la línea de socketio.run() y simplemente inicia la aplicación Flask
+    app.run(host='0.0.0.0', debug=True, port=5050)
+
