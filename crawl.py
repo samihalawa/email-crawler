@@ -32,7 +32,7 @@ def crawl_website(url):
     except requests.RequestException:
         return []
 
-def google_search(query, num_results=10):
+def google_search(query, num_results=100):
     emails = set()
     count = 0
     for url in search(query):

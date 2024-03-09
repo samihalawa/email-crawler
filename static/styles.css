@@ -1,0 +1,88 @@
+body {
+    background-color: #f7f7f7;
+    color: #333;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.container {
+    max-width: 800px;
+    margin: 30px auto;
+    padding: 20px;
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+h1 {
+    color: #007bff;
+    font-size: 24px;
+    margin-bottom: 20px;
+}
+
+.form-group {
+    margin-bottom: 15px;
+}
+
+.label {
+    margin-bottom: 5px;
+    font-weight: bold;
+}
+
+.input, .btn, .alert {
+    width: 100%;
+    padding: 10px;
+    border-radius: 5px;
+}
+
+.input {
+    border: 1px solid #ccc;
+}
+
+.btn-primary {
+    background-color: #007bff;
+    color: white;
+    border: none;
+    cursor: pointer;
+}
+
+.btn-success {
+    background-color: #28a745;
+    color: white;
+    border: none;
+    cursor: pointer;
+}
+
+.alert {
+    color: #fff;
+    padding: 15px;
+    margin-top: 20px;
+    text-align: center;
+}
+
+.alert-info {
+    background-color: #17a2b8;
+}
+
+.alert-success {
+    background-color: #28a745;
+}
+
+.alert-danger {
+    background-color: #dc3545;
+}
+
+#terminal {
+    background-color: #333;
+    color: #fff;
+    padding: 15px;
+    margin-top: 20px;
+    border-radius: 5px;
+    font-family: monospace;
+    height: 200px;
+    overflow-y: auto;
+}
+
+.terminal-output {
+    white-space: pre-wrap;
+}
+
