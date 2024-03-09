@@ -59,39 +59,39 @@
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="//cdnjs.cloudflare.com/ajax/libs/socket.io/4.0.1/socket.io.js"></script>
     <script src="/static/main.js"></script>
-    <script>
-    $(document).ready(function() {
-        var socket;
-        if (window.location.protocol === "https:") {
-            socket = io.connect('https://' + document.domain + ':' + location.port);
-        } else {
-            socket = io.connect('http://' + document.domain + ':' + location.port);
-        }
+ <script>
+   $(document).ready(function() {
+        // Esta línea asegura que Socket.IO se conecte usando el mismo protocolo que la página actual, ya sea http o https.
+        var socket = io.connect(window.location.origin, {secure: true});
     
         $('#searchForm').submit(function(event) {
             event.preventDefault();
-            var searchQuery = $('#searchTerm').val();
-            socket.emit('start_search', {search_query: searchQuery});
+            var searchQuery = $('#searchTerm').val().trim();
+            if (searchQuery) {
+                socket.emit('start_search', {search_query: searchQuery});
+            }
         });
     
         socket.on('new_email', function(data) {
-            // Append new email data to the table
-            var newRow = $('<tr>')
-                .append($('<td>').text(data.search_query))
-                .append($('<td>').text(data.email))
-                .append($('<td>').text(data.page_title))
-                .append($('<td>').text(data.url))
-                .append($('<td>').append($('<button>').text('Copy').click(function() {
-                    navigator.clipboard.writeText(data.email);
-                })));
-            $('#modalContent').append(newRow);
+            var resultElement = $('<tr>').append(
+                $('<td>').addClass('px-4 py-2 border').text(data.search_query),
+                $('<td>').addClass('px-4 py-2 border').text(data.email),
+                $('<td>').addClass('px-4 py-2 border').text(data.page_title),
+                $('<td>').addClass('px-4 py-2 border').text(data.url),
+                $('<td>').addClass('px-4 py-2 border').append(
+                    $('<button>').addClass('px-2 py-1 bg-blue-500 text-white rounded-lg shadow-md hover:bg-blue-600 focus:outline-none focus:ring focus:ring-blue-400').text('Copy').click(function() {
+                        navigator.clipboard.writeText(data.email);
+                    }).prepend($('<span>').addClass('fas fa-copy'))
+                )
+            );
+            $('#modalContent').append(resultElement);
         });
     
         $('#showModal').click(function() {
             $('#modal').show();
         });
     
-        $('#closeModal, .modal-close').click(function() {
+        $('.modal-close, #closeModal').click(function() {
             $('#modal').hide();
         });
     
