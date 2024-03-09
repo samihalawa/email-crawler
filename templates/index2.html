@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AutoClient AI - Revolutionize Your Email Marketing with AI</title>
+    <meta name="description" content="Streamline your marketing with AutoClient AI. Discover potential clients and engage with custom, AI-crafted emails.">
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+    <style>
+        .modal-overlay {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .modal-close {
+            position: absolute;
+            top: 0.5rem;
+            right: 0.5rem;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body class="bg-white font-sans text-gray-800">
+    <div id="content" class="container mx-auto px-4 py-8">
+        <div class="max-w-md mx-auto text-center">
+            <h1 class="text-3xl font-bold mb-6">AutoClient AI</h1>
+            <p>Find and engage potential clients with personalized, AI-generated emails.</p>
+            <form id="searchForm" class="mt-4 mb-6">
+                <input type="text" id="searchTerm" placeholder="Enter search term" class="w-full px-4 py-2 mb-4 rounded-lg shadow focus:outline-none focus:ring focus:ring-blue-400">
+                <button type="submit" class="w-full px-4 py-2 bg-blue-500 text-white rounded-lg shadow hover:bg-blue-600 focus:outline-none focus:ring focus:ring-blue-400">Start Search</button>
+            </form>
+            <button id="showModal" class="w-full px-4 py-2 bg-green-500 text-white rounded-lg shadow hover:bg-green-600 focus:outline-none focus:ring focus:ring-green-400">Show Results</button>
+        </div>
+    </div>
+    <div id="modal" class="fixed top-0 left-0 w-full h-full bg-gray-800 bg-opacity-50 hidden modal-overlay">
+        <div class="relative bg-white p-8 rounded-lg shadow-md max-w-lg w-full overflow-auto">
+            <span class="modal-close text-gray-800 hover:text-gray-600"><i class="fas fa-times"></i></span>
+            <h2 class="text-xl font-bold mb-4">Search Results</h2>
+            <div class="max-h-96 overflow-auto">
+                <table class="w-full text-black">
+                    <thead>
+                        <tr>
+                            <th class="px-4 py-2 border">Search Term</th>
+                            <th class="px-4 py-2 border">Email</th>
+                            <th class="px-4 py-2 border">Page Title</th>
+                            <th class="px-4 py-2 border">URL</th>
+                            <th class="px-4 py-2 border">Copy</th>
+                        </tr>
+                    </thead>
+                    <tbody id="modalContent"></tbody>
+                </table>
+            </div>
+            <div class="flex justify-end mt-4">
+                <button id="downloadCSV" class="px-4 py-2 bg-blue-500 text-white rounded-lg shadow hover:bg-blue-600 focus:outline-none focus:ring focus:ring-blue-400 mr-4">Download Emails</button>
+                <button id="closeModal" class="modal-close px-4 py-2 bg-gray-500 text-white rounded-lg shadow hover:bg-gray-600 focus:outline-none focus:ring focus:ring-gray-400">Close</button>
+            </div>
+        </div>
+    </div>
+    <footer class="text-center p-4 mt-8 bg-gray-100 text-gray-800">
+        © 2023 AutoClient AI. All rights reserved. <a href="#" class="text-blue-500">Terms of Service</a> | <a href="#" class="text-blue-500">Privacy Policy</a>
+    </footer>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/socket.io/4.0.1/socket.io.js"></script>
+    <script>
+    $(document).ready(function() {
+    var socket;
+    if (window.location.protocol === "https:") {
+        socket = io.connect('https://' + document.domain + ':' + location.port);
+    } else {
+        socket = io.connect('http://' + document.domain + ':' + location.port);
+    }
+
+    $('#searchForm').submit(function(event) {
+        event.preventDefault();
+        var searchQuery = $('#searchTerm').val().trim();
+        if (searchQuery) {
+            socket.emit('start_search', { search_query: searchQuery });
+        }
+    });
+
+    socket.on('new_email', function(data) {
+        var resultElement = $('<tr>').append(
+            $('<td>').addClass('px-4 py-2 border').text(data.search_query),
+            $('<td>').addClass('px-4 py-2 border').text(data.email),
+            $('<td>').addClass('px-4 py-2 border').text(data.page_title),
+            $('<td>').addClass('px-4 py-2 border').text(data.url),
+            $('<td>').addClass('px-4 py-2 border').append(
+                $('<button>').addClass('px-2 py-1 bg-blue-500 text-white rounded-lg shadow hover:bg-blue-600 focus:outline-none focus:ring focus:ring-blue-400').text('Copy').click(function() {
+                    var tempInput = $('<input>').val(data.email).appendTo('body').select();
+                    document.execCommand('copy');
+                    tempInput.remove();
+                }).prepend($('<span>').addClass('fas fa-copy'))
+            )
+        );
+        $('#modalContent').append(resultElement);
+    });
+
+    $('#showModal').click(function() {
+        $('#modal').show();
+    });
+
+    $('.modal-close, #closeModal').click(function() {
+        $('#modal').hide();
+    });
+
+    $('#downloadCSV').click(function() {
+        var csvContent = "data:text/csv;charset=utf-8,Search Term,Email,Page Title,URL\n";
+        $('#modalContent tr').each(function() {
+            $(this).find('td:not(:last)').each(function() {
+                csvContent += $(this).text() + ",";
+            });
+            csvContent = csvContent.slice(0, -1); // Remove last comma
+            csvContent += "\n";
+        });
+        var encodedUri = encodeURI(csvContent);
+        var link = document.createElement('a');
+        link.setAttribute('href', encodedUri);
+        link.setAttribute('download', 'emails.csv');
+        document.body.appendChild(link); // Required for FF
+        link.click();
+        document.body.removeChild(link);
+    });
+});
+
+    </script>
+</body>
+</html>

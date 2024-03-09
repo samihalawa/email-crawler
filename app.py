@@ -6,9 +6,10 @@ from bs4 import BeautifulSoup
 import re
 from googlesearch import search
 import csv
-
 app = Flask(__name__)
-socketio = SocketIO(app)
+# Asegúrate de configurar correctamente CORS y el modo de trabajo de SocketIO
+socketio = SocketIO(app, cors_allowed_origins="*", engineio_logger=True, logger=True, async_mode='threading')
+
 seen_emails = set()
 
 def find_emails(text):

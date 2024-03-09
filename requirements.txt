@@ -4,9 +4,12 @@ blinker==1.7.0
 certifi==2024.2.2
 charset-normalizer==3.3.2
 click==8.1.7
+dnspython==2.6.1
+eventlet==0.35.2
 Flask==3.0.2
 Flask-SocketIO==5.3.6
 googlesearch-python==1.2.3
+greenlet==3.0.3
 h11==0.14.0
 idna==3.6
 itsdangerous==2.1.2

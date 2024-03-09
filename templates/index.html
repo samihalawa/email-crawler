@@ -3,16 +3,29 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AutoClient AI</title>
+    <title>AutoClient AI - Revolutionize Your Email Marketing with AI</title>
+    <meta name="description" content="Streamline your marketing with AutoClient AI. Discover potential clients and engage with custom, AI-crafted emails.">
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
-    <!-- Agregar Font Awesome -->
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+    <style>
+        .modal-overlay {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .modal-close {
+            position: absolute;
+            top: 0.5rem;
+            right: 0.5rem;
+            cursor: pointer;
+        }
+    </style>
 </head>
 <body class="bg-gray-100 font-sans">
     <div id="content" class="container mx-auto px-4 py-8">
         <div class="max-w-md mx-auto">
             <h1 class="text-3xl font-bold text-center mb-6">AutoClient AI</h1>
-            <h2>以AI自動收集潛在客戶的郵箱！</h2>
+            <h2>Find and engage potential clients with personalized, AI-generated emails.！</h2>
             <form id="searchForm" class="mb-6">
                 <input type="text" id="searchTerm" placeholder="输入搜索词" class="w-full px-4 py-2 mb-4 rounded-lg shadow-md focus:outline-none focus:ring focus:ring-blue-400">
                 <button type="submit" class="block w-full px-4 py-2 bg-blue-500 text-white rounded-lg shadow-md hover:bg-blue-600 focus:outline-none focus:ring focus:ring-blue-400">开始搜索</button>
@@ -21,17 +34,17 @@
             <div id="results" class="mt-8"></div>
             <div id="modal" class="fixed top-0 left-0 w-full h-full bg-gray-800 bg-opacity-50 hidden">
                 <div class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-white p-8 rounded-lg shadow-md max-w-lg overflow-auto">
-                    <h2 class="text-xl font-bold mb-4">搜索结果</h2>
+            <h2 class="text-xl font-bold mb-4">Search Results</h2>
                     <table class="w-full">
                         <thead>
-                            <tr>
-                                <th class="px-4 py-2 border">搜索词</th>
-                                <th class="px-4 py-2 border">邮箱</th>
-                                <th class="px-4 py-2 border">页面标题</th>
-                                <th class="px-4 py-2 border">网址</th>
-                                <th class="px-4 py-2 border">复制</th>
-                            </tr>
-                        </thead>
+                                                <tr>
+                                                    <th class="px-4 py-2 border">Search Term</th>
+                                                    <th class="px-4 py-2 border">Email</th>
+                                                    <th class="px-4 py-2 border">Page Title</th>
+                                                    <th class="px-4 py-2 border">URL</th>
+                                                    <th class="px-4 py-2 border">Copy</th>
+                                                </tr>
+                                            </thead>
                         <tbody id="modalContent"></tbody>
                     </table>
                     <div class="flex justify-end mt-4">
@@ -47,8 +60,13 @@
     <script src="//cdnjs.cloudflare.com/ajax/libs/socket.io/4.0.1/socket.io.js"></script>
     <script src="/static/main.js"></script>
     <script>
-        $(document).ready(function() {
-            var socket = io.connect('http://' + document.domain + ':' + location.port);
+       $(document).ready(function() {
+                var socket;
+                if (window.location.protocol === "https:") {
+                    socket = io.connect('https://' + document.domain + ':' + location.port);
+                } else {
+                    socket = io.connect('http://' + document.domain + ':' + location.port);
+                }
             
             $('#searchForm').submit(function(event) {
                 event.preventDefault();
@@ -83,21 +101,23 @@
             });
 
             $('#downloadCSV').click(function() {
-                var csvContent = '';
-                $('#modalContent tr').each(function(index, row) {
-                    $(row).find('td').each(function(index, column) {
-                        csvContent += $(column).text() + ',';
-                    });
-                    csvContent += '\n';
-                });
-                var encodedUri = encodeURI('data:text/csv;charset=utf-8,' + csvContent);
-                var link = document.createElement('a');
-                link.setAttribute('href', encodedUri);
-                link.setAttribute('download', 'emails.csv');
-                document.body.appendChild(link);
-                link.click();
+        var csvContent = "data:text/csv;charset=utf-8,Search Term,Email,Page Title,URL\n";
+        $('#modalContent tr').each(function() {
+            $(this).find('td:not(:last)').each(function() {
+                csvContent += $(this).text() + ",";
             });
+            csvContent = csvContent.slice(0, -1); // Remove last comma
+            csvContent += "\n";
         });
+        var encodedUri = encodeURI(csvContent);
+        var link = document.createElement('a');
+        link.setAttribute('href', encodedUri);
+        link.setAttribute('download', 'emails.csv');
+        document.body.appendChild(link); // Required for FF
+        link.click();
+        document.body.removeChild(link);
+    });
+});
     </script>
 </body>
 </html>
