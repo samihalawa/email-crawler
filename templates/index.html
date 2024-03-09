@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="zh">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -60,47 +60,42 @@
     <script src="//cdnjs.cloudflare.com/ajax/libs/socket.io/4.0.1/socket.io.js"></script>
     <script src="/static/main.js"></script>
     <script>
-       $(document).ready(function() {
-                var socket;
-                if (window.location.protocol === "https:") {
-                    socket = io.connect('https://' + document.domain + ':' + location.port);
-                } else {
-                    socket = io.connect('http://' + document.domain + ':' + location.port);
-                }
-            
-            $('#searchForm').submit(function(event) {
-                event.preventDefault();
-                var searchQuery = $('#searchTerm').val();
-                $('#results').empty(); // Clear previous results
-                socket.emit('start_search', {search_query: searchQuery});
-            });
-
-            socket.on('new_email', function(data) {
-                var resultElement = $('<tr>');
-                resultElement.append($('<td>').addClass('px-4 py-2 border').text(data.search_query));
-                resultElement.append($('<td>').addClass('px-4 py-2 border').text(data.email));
-                resultElement.append($('<td>').addClass('px-4 py-2 border').text(data.page_title));
-                resultElement.append($('<td>').addClass('px-4 py-2 border').text(data.url));
-                var copyButton = $('<button>').addClass('px-2 py-1 bg-blue-500 text-white rounded-lg shadow-md hover:bg-blue-600 focus:outline-none focus:ring focus:ring-blue-400').text('复制');
-                copyButton.click(function() {
-                    var tempInput = $('<input>').val(data.email).appendTo('body').select();
-                    document.execCommand('copy');
-                    tempInput.remove();
-                });
-                copyButton.prepend($('<span>').addClass('text-xs').text('📋')); // Small copy icon
-                resultElement.append($('<td>').addClass('px-4 py-2 border').append(copyButton));
-                $('#modalContent').append(resultElement);
-            });
-
-            $('#showModal').click(function() {
-                $('#modal').show();
-            });
-
-            $('#closeModal').click(function() {
-                $('#modal').hide();
-            });
-
-            $('#downloadCSV').click(function() {
+    $(document).ready(function() {
+        var socket;
+        if (window.location.protocol === "https:") {
+            socket = io.connect('https://' + document.domain + ':' + location.port);
+        } else {
+            socket = io.connect('http://' + document.domain + ':' + location.port);
+        }
+    
+        $('#searchForm').submit(function(event) {
+            event.preventDefault();
+            var searchQuery = $('#searchTerm').val();
+            socket.emit('start_search', {search_query: searchQuery});
+        });
+    
+        socket.on('new_email', function(data) {
+            // Append new email data to the table
+            var newRow = $('<tr>')
+                .append($('<td>').text(data.search_query))
+                .append($('<td>').text(data.email))
+                .append($('<td>').text(data.page_title))
+                .append($('<td>').text(data.url))
+                .append($('<td>').append($('<button>').text('Copy').click(function() {
+                    navigator.clipboard.writeText(data.email);
+                })));
+            $('#modalContent').append(newRow);
+        });
+    
+        $('#showModal').click(function() {
+            $('#modal').show();
+        });
+    
+        $('#closeModal, .modal-close').click(function() {
+            $('#modal').hide();
+        });
+    
+        $('#downloadCSV').click(function() {
         var csvContent = "data:text/csv;charset=utf-8,Search Term,Email,Page Title,URL\n";
         $('#modalContent tr').each(function() {
             $(this).find('td:not(:last)').each(function() {
