@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AutoClient AI - Revolutionize Your Email Marketing with AI</title>
+    <meta name="description" content="Streamline your marketing with AutoClient AI. Discover potential clients and engage with custom, AI-crafted emails.">
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <style>
+:root {
+            --primary-color: #007bff;
+            --background-color: #f8f9fa;
+            --text-color: #333;
+            --header-footer-color: #ffffff;
+            --modal-background-color: #ffffff;
+            --button-color: var(--primary-color);
+            --button-text-color: #ffffff;
+            --border-radius: 8px;
+        }
+        
+        body {
+            background-color: var(--background-color);
+            color: var(--text-color);
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            scroll-behavior: smooth;
+        }
+        
+        header, footer {
+            background-color: var(--header-footer-color);
+            color: var(--text-color);
+            padding: 1rem;
+            text-align: center;
+            width: 100%;
+        }
+        
+        footer {
+            position: fixed;
+            bottom: 0;
+        }
+        
+        form {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+        
+        input, button {
+            border: 2px solid #ccc;
+            border-radius: var(--border-radius);
+            padding: 10px;
+            font-size: 1rem;
+            outline: none;
+        }
+        
+        button {
+            background-color: var(--button-color);
+            color: var(--button-text-color);
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+        
+        button:hover {
+            background-color: darken(var(--button-color), 10%);
+        }
+        
+        .email-block {
+            background-color: #fff;
+            border: 1px solid #ddd;
+            border-radius: var(--border-radius);
+            margin-top: 1rem;
+            padding: 1rem;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            transition: all 0.3s ease;
+        }
+        
+        .email-block:hover {
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+        
+        .modal-overlay {
+            display: none;
+            align-items: center;
+            justify-content: center;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 50;
+        }
+        
+        .modal-content {
+            background-color: var(--modal-background-color);
+            padding: 20px;
+            border-radius: var(--border-radius);
+            width: 90%;
+            max-width: 600px;
+            margin: auto;
+            transition: transform 0.3s ease-out;
+            transform: translateY(-30px);
+            opacity: 0;
+        }
+        
+        .modal-content.active {
+            transform: translateY(0);
+            opacity: 1;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        
+        th, td {
+            border: 1px solid #ddd;
+            text-align: left;
+            padding: 8px;
+        }
+        
+        th {
+            background-color: var(--primary-color);
+            color: white;
+        }
+        
+        @media (min-width: 768px) {
+            .container {
+                max-width: 720px;
+            }
+        }
+        
+        @media (min-width: 992px) {
+            .container {
+                max-width: 960px;
+            }
+        }
+            </style>
+</head>
+<body>
+
+    <header>
+        <h1>AutoClient AI</h1>
+    </header>
+
+    <div class="container mx-auto px-4 py-8">
+        <div class="max-w-md mx-auto">
+            <h2>Find and engage potential clients with personalized, AI-generated emails.</h2>
+            <form id="searchForm">
+                <input type="text" id="searchTerm" placeholder="Enter your search query">
+                <button type="submit">Start Search</button>
+            </form>
+            <button id="showModal">Show Results</button>
+            <div id="results" class="email-block-container"></div>
+            <div id="modal" class="modal-overlay">
+                <div class="modal-content">
+                    <span class="modal-close">X</span>
+                    <h3>Search Results</h3>
+                    <!-- Results Table Here -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        <p>© 2024 AutoClient AI. All rights reserved.</p>
+    </footer>
+
+   <script>
+            $(document).ready(function() {
+                var socket;
+                // Detect the page protocol and adjust the Socket.IO connection URL
+                var protocol = window.location.protocol === 'https:' ? 'wss' : 'ws';
+                var socketURL = protocol + '://' + document.domain + (location.port ? ':' + location.port : '');
+                socket = io.connect(socketURL, {secure: true});
+    
+                // Function to load emails under the form
+                function loadEmails() {
+                    $.get('/get_emails', function(data) {
+                        var emails = data.split('\n');
+                        var resultContainer = $('#results');
+                        resultContainer.empty();
+                        for (var i = emails.length - 1; i >= 0; i--) {
+                            var emailInfo = emails[i].split(',');
+                            var email = emailInfo[1].trim();
+                            var page_title = emailInfo[2].trim();
+                            var url = emailInfo[3].trim();
+                            var resultElement = $('<div>').addClass('p-4 bg-white shadow-md mb-4');
+                            resultElement.append($('<p>').addClass('text-lg font-bold').text('Email: ' + email));
+                            resultElement.append($('<p>').addClass('text-sm italic').text('Page Title: ' + page_title));
+                            resultElement.append($('<p>').addClass('text-xs').text('URL: ' + url));
+                            resultContainer.append(resultElement);
+                        }
+                    });
+                }
+    
+                // Submit form event handler
+                $('#searchForm').submit(function(event) {
+                    event.preventDefault();
+                    var searchQuery = $('#searchTerm').val().trim();
+                    if (searchQuery) {
+                        socket.emit('start_search', {search_query: searchQuery});
+                    }
+                });
+    
+                // Show modal button event handler
+                $('#showModalBtn').click(function() {
+                    $('#modal').show();
+                    loadEmails(); // Load emails in the modal
+                });
+    
+                // Close modal event handler
+                $('#closeModal').click(function() {
+                    $('#modal').hide();
+                });
+    
+                // Socket event for new email
+                socket.on('new_email', function(data) {
+                    var resultElement = $('<div>').addClass('p-4 bg-white shadow-md mb-4');
+                    resultElement.append($('<p>').addClass('text-lg font-bold').text('Email: ' + data.email));
+                    resultElement.append($('<p>').addClass('text-sm italic').text('Page Title: ' + data.page_title));
+                    resultElement.append($('<p>').addClass('text-xs').text('URL: ' + data.url));
+                    $('#modalContent').append(resultElement);
+                });
+    
+                // Toggle sidebar button event handler
+                $('#toggleSidebar').click(function() {
+                    $('#sidebar').toggleClass('hidden');
+                });
+            });
+        </script>
+</body>
+</html>

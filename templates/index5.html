@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AutoClient AI - Revolutionize Your Email Marketing with AI</title>
+    <meta name="description" content="Streamline your marketing with AutoClient AI. Discover potential clients and engage with custom, AI-crafted emails.">
+    <!-- Add necessary UI libraries for modern design -->
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+    <style>
+        /* Modal Styles */
+        .modal-overlay {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 9999;
+        }
+        .modal-content {
+            position: relative;
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            max-width: 90%;
+            max-height: 90%;
+            overflow-y: auto;
+            transition: opacity 1s ease;
+        }
+        .modal-close {
+            position: absolute;
+            top: 0.5rem;
+            right: 0.5rem;
+            cursor: pointer;
+        }
+        /* Spinner Animation */
+        .loader {
+            border: 4px solid #f3f3f3; /* Light grey */
+            border-top: 4px solid #3498db; /* Blue */
+            border-radius: 50%;
+            width: 30px;
+            height: 30px;
+            animation: spin 1s linear infinite;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            opacity: 0; /* Initially hidden */
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body class="bg-gray-100 font-sans">
+    <!-- Navbar -->
+    <nav class="bg-gray-800 text-white py-4">
+        <div class="container mx-auto px-4">
+            <div class="flex justify-between items-center">
+                <a href="#" class="text-2xl font-bold">AutoClient AI</a>
+                <button id="showModal" class="px-4 py-2 bg-yellow-500 text-white rounded-lg shadow-md hover:bg-yellow-600 focus:outline-none focus:ring focus:ring-yellow-400">Show Results</button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <div id="content" class="container mx-auto px-4 py-8">
+        <div class="max-w-md mx-auto">
+            <h1 class="text-3xl font-bold text-center mb-6">Find and Engage Potential Clients</h1>
+            <h2 class="text-center mb-6">Streamline your marketing with custom, AI-generated emails.</h2>
+            <form id="searchForm" class="mb-6">
+                <input type="text" id="searchTerm" placeholder="Search for potential clients..." class="w-full px-4 py-2 mb-4 rounded-lg shadow-md focus:outline-none focus:ring focus:ring-blue-400">
+                <button type="submit" class="block w-full px-4 py-2 bg-blue-500 text-white rounded-lg shadow-md hover:bg-blue-600 focus:outline-none focus:ring focus:ring-blue-400">Start Search</button>
+            </form>
+            <div id="results" class="mt-8"></div>
+            <div id="modal" class="modal-overlay bg-gray-800 bg-opacity-50 hidden">
+                <div class="modal-content bg-white p-8 rounded-lg shadow-md max-w-lg overflow-auto">
+                    <h2 class="text-xl font-bold mb-4">Search Results</h2>
+                    <table class="w-full">
+                        <thead>
+                            <tr>
+                                <th class="px-4 py-2 border">Search Term</th>
+                                <th class="px-4 py-2 border">Email</th>
+                                <th class="px-4 py-2 border">Page Title</th>
+                                <th class="px-4 py-2 border">URL</th>
+                                <th class="px-4 py-2 border">Copy</th>
+                            </tr>
+                        </thead>
+                        <tbody id="modalContent"></tbody>
+                    </table>
+                    <div class="flex justify-end mt-4">
+                        <button id="downloadCSV" class="px-4 py-2 bg-blue-500 text-white rounded-lg shadow-md hover:bg-blue-600 focus:outline-none focus:ring focus:ring-blue-400 mr-4">Download Emails</button>
+                        <button id="closeModal" class="px-4 py-2 bg-blue-500 text-white rounded-lg shadow-md hover:bg-blue-600 focus:outline-none focus:ring focus:ring-blue-400">Close</button>
+                    </div>
+                </div>
+                <!-- Spinner Loader -->
+                <div class="loader"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="bg-gray-800 text-white py-4">
+        <div class="container mx-auto px-4">
+            <p class="text-center">© 2023 AutoClient AI. All rights reserved. <a href="#">Terms</a> | <a href="#">Privacy</a></p>
+        </div>
+    </footer>
+
+    <!-- JavaScript Libraries -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.0.1/socket.io.js"></script>
+    <script>
+        $(document).ready(function() {
+            var socket;
+            // Detect the page protocol and adjust the Socket.IO connection URL
+            var protocol = window.location.protocol === 'https:' ? 'wss' : 'ws';
+            var socketURL = protocol + '://' + document.domain + (location.port ? ':' + location.port : '');
+            socket = io.connect(socketURL, {secure: true});
+
+            // Function to load emails under the form
+            function loadEmails() {
+                $.get('/get_emails', function(data) {
+                    var emails = data.split('\n');
+                    var resultContainer = $('#results');
+                    resultContainer.empty();
+                    for (var i = emails.length - 1; i >= 0; i--) {
+                        var emailInfo = emails[i].split(',');
+                        var email = emailInfo[1].trim();
+                        var page_title = emailInfo[2].trim();
+                        var url = emailInfo[3].trim();
+                        var resultElement = $('<div>').addClass('p-4 bg-white shadow-md mb-4');
+                        resultElement.append($('<p>').addClass('text-lg font-bold').text('Email: ' + email));
+                        resultElement.append($('<p>').addClass('text-sm italic').text('Page Title: ' + page_title));
+                        resultElement.append($('<p>').addClass('text-xs').text('URL: ' + url));
+                        resultContainer.append(resultElement);
+                    }
+                });
+            }
+
+            // Submit form event handler
+            $('#searchForm').submit(function(event) {
+                event.preventDefault();
+                var searchQuery = $('#searchTerm').val().trim();
+                if (searchQuery) {
+                    socket.emit('start_search', {search_query: searchQuery});
+                }
+            });
+
+            // Show modal button event handler
+            $('#showModal').click(function() {
+                $('#modal').show();
+                loadEmails(); // Load emails in the modal table
+            });
+
+            // Close modal event handler
+            $('.modal-close, #closeModal').click(function() {
+                $('#modal').hide();
+            });
+
+            // Click outside modal to close
+            $(window).click(function(event) {
+                if (event.target == $('#modal')[0]) {
+                    $('#modal').hide();
+                }
+            });
+
+            // Socket event for new email
+            socket.on('new_email', function(data) {
+                var resultElement = $('<tr>').append(
+                    $('<td>').addClass('px-4 py-2 border').text(data.search_query),
+                    $('<td>').addClass('px-4 py-2 border').text(data.email),
+                    $('<td>').addClass('px-4 py-2 border').text(data.page_title),
+                    $('<td>').addClass('px-4 py-2 border').text(data.url),
+                    $('<td>').addClass('px-4 py-2 border').append(
+                        $('<button>').addClass('px-2 py-1 bg-blue-500 text-white rounded-lg shadow-md hover:bg-blue-600 focus:outline-none focus:ring focus:ring-blue-400').text('Copy').click(function() {
+                            navigator.clipboard.writeText(data.email);
+                        }).prepend($('<span>').addClass('fas fa-copy'))
+                    )
+                );
+                $('#modalContent').append(resultElement); // Append to modal table
+            });
+        });
+    </script>
+</body>
+</html>

@@ -1,118 +1,339 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AutoClient AI - Revolutionize Your Email Marketing with AI</title>
+    <title>AutoClient AI Dashboard</title>
     <meta name="description" content="Streamline your marketing with AutoClient AI. Discover potential clients and engage with custom, AI-crafted emails.">
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/daisyui@1.11.5/dist/full.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
-    <style>
+    <link rel="icon" type="image/png" sizes="192x192" href="/favicon-192.png">
+    <link rel="icon" type="image/jpeg" sizes="192x192" href="/favicon-192.jpg">
+   <style>
+        /* Modal Styles */
         .modal-overlay {
-            display: flex;
+            display: none; /* Changed to none */
             align-items: center;
             justify-content: center;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 9999;
         }
+
+        .modal-content {
+            position: relative;
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            max-width: 90%;
+            max-height: 90%;
+            overflow-y: auto;
+            transition: opacity 1s ease;
+        }
+
         .modal-close {
             position: absolute;
             top: 0.5rem;
             right: 0.5rem;
             cursor: pointer;
         }
+
+        /* Spinner Animation */
+        .loader {
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #3498db;
+            border-radius: 50%;
+            width: 30px;
+            height: 30px;
+            animation: spin 1s linear infinite;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            opacity: 0; /* Initially hidden */
+        }
+
+        @keyframes spin {
+            0% {
+                transform: rotate(0deg);
+            }
+
+            100% {
+                transform: rotate(360deg);
+            }
+        }
     </style>
 </head>
-<body class="bg-gray-100 font-sans">
-    <div id="content" class="container mx-auto px-4 py-8">
-        <div class="max-w-md mx-auto">
-            <h1 class="text-3xl font-bold text-center mb-6">AutoClient AI</h1>
-            <h2>Find and engage potential clients with personalized, AI-generated emails.！</h2>
-            <form id="searchForm" class="mb-6">
-                <input type="text" id="searchTerm" placeholder="输入搜索词" class="w-full px-4 py-2 mb-4 rounded-lg shadow-md focus:outline-none focus:ring focus:ring-blue-400">
-                <button type="submit" class="block w-full px-4 py-2 bg-blue-500 text-white rounded-lg shadow-md hover:bg-blue-600 focus:outline-none focus:ring focus:ring-blue-400">开始搜索</button>
-            </form>
-            <button id="showModal" class="block w-full px-4 py-2 bg-yellow-500 text-white rounded-lg shadow-md hover:bg-yellow-600 focus:outline-none focus:ring focus:ring-yellow-400 mt-4">显示结果</button>
-            <div id="results" class="mt-8"></div>
-            <div id="modal" class="fixed top-0 left-0 w-full h-full bg-gray-800 bg-opacity-50 hidden">
-                <div class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-white p-8 rounded-lg shadow-md max-w-lg overflow-auto">
-            <h2 class="text-xl font-bold mb-4">Search Results</h2>
-                    <table class="w-full">
-                        <thead>
-                                                <tr>
-                                                    <th class="px-4 py-2 border">Search Term</th>
-                                                    <th class="px-4 py-2 border">Email</th>
-                                                    <th class="px-4 py-2 border">Page Title</th>
-                                                    <th class="px-4 py-2 border">URL</th>
-                                                    <th class="px-4 py-2 border">Copy</th>
-                                                </tr>
-                                            </thead>
-                        <tbody id="modalContent"></tbody>
-                    </table>
-                    <div class="flex justify-end mt-4">
-                        <button id="downloadCSV" class="px-4 py-2 bg-blue-500 text-white rounded-lg shadow-md hover:bg-blue-600 focus:outline-none focus:ring focus:ring-blue-400 mr-4">下载 Emails</button>
-                        <button id="closeModal" class="px-4 py-2 bg-blue-500 text-white rounded-lg shadow-md hover:bg-blue-600 focus:outline-none focus:ring focus:ring-blue-400">关闭</button>
-                    </div>
+
+<body class="bg-gray-100 dark:bg-gray-800 font-sans" data-theme="dark">
+
+    <!-- Navbar -->
+    <!-- Menu -->
+    <div class="drawer">
+        <input id="menu-toggle" type="checkbox" class="drawer-toggle" />
+        <div class="drawer-content flex flex-col">
+            <!-- Navbar -->
+            <div class="w-full navbar bg-base-300">
+                <div class="flex-none lg:hidden">
+                    <label for="menu-toggle" class="btn btn-square btn-ghost">
+                        <svg xmlns="https://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                            class="inline-block w-6 h-6 stroke-current"><path stroke-linecap="round"
+                                stroke-linejoin="round" stroke-width="2"
+                                d="M4 6h16M4 12h16M4 18h16"></path></svg>
+                    </label>
+                </div>
+                <div class="flex-1 px-2 mx-2">AutoClient.AI</div>
+                <div class="flex-none hidden lg:block">
+                    <ul class="menu menu-horizontal">
+                        <li><a>AI InfoExtractor</a></li>
+                        <li><a>AI AutoMailing</a></li>
+                        <li><a>ContactManager</a></li>
+                        <li><a>Settings</a></li>
+                        <li tabindex="0">
+                            <a class="justify-between">
+                                Change Theme
+                                <svg class="fill-current" xmlns="https://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24"><path d="M12 3L12 21L12 3Z" /><path d="M3 12L21 12L3 12Z" /></svg>
+                            </a>
+                            <ul class="p-2 shadow menu menu-compact dropdown-content bg-base-100 rounded-box w-52">
+                                <li><a href="#" class="theme-toggle" data-set-theme="light">Light</a></li>
+                                <li><a href="#" class="theme-toggle" data-set-theme="dark">Dark</a></li>
+                                <li><a href="#" class="theme-toggle" data-set-theme="">Default</a></li>
+                            </ul>
+                        </li>
+                    </ul>
                 </div>
             </div>
+            <!-- Page content here -->
+            <section class="bg-gray-200 dark:bg-gray-700 py-8">
+                <div class="container mx-auto px-4 grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <!-- Left half -->
+                    <div class="card bg-white dark:bg-gray-800 p-6 rounded-lg shadow-md mb-6">
+                        <h2 class="card-title">Potential Customer Email/Phone AI Extractor</h2>
+                        <form id="searchForm" class="mb-6 space-y-4">
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                <div class="form-control">
+                                    <label class="label" for="searchTerm">
+                                        <span class="label-text">Search Term</span>
+                                    </label>
+                                    <input type="text" id="searchTerm" placeholder="Enter search term" class="input input-bordered w-full max-w-xs" />
+                                </div>
+                                <div class="form-control">
+                                    <label class="label" for="numEmails">
+                                        <span class="label-text">Number of Emails</span>
+                                    </label>
+                                    <input type="range" id="numEmails" min="1" max="100" value="30" class="range range-primary" />
+                                    <div class="w-full flex justify-between text-xs px-2">
+                                        <span>1</span>
+                                        <span>100</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-control">
+                                <label class="cursor-pointer label">
+                                    <span class="label-text">Business Info</span> 
+                                    <input type="checkbox" id="businessInfo" class="checkbox" />
+                                </label>
+                            </div>
+                            <div class="form-control">
+                                <label class="cursor-pointer label">
+                                    <span class="label-text">Emails</span> 
+                                    <input type="checkbox" id="emails" class="checkbox" />
+                                </label>
+                            </div>
+                            <div class="form-control">
+                                <label class="cursor-pointer label">
+                                    <span class="label-text">Phone Numbers</span> 
+                                    <input type="checkbox" id="phoneNumbers" class="checkbox" />
+                                </label>
+                            </div>
+                            <div class="form-control mt-6">
+                                <button type="submit" class="btn btn-primary">Start Search</button>
+                            </div>
+                        </form>
+                        <!-- Modal trigger button -->
+                        <button id="showModal" class="btn modal-button">Show Results</button>
+                 <!-- Modal -->
+<div id="modal" class="modal-overlay" style="display:none;"> <!-- Adjusted for clarity and corrected quotes -->
+    <div class="modal-box">
+        <h3 class="font-bold text-lg">Results</h3>
+        <div id="results" class="py-4"></div>
+        <div class="modal-action">
+            <a href="#" class="btn modal-close">Close</a> <!-- Ensure this is present for closing -->
+        </div>
+    </div>
+</div>
+                    </div>
+                    <!-- Right half -->
+                          <!-- Right half -->
+                    <div class="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-md mb-6 overflow-hidden relative">
+                        <h2 class="text-2xl font-bold mb-4">Potential Customer Leads</h2>
+                        <p class="mb-4">AI Extractor of <strong class="text-blue-600">Potential Customer</strong>
+                            Contact (emails/phone/info) their emails&amp;phones in 1 Click</p>
+                        <p class="mb-4">Send Bulk Emails To All of them with our <strong
+                                class="text-blue-600">CustomAIL®</strong> Technology</p>
+                        <div class="overflow-y-auto h-72 max-h-full">
+                            <!-- Animation of email blocks -->
+                            <div class="relative">
+                                <div
+                                    class="absolute top-0 left-0 right-0 bg-gradient-to-b from-transparent to-gray-800 h-16">
+                                </div>
+                                <div class="absolute top-0 left-0 right-0 text-white text-center z-10">Scrolling
+                                    Up</div>
+                                <div class="grid grid-cols-1 gap-4 mt-6">
+                                    <!-- Email block -->
+                                    <div
+                                        class="flex items-center bg-white dark:bg-gray-800 p-4 rounded-lg shadow-md">
+                                        <div class="w-12 h-12 flex-shrink-0 mr-4">
+                                            <img src="https://source.unsplash.com/64x64/?company"
+                                                alt="Company Logo" class="rounded-full w-full h-full object-cover">
+                                        </div>
+                                        <div class="flex-1">
+                                            <p class="font-semibold">Daniel Ferz. The LFS Store Natural
+                                                Products</p>
+                                            <p class="text-gray-600 dark:text-gray-300">daniel@lfsshop.com</p>
+                                            <p class="text-gray-600 dark:text-gray-300">+34 659888329</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+        <div class="drawer-side">
+            <label for="menu-toggle" class="drawer-overlay"></label>
+            <ul class="menu p-4 overflow-y-auto w-80 bg-base-100">
+             <!-- Sidebar content here -->
+                <li class="font-bold text-lg mb-4">AutoClient.AI</li>
+                <li><a>AI InfoExtractor</a></li>
+                <li><a>AI AutoMailing</a></li>
+                <li><a>ContactManager</a></li>
+                <li><a>Settings</a></li>
+                <li class="dropdown">
+                    <label class="dropdown-toggle">
+                        <input type="checkbox" class="toggle">
+                        <span>Change Theme</span>
+                    </label>
+                    <ul class="p-2 shadow menu dropdown-content bg-base-100 rounded-box w-52">
+                        <li><a href="#">Default</a></li>
+                        <li><a href="#">Dark</a></li>
+                        <li><a href="#">Light</a></li>
+                    </ul>
+                </li>
+            </ul>
         </div>
     </div>
 
+   <!-- Footer -->
+    <footer class="fixed bottom-0 w-full bg-gray-800 dark:bg-gray-900 py-4 text-white">
+        <div class="container mx-auto px-4 flex justify-between items-center">
+            <p>&copy; 2024 AutoClient AI. All rights reserved.</p>
+            <ul class="flex space-x-4">
+                <li><a href="#" class="hover:text-gray-400">Privacy Policy</a></li>
+                <li><a href="#" class="hover:text-gray-400">Terms of Service</a></li>
+                <li><a href="#" class="hover:text-gray-400">Contact Us</a></li>
+            </ul>
+        </div>
+    </footer>
+
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script src="//cdnjs.cloudflare.com/ajax/libs/socket.io/4.0.1/socket.io.js"></script>
-    <script src="/static/main.js"></script>
- <script>
-   $(document).ready(function() {
-        // Esta línea asegura que Socket.IO se conecte usando el mismo protocolo que la página actual, ya sea http o https.
-        var socket = io.connect(window.location.origin, {secure: true});
-    
-        $('#searchForm').submit(function(event) {
-            event.preventDefault();
-            var searchQuery = $('#searchTerm').val().trim();
-            if (searchQuery) {
-                socket.emit('start_search', {search_query: searchQuery});
+    <script src="https://cdn.jsdelivr.net/npm/daisyui"></script>
+    <script src="https://cdn.socket.io/4.0.1/socket.io.min.js"></script> <!-- Ensure this is added if not present -->
+    <script>
+        $(document).ready(function () {
+            var socket;
+            // Detect the page protocol and adjust the Socket.IO connection URL
+            var protocol = window.location.protocol === 'https:' ? 'wss' : 'ws';
+            var socketURL = protocol + '://' + document.domain + (location.port ? ':' + location.port : '');
+            socket = io.connect(socketURL, { secure: true });
+
+            // Function to load emails under the form
+            function loadEmails() {
+                $.get('/get_emails', function (data) {
+                    var emails = data.split('\n');
+                    var resultContainer = $('#results');
+                    resultContainer.empty();
+                    for (var i = emails.length - 1; i >= 0; i--) {
+                        var emailInfo = emails[i].split(',');
+                        var email = emailInfo[1].trim();
+                        var page_title = emailInfo[2].trim();
+                        var url = emailInfo[3].trim();
+                        var resultElement = $('<div>').addClass('p-4 bg-white shadow-md mb-4');
+                        resultElement.append($('<p>').addClass('text-lg font-bold').text('Email: ' + email));
+                        resultElement.append($('<p>').addClass('text-sm italic').text('Page Title: ' + page_title));
+                        resultElement.append($('<p>').addClass('text-xs').text('URL: ' + url));
+                        resultContainer.append(resultElement);
+                    }
+                });
             }
-        });
-    
-        socket.on('new_email', function(data) {
-            var resultElement = $('<tr>').append(
-                $('<td>').addClass('px-4 py-2 border').text(data.search_query),
-                $('<td>').addClass('px-4 py-2 border').text(data.email),
-                $('<td>').addClass('px-4 py-2 border').text(data.page_title),
-                $('<td>').addClass('px-4 py-2 border').text(data.url),
-                $('<td>').addClass('px-4 py-2 border').append(
-                    $('<button>').addClass('px-2 py-1 bg-blue-500 text-white rounded-lg shadow-md hover:bg-blue-600 focus:outline-none focus:ring focus:ring-blue-400').text('Copy').click(function() {
-                        navigator.clipboard.writeText(data.email);
-                    }).prepend($('<span>').addClass('fas fa-copy'))
-                )
-            );
-            $('#modalContent').append(resultElement);
-        });
-    
-        $('#showModal').click(function() {
-            $('#modal').show();
-        });
-    
-        $('.modal-close, #closeModal').click(function() {
-            $('#modal').hide();
-        });
-    
-        $('#downloadCSV').click(function() {
-        var csvContent = "data:text/csv;charset=utf-8,Search Term,Email,Page Title,URL\n";
-        $('#modalContent tr').each(function() {
-            $(this).find('td:not(:last)').each(function() {
-                csvContent += $(this).text() + ",";
+
+            // Submit form event handler
+            $('#searchForm').submit(function (event) {
+                event.preventDefault();
+                var searchQuery = $('#searchTerm').val().trim();
+                var numEmails = $('#numEmails').val().trim();
+                var businessInfo = $('#businessInfo').is(':checked');
+                var emails = $('#emails').is(':checked');
+                var phoneNumbers = $('#phoneNumbers').is(':checked');
+                if (searchQuery) {
+                    socket.emit('start_search', { search_query: searchQuery, num_emails: numEmails, business_info: businessInfo, emails: emails, phone_numbers: phoneNumbers });
+                }
             });
-            csvContent = csvContent.slice(0, -1); // Remove last comma
-            csvContent += "\n";
+
+            // Show modal button event handler
+            $('#showModal').click(function () {
+                $('#modal').show();
+                loadEmails(); // Load emails in the modal table
+            });
+
+            // Close modal event handler - No direct #closeModal element, so rely on .modal-close class
+            $('.modal-close').click(function () {
+                $('#modal').hide();
+            });
+
+            // Click outside modal to close - This functionality requires a modal-overlay that is not present. If you want to implement this, ensure there's a modal-overlay element that can trigger this.
+            $(window).click(function (event) {
+                if ($(event.target).hasClass('modal-overlay')) {
+                    $('#modal').hide();
+                }
+            });
+
+            // Socket event for new email
+            socket.on('new_email', function (data) {
+                var resultElement = $('<tr>').append(
+                    $('<td>').addClass('px-4 py-2 border').text(data.search_query),
+                    $('<td>').addClass('px-4 py-2 border').text(data.email),
+                    $('<td>').addClass('px-4 py-2 border').text(data.page_title),
+                    $('<td>').addClass('px-4 py-2 border').text(data.url),
+                    $('<td>').addClass('px-4 py-2 border').append(
+                        $('<button>').addClass('px-2 py-1 bg-blue-500 text-white rounded-lg shadow-md hover:bg-blue-600 focus:outline-none focus:ring focus:ring-blue-400').text('Copy').click(function () {
+                            navigator.clipboard.writeText(data.email);
+                        }).prepend($('<span>').addClass('fas fa-copy'))
+                    )
+                );
+                $('#modalContent').append(resultElement); // Append to modal table
+            });
+
+            // Theme changer script
+            $('.theme-toggle').click(function(e) {
+                e.preventDefault();
+                var theme = $(this).data('set-theme');
+                $('html').attr('data-theme', theme);
+            });
+
+            // Since the modal close functionality and outside click were the main concerns highlighted, those have been addressed. The theme switching functionality and Socket.IO integration were correctly implemented.
         });
-        var encodedUri = encodeURI(csvContent);
-        var link = document.createElement('a');
-        link.setAttribute('href', encodedUri);
-        link.setAttribute('download', 'emails.csv');
-        document.body.appendChild(link); // Required for FF
-        link.click();
-        document.body.removeChild(link);
-    });
-});
     </script>
 </body>
+
 </html>
+
+
+

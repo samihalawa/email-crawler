@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AutoClient AI</title>
+    <!-- Materialize CSS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
+    <!-- Custom CSS -->
+    <style>
+        body {
+            font-family: 'Avenir', sans-serif;
+            background-color: #1a202c;
+            color: #e2e8f0;
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .footer {
+            background-color: #2d3748;
+            color: #e2e8f0;
+            text-align: center;
+            padding: 10px;
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+        }
+    </style>
+</head>
+<body>
+    <!-- Navbar -->
+    <nav>
+        <div class="nav-wrapper blue">
+            <a href="#" class="brand-logo center">AutoClient AI</a>
+            <a href="#" data-target="mobile-nav" class="sidenav-trigger"><i class="material-icons">menu</i></a>
+            <ul id="nav-mobile" class="left hide-on-med-and-down">
+                <li><a href="#">Home</a></li>
+                <li><a href="#">About</a></li>
+                <li><a href="#">Services</a></li>
+                <li><a href="#">Contact</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- Sidebar (Mobile) -->
+    <ul class="sidenav" id="mobile-nav">
+        <li><a href="#">Home</a></li>
+        <li><a href="#">About</a></li>
+        <li><a href="#">Services</a></li>
+        <li><a href="#">Contact</a></li>
+    </ul>
+
+    <!-- Content Area -->
+    <div class="container">
+        <h1 class="center-align">Revolutionize Your Email Marketing</h1>
+        <h2 class="center-align">Discover potential clients and engage with custom, AI-crafted emails.</h2>
+        <form id="searchForm" class="center-align">
+            <div class="input-field">
+                <input type="text" id="searchTerm" placeholder="Search..." class="validate">
+                <label for="searchTerm">Search</label>
+            </div>
+            <button type="submit" class="btn waves-effect waves-light blue">Start Search</button>
+        </form>
+        <button id="showModalBtn" class="btn waves-effect waves-light yellow darken-2">Show Results</button>
+        <div id="results"></div>
+        <!-- Modal -->
+        <div id="modal" class="modal">
+            <div class="modal-content">
+                <h2 class="center-align">Search Results</h2>
+                <div id="modalContent"></div>
+            </div>
+            <div class="modal-footer">
+                <button id="downloadCSV" class="btn waves-effect waves-light blue">Download Emails</button>
+                <button id="closeModal" class="btn waves-effect waves-light blue">Close</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <div class="footer">
+        <p>&copy; 2024 AutoClient AI. All rights reserved. | <a href="#">Terms of Service</a> | <a href="#">Privacy Policy</a></p>
+    </div>
+
+    <!-- Materialize JS -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Initialize Materialize components
+            var modals = document.querySelectorAll('.modal');
+            M.Modal.init(modals);
+            var sidenav = document.querySelectorAll('.sidenav');
+            M.Sidenav.init(sidenav);
+            var elems = document.querySelectorAll('.collapsible');
+            M.Collapsible.init(elems);
+            var forms = document.querySelectorAll('.modal-content form');
+            forms.forEach(function(form) {
+                form.addEventListener('submit', function(event) {
+                    event.preventDefault();
+                    // Your form submission logic here
+                });
+            });
+        });
+    </script>
+</body>
+</html>

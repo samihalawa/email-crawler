@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AutoClient AI</title>
+    <!-- Tailwind CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <!-- Custom CSS -->
+    <style>
+        body {
+            background-color: #1a202c;
+            color: #e2e8f0;
+            font-family: 'Avenir', sans-serif;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .btn {
+            transition: all 0.3s ease;
+        }
+        .btn:hover {
+            transform: scale(1.05);
+        }
+        .header {
+            padding: 20px;
+            text-align: center;
+        }
+        .sidebar {
+            background-color: #2d3748;
+            color: #e2e8f0;
+            height: 100vh;
+            width: 200px;
+            position: fixed;
+            top: 0;
+            left: -200px;
+            z-index: 1000;
+            overflow-x: hidden;
+            padding-top: 20px;
+            transition: left 0.3s ease;
+        }
+        .sidebar.show {
+            left: 0;
+        }
+        .sidebar a {
+            padding: 10px;
+            text-decoration: none;
+            font-size: 18px;
+            color: #e2e8f0;
+            display: block;
+            transition: 0.3s;
+        }
+        .sidebar a:hover {
+            background-color: #4a5568;
+        }
+        .content {
+            margin-left: 200px;
+            padding: 20px;
+        }
+        .footer {
+            background-color: #2d3748;
+            color: #e2e8f0;
+            padding: 10px 20px;
+            text-align: center;
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <div class="header">
+        <h1 class="text-3xl font-bold">AutoClient AI</h1>
+        <p class="text-lg">Revolutionize Your Email Marketing</p>
+    </div>
+
+    <!-- Sidebar -->
+    <div class="sidebar" id="sidebar">
+        <a href="#">Home</a>
+        <a href="#">About</a>
+        <a href="#">Services</a>
+        <a href="#">Contact</a>
+    </div>
+
+    <!-- Content Area -->
+    <div class="content">
+        <div class="container">
+            <form id="searchForm" class="mb-6">
+                <input type="text" id="searchTerm" placeholder="Search..." class="w-full px-4 py-2 mb-4 rounded-lg shadow-md focus:outline-none focus:ring focus:ring-blue-400 bg-gray-800 text-white">
+                <button type="submit" class="btn w-full px-4 py-2 bg-blue-500 text-white rounded-lg shadow-md hover:bg-blue-600 focus:outline-none focus:ring focus:ring-blue-400">Start Search</button>
+            </form>
+            <button id="showModalBtn" class="btn w-full px-4 py-2 bg-yellow-500 text-white rounded-lg shadow-md hover:bg-yellow-600 focus:outline-none focus:ring focus:ring-yellow-400 mb-4">Show Results</button>
+            <div id="results"></div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <div class="footer">
+        <p>Copyright © 2024 AutoClient AI. All rights reserved. | <a href="#">Terms of Service</a> | <a href="#">Privacy Policy</a></p>
+    </div>
+
+    <!-- Font Awesome Script -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/js/all.min.js"></script>
+    <!-- jQuery -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        // Your JavaScript code here
+        $('#showModalBtn').click(function() {
+            $('#modal').show();
+        });
+
+        $('#closeModal').click(function() {
+            $('#modal').hide();
+        });
+
+        $('#sidebarBtn').click(function() {
+            $('#sidebar').toggleClass('show');
+        });
+    </script>
+</body>
+</html>
