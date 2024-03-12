@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AutoClient AI Dashboard</title>
+    <meta name="description" content="Streamline your marketing with AutoClient AI. Discover potential clients and engage with custom, AI-crafted emails.">
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/daisyui@1.11.5/dist/full.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+    <style>
+        /* Modal Styles */
+        .modal-overlay {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 9999;
+        }
+        .modal-content {
+            position: relative;
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            max-width: 90%;
+            max-height: 90%;
+            overflow-y: auto;
+            transition: opacity 1s ease;
+        }
+        .modal-close {
+            position: absolute;
+            top: 0.5rem;
+            right: 0.5rem;
+            cursor: pointer;
+        }
+        /* Spinner Animation */
+        .loader {
+            border: 4px solid #f3f3f3; /* Light grey */
+            border-top: 4px solid #3498db; /* Blue */
+            border-radius: 50%;
+            width: 30px;
+            height: 30px;
+            animation: spin 1s linear infinite;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            opacity: 0; /* Initially hidden */
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body class="bg-gray-100 dark:bg-gray-800 font-sans">
+    <!-- Navbar -->
+<!-- Menu -->
+<div class="drawer">
+  <input id="menu-toggle" type="checkbox" class="drawer-toggle" />
+  <div class="drawer-content flex flex-col">
+    <!-- Navbar -->
+    <div class="w-full navbar bg-base-300">
+      <div class="flex-none lg:hidden">
+        <label for="menu-toggle" aria-label="open sidebar" class="btn btn-square btn-ghost">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" class="inline-block w-6 h-6 stroke-current"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path></svg>
+        </label>
+      </div>
+      <div class="flex-1 px-2 mx-2 font-bold">AutoClient.AI</div>
+      <div class="flex-none hidden lg:block">
+        <ul class="menu menu-horizontal">
+          <li><a>AI InfoExtractor</a></li>
+          <li><a>AI AutoMailing</a></li>
+          <li><a>ContactManager</a></li>
+          <li><a>Settings</a></li>
+          <li>
+            <label class="inline-flex items-center ml-3 cursor-pointer">
+              <input type="checkbox" class="form-checkbox h-5 w-5 text-blue-500" id="darkModeToggle">
+              <span class="ml-2 text-gray-700 dark:text-gray-300">Dark Mode</span>
+            </label>
+          </li>
+          <li>
+            <label class="inline-flex items-center ml-3 cursor-pointer">
+              <input type="checkbox" class="form-checkbox h-5 w-5 text-blue-500" id="themeToggle">
+              <span class="ml-2 text-gray-700 dark:text-gray-300">Change Theme</span>
+            </label>
+          </li>
+        </ul>
+      </div>
+    </div>
+    <!-- Page content here -->
+    <section class="bg-gray-200 dark:bg-gray-700 py-8">
+        <div class="container mx-auto px-4 grid grid-cols-1 md:grid-cols-2 gap-6">
+            <!-- Left half -->
+            <div class="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-md mb-6">
+                <h2 class="text-2xl font-bold mb-4">Email Search</h2>
+                <form id="searchForm" class="mb-6 space-y-4">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div class="col-span-2 md:col-span-1">
+                            <label for="searchTerm" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Search Term</label>
+                            <input type="text" id="searchTerm" placeholder="Enter search term" class="w-full px-4 py-2 rounded-lg shadow-md focus:outline-none focus:ring focus:ring-blue-400">
+                        </div>
+                        <div class="col-span-2 md:col-span-1">
+                            <label for="numEmails" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Number of Emails</label>
+                            <input type="number" id="numEmails" placeholder="30" class="w-full px-4 py-2 rounded-lg shadow-md focus:outline-none focus:ring focus:ring-blue-400">
+                        </div>
+                    </div>
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                        <div class="col-span-1 flex items-center space-x-2">
+                            <input type="checkbox" id="businessInfo" class="form-checkbox">
+                            <label for="businessInfo">Business Info</label>
+                        </div>
+                        <div class="col-span-1 flex items-center space-x-2">
+                            <input type="checkbox" id="emails" class="form-checkbox">
+                            <label for="emails">Emails</label>
+                        </div>
+                        <div class="col-span-1 flex items-center space-x-2">
+                            <input type="checkbox" id="phoneNumbers" class="form-checkbox">
+                            <label for="phoneNumbers">Phone Numbers</label>
+                        </div>
+                    </div>
+                    <button type="submit" class="w-full px-4 py-2 bg-blue-600 text-white rounded-lg shadow-md hover:bg-blue-700 focus:outline-none focus:ring focus:ring-blue-400">Start Search</button>
+                </form>
+                <button id="showModal" class="w-full px-4 py-2 bg-yellow-500 text-white rounded-lg shadow-md hover:bg-yellow-600 focus:outline-none focus:ring focus:ring-yellow-400">Show Results</button>
+            </div>
+            <!-- Right half -->
+            <div class="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-md mb-6 overflow-hidden relative">
+                <h2 class="text-2xl font-bold mb-4">Potential Customer Leads</h2>
+                <p class="mb-4">AI Extractor of <strong class="text-blue-600">Potential Customer</strong> Contact (emails/phone/info) their emails&amp;phones in 1 Click</p>
+                <p class="mb-4">Send Bulk Emails To All of them with our <strong class="text-blue-600">CustomAIL®</strong> Technology</p>
+                <div class="overflow-y-auto h-72 max-h-full">
+                    <!-- Animation of email blocks -->
+                    <div class="relative">
+                        <div class="absolute top-0 left-0 right-0 bg-gradient-to-b from-transparent to-gray-800 h-16"></div>
+                        <div class="absolute top-0 left-0 right-0 text-white text-center z-10">Scrolling Up</div>
+                        <div class="grid grid-cols-1 gap-4 mt-6">
+                            <!-- Email block -->
+                            <div class="flex items-center bg-white dark:bg-gray-800 p-4 rounded-lg shadow-md">
+                                <div class="w-12 h-12 flex-shrink-0 mr-4">
+                                    <img src="https://source.unsplash.com/64x64/?company" alt="Company Logo" class="rounded-full w-full h-full object-cover">
+                                </div>
+                                <div class="flex-1">
+                                    <p class="font-semibold">Daniel Ferz. The LFS Store Natural Products</p>
+                                    <p class="text-gray-600 dark:text-gray-300">daniel@lfsshop.com</p>
+                                    <p class="text-gray-600 dark:text-gray-300">+34 659888329</p>
+                                </div>
+                            </div>
+                            <!-- Repeat the above block for each potential customer -->
+                            <!-- Example:
+                            <div class="flex items-center bg-white dark:bg-gray-800 p-4 rounded-lg shadow-md">
+                                <div class="w-12 h-12 flex-shrink-0 mr-4">
+                                    <img src="https://source.unsplash.com/64x64/?company" alt="Company Logo" class="rounded-full w-full h-full object-cover">
+                                </div>
+                                <div class="flex-1">
+                                    <p class="font-semibold">Customer Name</p>
+                                    <p class="text-gray-600 dark:text-gray-300">Email</p>
+                                    <p class="text-gray-600 dark:text-gray-300">Phone</p>
+                                </div>
+                            </div>
+                            -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+  </div>
+  <div class="drawer-side">
+    <label for="menu-toggle" aria-label="close sidebar" class="drawer-overlay"></label> 
+    <ul class="menu p-4 w-80 min-h-full bg-base-200">
+      <!-- Sidebar content here -->
+      <li class="font-bold text-lg mb-4">AutoClient.AI</li>
+      <li><a>AI InfoExtractor</a></li>
+      <li><a>AI AutoMailing</a></li>
+      <li><a>ContactManager</a></li>
+      <li><a>Settings</a></li>
+      <li>
+        <label class="inline-flex items-center ml-3 cursor-pointer">
+          <input type="checkbox" class="form-checkbox h-5 w-5 text-blue-500" id="darkModeToggle">
+          <span class="ml-2 text-gray-700 dark:text-gray-300">Dark Mode</span>
+        </label>
+      </li>
+      <li>
+        <label class="inline-flex items-center ml-3 cursor-pointer">
+          <input type="checkbox" class="form-checkbox h-5 w-5 text-blue-500" id="themeToggle">
+          <span class="ml-2 text-gray-700 dark:text-gray-300">Change Theme</span>
+        </label>
+      </li>
+    </ul>
+  </div>
+</div>
+
+
+
+    <!-- Features Section -->
+    <section class="bg-gray-200 dark:bg-gray-700 py-8">
+        <div class="container mx-auto px-4">
+            <h2 class="text-2xl font-bold text-center mb-6">Features</h2>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <div class="p-6 bg-white dark:bg-gray-800 rounded-lg shadow-md">
+                    <i class="fas fa-robot text-3xl text-blue-500 mb-4"></i>
+                    <h3 class="text-xl font-bold mb-2">AI-Powered Email Generation</h3>
+                    <p>Efficiently create personalized emails using advanced AI algorithms.</p>
+                </div>
+                <div class="p-6 bg-white dark:bg-gray-800 rounded-lg shadow-md">
+                    <i class="fas fa-search text-3xl text-blue-500 mb-4"></i>
+                    <h3 class="text-xl font-bold mb-2">Web Scraping</h3>
+                    <p>Automatically extract relevant business information, emails, and phone numbers from web pages.</p>
+                </div>
+                <div class="p-6 bg-white dark:bg-gray-800 rounded-lg shadow-md">
+                    <i class="fas fa-envelope-open-text text-3xl text-blue-500 mb-4"></i>
+                    <h3 class="text-xl font-bold mb-2">Email AI Crawling</h3>
+                    <p>Automatically extract emails from relevant web pages using AI technology.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Benefits Section -->
+    <section class="py-8">
+        <div class="container mx-auto px-4">
+            <h2 class="text-2xl font-bold text-center mb-6">Benefits</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div class="p-6 bg-white dark:bg-gray-800 rounded-lg shadow-md">
+                    <i class="fas fa-chart-line text-3xl text-green-500 mb-4"></i>
+                    <h3 class="text-xl font-bold mb-2">Increased Efficiency</h3>
+                    <p>Save time and resources by automating the email marketing process.</p>
+                </div>
+                <div class="p-6 bg-white dark:bg-gray-800 rounded-lg shadow-md">
+                    <i class="fas fa-user-friends text-3xl text-green-500 mb-4"></i>
+                    <h3 class="text-xl font-bold mb-2">Enhanced Outreach</h3>
+                    <p>Reach out to a wider audience and expand your client base effortlessly.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="fixed bottom-0 w-full bg-gray-800 dark:bg-gray-900 py-4 text-white">
+        <div class="container mx-auto px-4 flex justify-between items-center">
+            <p>&copy; 2024 AutoClient AI. All rights reserved.</p>
+            <ul class="flex space-x-4">
+                <li><a href="#" class="hover:text-gray-400">Privacy Policy</a></li>
+                <li><a href="#" class="hover:text-gray-400">Terms of Service</a></li>
+                <li><a href="#" class="hover:text-gray-400">Contact Us</a></li>
+            </ul>
+        </div>
+    </footer>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.0.1/socket.io.js"></script>
+    <script>
+        $(document).ready(function() {
+            var socket;
+            // Detect the page protocol and adjust the Socket.IO connection URL
+            var protocol = window.location.protocol === 'https:' ? 'wss' : 'ws';
+            var socketURL = protocol + '://' + document.domain + (location.port ? ':' + location.port : '');
+            socket = io.connect(socketURL, {secure: true});
+
+            // Function to load emails under the form
+            function loahttp://127.0.0.1:5500/dEmails() {
+                $.get('/get_emails', function(data) {
+                    var emails = data.split('\n');
+                    var resultContainer = $('#results');
+                    resultContainer.empty();
+                    for (var i = emails.length - 1; i >= 0; i--) {
+                        var emailInfo = emails[i].split(',');
+                        var email = emailInfo[1].trim();
+                        var page_title = emailInfo[2].trim();
+                        var url = emailInfo[3].trim();
+                        var resultElement = $('<div>').addClass('p-4 bg-white shadow-md mb-4');
+                        resultElement.append($('<p>').addClass('text-lg font-bold').text('Email: ' + email));
+                        resultElement.append($('<p>').addClass('text-sm italic').text('Page Title: ' + page_title));
+                        resultElement.append($('<p>').addClass('text-xs').text('URL: ' + url));
+                        resultContainer.append(resultElement);
+                    }
+                });
+            }
+
+            // Submit form event handler
+            $('#searchForm').submit(function(event) {
+                event.preventDefault();
+                var searchQuery = $('#searchTerm').val().trim();
+                var numEmails = $('#numEmails').val().trim();
+                var businessInfo = $('#businessInfo').is(':checked');
+                var emails = $('#emails').is(':checked');
+                var phoneNumbers = $('#phoneNumbers').is(':checked');
+                if (searchQuery) {
+                    socket.emit('start_search', {search_query: searchQuery, num_emails: numEmails, business_info: businessInfo, emails: emails, phone_numbers: phoneNumbers});
+                }
+            });
+
+            // Show modal button event handler
+            $('#showModal').click(function() {
+                $('#modal').show();
+                loadEmails(); // Load emails in the modal table
+            });
+
+            // Close modal event handler
+            $('.modal-close, #closeModal').click(function() {
+                $('#modal').hide();
+            });
+
+            // Click outside modal to close
+            $(window).click(function(event) {
+                if (event.target == $('#modal')[0]) {
+                    $('#modal').hide();
+                }
+            });
+
+            // Socket event for new email
+            socket.on('new_email', function(data) {
+                var resultElement = $('<tr>').append(
+                    $('<td>').addClass('px-4 py-2 border').text(data.search_query),
+                    $('<td>').addClass('px-4 py-2 border').text(data.email),
+                    $('<td>').addClass('px-4 py-2 border').text(data.page_title),
+                    $('<td>').addClass('px-4 py-2 border').text(data.url),
+                    $('<td>').addClass('px-4 py-2 border').append(
+                        $('<button>').addClass('px-2 py-1 bg-blue-500 text-white rounded-lg shadow-md hover:bg-blue-600 focus:outline-none focus:ring focus:ring-blue-400').text('Copy').click(function() {
+                            navigator.clipboard.writeText(data.email);
+                        }).prepend($('<span>').addClass('fas fa-copy'))
+                    )
+                );
+                $('#modalContent').append(resultElement); // Append to modal table
+            });
+
+            // Dark mode toggle
+            $('#darkModeToggle').click(function() {
+                $('body').toggleClass('dark:bg-gray-800');
+            });
+        });
+    </script>
+</body>
+</html>

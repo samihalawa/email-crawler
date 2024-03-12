@@ -1,0 +1,22 @@
+[binaries]
+# Compilers
+c = ['/usr/bin/cc']
+cpp = ['/usr/bin/c++']
+fortran = ['/usr/local/bin/gfortran']
+objc = ['/usr/bin/cc']
+objcpp = ['/usr/bin/c++']
+
+# Other binaries
+ar = ['/usr/bin/ar']
+as = ['/usr/bin/as']
+ld = ['/usr/bin/ld']
+make = ['/usr/bin/make']
+nm = ['/usr/bin/nm']
+objdump = ['/usr/bin/objdump']
+ranlib = ['/usr/bin/ranlib']
+size = ['/usr/bin/size']
+strings = ['/usr/bin/strings']
+strip = ['/usr/bin/strip']
+
+[properties]
+
