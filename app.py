@@ -1,3 +1,5 @@
+
+
 from flask import Flask, render_template
 from flask_socketio import SocketIO, emit
 import threading
@@ -45,12 +47,12 @@ def crawl_website(url, search_query):
 
 
 def background_search(search_query):
-    for url in search(search_query, num_results=50):
+    for url in search(search_query, num_results=10):
         crawl_website(url, search_query)
 
 @app.route('/')
 def index():
-    return render_template('index5.html')
+    return render_template('index.html')
 
     @app.route('/get_emails')
     def get_emails():
@@ -69,4 +71,3 @@ def handle_start_search(json):
 if __name__ == '__main__':
     # Elimina la línea de socketio.run() y simplemente inicia la aplicación Flask
     app.run(host='0.0.0.0', debug=True, port=5050)
-

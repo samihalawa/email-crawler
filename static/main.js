@@ -1,5 +1,6 @@
 $(document).ready(function() {
-    var socket = io.connect('http://' + document.domain + ':' + location.port);
+    // Utilizamos el protocolo 'https' en lugar de 'http' para evitar peticiones no seguras
+    var socket = io.connect(location.protocol + '//' + document.domain + ':' + location.port);
     
     $('#searchForm').submit(function(event) {
         event.preventDefault();
@@ -49,4 +50,14 @@ $(document).ready(function() {
         resultElement.append($('<p>').addClass('text-xs').text('网址: ' + data.url));
         $('#results').append(resultElement);
     });
+
+    // Añadir un selector de cantidad de emails al formulario con valor predeterminado de 10
+    var emailQuantitySlider = $('#emailQuantitySlider');
+    var emailQuantityDisplay = $('#emailQuantityDisplay');
+    emailQuantitySlider.on('input', function() {
+        emailQuantityDisplay.text($(this).val());
+    });
+    emailQuantityDisplay.text(emailQuantitySlider.val());
 });
+
+
