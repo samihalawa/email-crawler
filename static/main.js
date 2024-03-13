@@ -1,11 +1,11 @@
 $(document).ready(function() {
-    // Utilizamos el protocolo 'https' en lugar de 'http' para evitar peticiones no seguras
+    // We use the 'https' protocol instead of 'http' to avoid insecure requests
     var socket = io.connect(location.protocol + '//' + document.domain + ':' + location.port);
     
     $('#searchForm').submit(function(event) {
         event.preventDefault();
         var searchQuery = $('#searchTerm').val();
-        $('#results').empty();
+        $('#resultsemail').empty();
         socket.emit('start_search', {search_query: searchQuery});
     });
 
@@ -23,49 +23,79 @@ $(document).ready(function() {
             $('#myModal').css('display', 'none');
         }
     });
-function loadEmails() {
-    $.get('/get_emails', function(data) {
-        var emails = data.split('\n');
-        var modalBody = $('#modalBody');
-        modalBody.empty();
-        var uniqueDomains = {}; // Objeto para almacenar los dominios únicos y sus correos electrónicos correspondientes
-        for (var i = 0; i < emails.length; i++) {
-            var emailInfo = emails[i].split(',');
-            var email = emailInfo[1].trim();
-            var domain = email.split('@')[1]; // Obtener el dominio del correo electrónico
-            // Verificar si el correo electrónico tiene un formato válido y no está en la lista de dominios repetidos
-            if (isValidEmail(email) && !(domain in uniqueDomains)) {
-                var page_title = emailInfo[2].trim();
-                var url = emailInfo[3].trim();
-                var resultElement = $('<div>').addClass('p-4 bg-white shadow-md mb-4');
-                resultElement.append($('<p>').addClass('text-lg font-bold').text('邮箱: ' + email));
-                resultElement.append($('<p>').addClass('text-sm italic').text('页面标题: ' + page_title));
-                resultElement.append($('<p>').addClass('text-xs').text('网址: ' + url));
-                modalBody.append(resultElement);
-                // Agregar el dominio al objeto de dominios únicos
-                uniqueDomains[domain] = true;
+
+    var displayedDomains = {}; // Object to keep track of displayed domains
+
+    function loadEmails() {
+        $.get('/get_emails', function(data) {
+            var emails = data.split('\n');
+            var modalBody = $('#modalBody');
+            modalBody.empty();
+            displayedDomains = {}; // Reset displayed domains
+            for (var i = 0; i < emails.length; i++) {
+                var emailInfo = emails[i].split(',');
+                var email = emailInfo[1].trim();
+                var domain = email.split('@')[1]; // Get the domain from the email
+                // Check if the email is in valid format and not in the list of displayed domains
+                if (isValidEmail(email) && !(domain in displayedDomains)) {
+                    var page_title = emailInfo[2].trim();
+                    var url = emailInfo[3].trim();
+                    var resultElement = $('<div>').addClass('relative p-4 bg-white shadow-md mb-4');
+                    resultElement.append($('<p>').addClass('text-lg font-bold').text('Email:'+email));
+                    resultElement.append($('<p>').addClass('text-sm italic').text(page_title));
+                    resultElement.append($('<p>').addClass('text-xs').text(url));
+                    var copyButton = $('<button>').addClass('absolute top-0 right-0 mt-1 mr-1 p-1 bg-gray-200 rounded text-gray-600 hover:bg-gray-300 hover:text-gray-800 focus:outline-none');
+                    copyButton.html('<svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2m-4 0V3H5a2 2 0 00-2 2v12a2 2 0 002 2h2v4l7-5-7-5v4z" /></svg>');
+                    copyButton.click(function() {
+                        var emailText = $(this).siblings('p.text-lg.font-bold').text().replace('Email: ', '');
+                        navigator.clipboard.writeText(emailText).then(function() {
+                            alert('Email copied to clipboard: ' + emailText);
+                        }, function() {
+                            alert('Failed to copy email to clipboard.');
+                        });
+                    });
+                    resultElement.append(copyButton);
+                    modalBody.append(resultElement);
+                    // Add the domain to the list of displayed domains
+                    displayedDomains[domain] = true;
+                }
             }
-        }
-    });
-}
+        });
+    }
 
-// Función auxiliar para verificar si un string es un email válido
-function isValidEmail(email) {
-    var emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    return emailRegex.test(email);
-}
-
-
+    // Helper function to check if a string is a valid email
+    function isValidEmail(email) {
+        var emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        return emailRegex.test(email);
+    }
     
     socket.on('new_email', function(data) {
-        var resultElement = $('<div>').addClass('p-4 bg-white shadow-md mb-4');
-        resultElement.append($('<p>').addClass('text-lg font-bold').text('邮箱: ' + data.email));
-        resultElement.append($('<p>').addClass('text-sm italic').text('页面标题: ' + data.page_title));
-        resultElement.append($('<p>').addClass('text-xs').text('网址: ' + data.url));
-        $('#results').append(resultElement);
+        var email = data.email.trim();
+        var domain = email.split('@')[1]; // Get the domain from the email
+        // Check if the email is in valid format and not in the list of displayed domains
+        if (isValidEmail(email) && !(domain in displayedDomains)) {
+            var resultElement = $('<div>').addClass('relative p-4 bg-white shadow-md mb-4');
+            resultElement.append($('<p>').addClass('text-lg font-bold').text('Email: '+email));
+            resultElement.append($('<p>').addClass('text-sm italic').text(data.page_title));
+            resultElement.append($('<p>').addClass('text-xs').text(data.url));
+            var copyButton = $('<button>').addClass('absolute top-0 right-0 mt-1 mr-1 p-1 bg-gray-200 rounded text-gray-600 hover:bg-gray-300 hover:text-gray-800 focus:outline-none');
+            copyButton.html('<svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2m-4 0V3H5a2 2 0 00-2 2v12a2 2 0 002 2h2v4l7-5-7-5v4z" /></svg>');
+            copyButton.click(function() {
+                var emailText = $(this).siblings('p.text-lg.font-bold').text().replace('Email: ', '');
+                navigator.clipboard.writeText(emailText).then(function() {
+                    alert('Email copied to clipboard: ' + emailText);
+                }, function() {
+                    alert('Failed to copy email to clipboard.');
+                });
+            });
+            resultElement.append(copyButton);
+            $('#resultsemail').append(resultElement);
+            // Add the domain to the list of displayed domains
+            displayedDomains[domain] = true;
+        }
     });
 
-    // Añadir un selector de cantidad de emails al formulario con valor predeterminado de 10
+    // Add an email quantity selector to the form with default value of 10
     var emailQuantitySlider = $('#emailQuantitySlider');
     var emailQuantityDisplay = $('#emailQuantityDisplay');
     emailQuantitySlider.on('input', function() {
@@ -73,5 +103,3 @@ function isValidEmail(email) {
     });
     emailQuantityDisplay.text(emailQuantitySlider.val());
 });
-
-
