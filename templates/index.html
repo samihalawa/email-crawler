@@ -54,14 +54,17 @@
             <li><i class="far fa-paper-plane mr-2"></i>Automatically send marketing emails.</li>
             <li><i class="far fa-address-card mr-2"></i>Distribute your CV to thousands.</li>
         </ul>
-        <form id="searchForm" class="mb-6">
+      <form id="searchForm" class="mb-6">
             <label for="searchTerm" class="sr-only">Search Term</label>
             <input type="text" id="searchTerm" placeholder="Enter Search Term" class="w-full px-4 py-2 mb-4 rounded-lg shadow-md focus:outline-none focus:ring focus:ring-blue-400">
             <label for="emailQuantitySlider" class="sr-only">Emails</label>
             <input type="range" id="emailQuantitySlider" name="emailQuantity" min="1" max="50" value="10" class="w-full mt-2">
             <span id="emailQuantityDisplay" class="ml-2">10</span><br><br>
+            <!-- Agrega un campo oculto para enviar el número de resultados -->
+            <input type="hidden" id="numResults" name="numResults" value="10">
             <button type="submit" class="block w-full px-4 py-2 bg-blue-500 text-white rounded-lg shadow-md hover:bg-blue-600 focus:outline-none focus:ring focus:ring-blue-400">Start Search</button>
         </form>
+        
         <button id="showModal" class="block w-full px-4 py-2 bg-yellow-500 text-white rounded-lg shadow-md hover:bg-yellow-600 focus:outline-none focus:ring focus:ring-yellow-400 mb-4">Show Results</button>
         <div id="resultsemail"></div>
         <div id="modal" class="fixed top-0 left-0 w-full h-full bg-gray-800 bg-opacity-50 hidden">
@@ -96,13 +99,16 @@
     var socketProtocol = window.location.protocol.startsWith('https') ? 'https://' : 'http://';
     var socket = io.connect(socketProtocol + document.domain + ':' + location.port);
     
-    $('#searchForm').submit(function(event) {
+ $('#searchForm').submit(function(event) {
         event.preventDefault();
         var searchQuery = $('#searchTerm').val();
+        var numResults = $('#emailQuantitySlider').val(); // Obtén el valor del deslizador
         $('#results').empty(); // Clear previous results
         $('#modalContent').empty(); // Clear previous modal content
-        socket.emit('start_search', {search_query: searchQuery});
+        // Envía el número de resultados junto con la consulta de búsqueda
+        socket.emit('start_search', {search_query: searchQuery, num_ults: numResults});
     });
+    
 
     socket.on('new_email', function(data) {
         var resultElement = $('<tr>');

@@ -1,13 +1,15 @@
 $(document).ready(function() {
     // We use the 'https' protocol instead of 'http' to avoid insecure requests
-    var socket = io.connect(location.protocol + '//' + document.domain + ':' + location.port);
+    var socketProtocol = (window.location.protocol.includes('https') ? 'wss' : 'ws') + '://';
+    var socket = io.connect(socketProtocol + document.domain + ':' + location.port, {secure: window.location.protocol.includes('https')});
     
-    $('#searchForm').submit(function(event) {
-        event.preventDefault();
-        var searchQuery = $('#searchTerm').val();
-        $('#resultsemail').empty();
-        socket.emit('start_search', {search_query: searchQuery});
-    });
+  $('#searchForm').submit(function(event) {
+    event.preventDefault();
+    var searchQuery = $('#searchTerm').val();
+    var numResults = $('#emailQuantitySlider').val(); // Captura el valor seleccionado en el slider
+    $('#resultsemail').empty();
+    socket.emit('start_search', {search_query: searchQuery, num_results: numResults});
+});
 
     $('#showResultsBtn').click(function() {
         $('#myModal').css('display', 'block');
