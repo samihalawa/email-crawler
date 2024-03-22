@@ -81,7 +81,7 @@
             <div id="results" class="mt-8"></div>
             <div id="modal" class="modal-overlay bg-gray-800 bg-opacity-50 hidden">
                 <div class="modal-content bg-white p-8 rounded-lg shadow-md max-w-lg overflow-auto">
-                    <h2 class="text-xl font-bold mb-4">Search Results</h2>
+                    <h2 class="text-xl font-bold mb-4">Download Email Excel</h2>
                     <table class="w-full">
                         <thead>
                             <tr>
@@ -108,10 +108,10 @@
     <!-- Footer -->
     <footer class="bg-gray-800 text-white py-4">
         <div class="container mx-auto px-4">
-            <p class="text-center">© 2023 AutoClient AI. All rights reserved. <a href="#">Terms</a> | <a href="#">Privacy</a></p>
+            <p class="text-center">© 2024 AutoClient AI. All rights reserved. <a href="#">Terms</a> | <a href="#">Privacy</a></p>
         </div>
     </footer>
-
+<script src="/static/main.js"></script>
     <!-- JavaScript Libraries -->
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.0.1/socket.io.js"></script>
@@ -159,9 +159,9 @@
             });
 
             // Close modal event handler
-            $('.modal-close, #closeModal').click(function() {
-                $('#modal').hide();
-            });
+             $('#closeModal').click(function() {
+        $('#modal').addClass('hidden'); // Usa addClass para ocultar el modal
+    });
 
             // Click outside modal to close
             $(window).click(function(event) {
