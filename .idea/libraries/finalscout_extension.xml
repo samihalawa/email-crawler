@@ -1,0 +1,9 @@
+<component name="libraryTable">
+  <library name="finalscout_extension">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/finalscout/finalscout_extension.zip!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>

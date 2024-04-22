@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>FinalScout</title>
+	<meta charset="utf-8"/>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <link rel="stylesheet" href="src/res/popup.css">
+</head>
+<body>
+	<section class="section nav-header border-bottom">
+    <a href="https://finalscout.com?utm_source=chrome_extension&utm_medium=chrome_extension&utm_campaign=extension&utm_content=popup" class="link-logo" style="margin-right: auto;" target="_blank">
+      <img src="src/res/logo-text.png" class="logo">
+    </a>
+    <a href="#" class="link-rate-extension pull-right" title="Rate this extension" target="_blank">
+      <i class="flaticon-rate"></i>
+    </a>
+  </section>
+  <section class="section main-content border-bottom">
+    <div class="group">
+      <div class="group-legend">
+        <i class="flaticon-scrape"></i>
+        <span>Scrape</span>
+      </div>
+      <div class="group-content">
+        <a class="menu-item" href="https://www.linkedin.com/sales/search/people" target="_blank">- Linkedin Sales Navigator</a>
+        <a class="menu-item" href="https://www.linkedin.com/search/results/people" target="_blank">- Regular Linkedin search</a>
+        <a class="menu-item" href="https://www.linkedin.com/search/results/content/" target="_blank">- LinkedIn posts search</a>
+        <a class="menu-item" href="https://www.linkedin.com/search/results/groups/" target="_blank">- LinkedIn group members</a>
+        <a class="menu-item" href="https://www.linkedin.com/search/results/events/" target="_blank">- LinkedIn event attendees</a>
+        <a class="menu-item" href="https://www.linkedin.com/talent/search" target="_blank">- LinkedIn Recruiter</a>
+        <a class="menu-item show-extra-menu" href="javascript:;" target="_blank">Display all scrape options</a>
+        <div class="extra-menu" style="display: none;">
+          <a class="menu-item task-source-bulk_professional_emails" href="https://finalscout.com/plugin/r/popup/create-scrape-task?source=bulk-professional-emails&utm_source=chrome_extension&utm_medium=chrome_extension&utm_campaign=extension&utm_content=popup" target="_blank">- Emails from a list of names and domains</a>
+          <a class="menu-item task-source-bulk_article_urls" href="https://finalscout.com/plugin/r/popup/create-scrape-task?source=bulk-article-urls&utm_source=chrome_extension&utm_medium=chrome_extension&utm_campaign=extension&utm_content=popup" target="_blank">- Emails from a list of news articles</a>
+          <a class="menu-item task-source-bulk_linkedin_urls" href="https://finalscout.com/plugin/r/popup/create-scrape-task?source=bulk-linkedin-urls&utm_source=chrome_extension&utm_medium=chrome_extension&utm_campaign=extension&utm_content=popup" target="_blank">- Emails from a list of LinkedIn URLs</a>
+          <a class="menu-item task-source-bulk_post_urls" href="https://finalscout.com/plugin/r/popup/create-scrape-task?source=bulk-post-urls&utm_source=chrome_extension&utm_medium=chrome_extension&utm_campaign=extension&utm_content=popup" target="_blank">- Emails from a list of LinkedIn Post URLs</a>
+          <a class="menu-item task-source-bulk_company_linkedin_urls" href="https://finalscout.com/plugin/r/popup/create-scrape-task?source=bulk-company-linkedin-urls&utm_source=chrome_extension&utm_medium=chrome_extension&utm_campaign=extension&utm_content=popup" target="_blank">- Employees from a list of LinkedIn company pages</a>
+          <a class="menu-item task-source-bulk_company_domains" href="https://finalscout.com/plugin/r/popup/create-scrape-task?source=bulk-company-domains&utm_source=chrome_extension&utm_medium=chrome_extension&utm_campaign=extension&utm_content=popup" target="_blank">- Employees from a list of company domains</a>
+        </div>
+      </div>
+    </div>
+    <!--
+    <div class="group">
+      <div class="group-legend">
+        <i class="flaticon-prospect"></i>
+        <span>Prospect</span>
+      </div>
+      <div class="group-content">
+        <div class="search-box prospect">
+          <input name="keywords" class="form-input" placeholder="Search for leads across the web"/>
+          <i class="flaticon-search"></i>
+        </div>
+      </div>
+    </div>
+    -->
+    <div class="group">
+      <div class="group-legend">
+        <i class="flaticon-find"></i>
+        <span>Find</span>
+      </div>
+      <div class="group-content">
+        <a class="menu-item link_find_professional" href="https://finalscout.com/app/find/professional?utm_source=chrome_extension&utm_medium=chrome_extension&utm_campaign=extension&utm_content=popup" target="_blank">- Professional email</a>
+        <a class="menu-item link_find_author" href="https://finalscout.com/app/find/author?utm_source=chrome_extension&utm_medium=chrome_extension&utm_campaign=extension&utm_content=popup" target="_blank">- Author email</a>
+        <a class="menu-item link_find_linkedin" href="https://finalscout.com/app/find/linkedin?utm_source=chrome_extension&utm_medium=chrome_extension&utm_campaign=extension&utm_content=popup" target="_blank">- Linkedin email</a>
+      </div>
+    </div>
+    <div class="group">
+      <div class="group-legend">
+        <i class="flaticon-contacts"></i>
+        <span>Contacts</span>
+      </div>
+      <div class="group-content">
+        <div class="search-box contacts">
+          <input name="keywords" class="form-input" placeholder="Search saved contacts"/>
+          <i class="flaticon-search"></i>
+        </div>
+      </div>
+    </div>
+  </section>
+  <section class="section credits-usage border-bottom">
+    <div class="group">
+      <div class="group-legend">
+        <i class="flaticon-usage"></i>
+        <span>Usage</span>
+        <a href="https://finalscout.com/app/account/credits/usage?utm_source=chrome_extension&utm_medium=chrome_extension&utm_campaign=extension&utm_content=popup" class="link_usage pull-right" target="_blank">View details</a>
+      </div>
+      <div class="group-content">
+        <div class="menu-item">
+          - Email credits: <span class="email-credits">loading ...</span>
+        </div>
+        <div class="menu-item">
+          - Prospect credits: <span class="prospect-credits">loading ...</span>
+        </div>
+        <div class="menu-item">
+          - Profile credits: <span class="scrape-credits">loading ...</span>
+        </div>
+      </div>
+    </div>
+  </section>
+  <section class="section">
+    <div class="slogan text-mute">
+      Find anyone's professional email address
+    </div>
+  </section>
+  <script type="text/javascript" src="src/jquery.js"></script>
+	<script type="text/javascript" src="src/popup.js"></script>
+</body>
+</html>
