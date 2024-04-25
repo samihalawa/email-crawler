@@ -50,7 +50,7 @@ def background_search(search_query, num_results):
 
 @app.route('/')
 def index():
-    return render_template('index.html')
+    return render_template('indexBuenoChino.html')
 
 @socketio.on('start_search')
 def handle_start_search(json):
