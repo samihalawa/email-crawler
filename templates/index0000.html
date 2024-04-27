@@ -1,0 +1,39 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AutoClient AI</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+   
+$('#searchForm').submit(function(event) {
+    event.preventDefault();
+    var searchQuery = $('#searchTerm').val();
+    var numResults = $('#emailQuantitySlider').val();
+    var dataType = [];
+    $("input[name='dataType']:checked").each(function() {
+        dataType.push($(this).val());
+    });
+    $('#resultsemail').empty();
+    socket.emit('start_search', {search_query: searchQuery, num_results: numResults, data_type: dataType.join('_')});
+});
+
+socket.on('new_contact', function(data) {
+    var resultElement = $('<div>').addClass('relative p-4 bg-white shadow-md mb-4');
+    resultElement.append($('<p>').addClass('text-lg font-bold').text('Contact: ' + data.contact));
+    resultElement.append($('<p>').addClass('text-sm italic').text(data.page_title));
+    resultElement.append($('<p>').addClass('text-xs').text (data.url));
+$(’#resultsemail’).append(resultElement);
+});
+
+var emailQuantitySlider = $('#emailQuantitySlider');
+var emailQuantityDisplay = $('#emailQuantityDisplay');
+emailQuantitySlider.on('input', function() {
+    emailQuantityDisplay.text($(this).val());
+});
+emailQuantityDisplay.text(emailQuantitySlider.val());
+
+});
+
+
+</body>
+</html>
