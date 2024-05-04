@@ -4,6 +4,9 @@
 <link rel="shortcut icon" href="/favicon.svg"><meta name="twitter:card" content="summary_large_image">
 <title>Autoclient.AI Collect Leads Bulk Campaigns</title><meta name="robots" content="index,follow"><meta name="description" content="The Ultimate Marketing Tool Collect emails from potential customers. Download data with one click. Automatically send marketing emails"><meta property="og:title" content="remoteStorage"><meta property="og:description" content="The Ultimate Marketing Tool Collect emails from potential customers. Download data with one click. Automatically send marketing emails"><meta property="og:url" content="https://remote.storage"><meta property="og:type" content="website"><meta property="og:image" content="https://remote.storage/og.png"><meta property="og:image:alt" content="remoteStorage"><meta name="next-head-count" content="13">
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/daisyui@4.10.5/dist/full.min.css" rel="stylesheet" type="text/css" />
+    <script src="https://cdn.tailwindcss.com"></script>
+    
     <!-- Add Font Awesome -->
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
     <style>/* Add Tailwind CSS classes for spinner animation */
@@ -30,7 +33,7 @@
 </style>
 </head>
 <body class="bg-gray-100 font-sans">
-<nav class="bg-white dark:bg-gray-900 shadow-lg">
+<!-- <nav class="bg-white dark:bg-gray-900 shadow-lg">
         <div class="container mx-auto px-4 py-3">
             <div class="flex justify-between items-center">
                 <a href="#" class="text-xl text-gray-800 dark:text-white"><b>AUTOCLIENT</b><span class="text-gray-500">.AI</span></a>
@@ -44,7 +47,37 @@
                 </ul>
             </div>
         </div>
-    </nav>
+    </nav> -->
+<div class="navbar bg-base-100">
+  <div class="navbar-start">
+    <div class="dropdown">
+      <div tabindex="0" role="button" class="btn btn-ghost btn-circle">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h7" /></svg>
+      </div>
+      <ul tabindex="0" class="menu menu-sm dropdown-content mt-3 z-[1] p-2 shadow bg-base-100 rounded-box w-52">
+        <li><a>Homepage</a></li>
+        <li><a>Portfolio</a></li>
+        <li><a>About</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="navbar-center">
+    <a class="btn btn-ghost text-xl"><b>AUTOCLIENT</b><span class="text-gray-500">.AI</a>
+  </div>
+  <div class="navbar-end">
+    <button class="btn btn-ghost btn-circle">
+      <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" /></svg>
+    </button>
+    <button class="btn btn-ghost btn-circle">
+      <div class="indicator">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" /></svg>
+        <span class="badge badge-xs badge-primary indicator-item"></span>
+      </div>
+    </button>
+  </div>
+</div>
+
+    
 <section class="bg-gray-200 dark:bg-gray-700 py-8">
         <div class="container mx-auto px-4 grid grid-cols-1 md:grid-cols-2 gap-6">
             <!-- Left half -->
@@ -171,7 +204,7 @@
     </section>
 
     <!-- Footer -->
-    <footer class="fixed bottom-0 w-full text-sm bg-gray-300 dark:bg-gray-500 px-3 text-gray-500">
+    <footer class="fixed bottom-0 w-full text-sm bg-gray-300 dark:bg-gray-500 px-3 py-1 text-gray-500">
         <div class="container mx-auto px-2  flex justify-between items-center">
             <p>&copy; 2024 AutoClient AI. 
             <ul class="flex space-x-4">

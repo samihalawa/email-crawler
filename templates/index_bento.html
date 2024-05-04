@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width">
+    <link rel="shortcut icon" href="/favicon.svg">
+    <meta name="twitter:card" content="summary_large_image">
+    <title>Autoclient.AI Collect Leads Bulk Campaigns</title>
+    <meta name="robots" content="index,follow">
+    <meta name="description" content="The Ultimate Marketing Tool Collect emails from potential customers. Download data with one click. Automatically send marketing emails">
+    <meta property="og:title" content="remoteStorage">
+    <meta property="og:description" content="The Ultimate Marketing Tool Collect emails from potential customers. Download data with one click. Automatically send marketing emails">
+    <meta property="og:url" content="https://remote.storage">
+    <meta property="og:type" content="website">
+    <meta property="og:image" content="https://remote.storage/og.png">
+    <meta property="og:image:alt" content="remoteStorage">
+    <meta name="next-head-count" content="13">
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/daisyui@2.15.0/dist/full.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.ampproject.org/v0/bento-accordion-1.0.css" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdn.ampproject.org/v0/bento-inline-gallery-1.0.css" crossorigin="anonymous">
+    <script type="module" async src="https://cdn.ampproject.org/bento.mjs"></script>
+    <script nomodule src="https://cdn.ampproject.org/bento.js"></script>
+    <script type="module" async src="https://cdn.ampproject.org/v0/bento-accordion-1.0.mjs"></script>
+    <script nomodule async src="https://cdn.ampproject.org/v0/bento-accordion-1.0.js"></script>
+    <script type="module" async src="https://cdn.ampproject.org/v0/bento-inline-gallery-1.0.mjs"></script>
+    <script nomodule async src="https://cdn.ampproject.org/v0/bento-inline-gallery-1.0.js"></script>
+    <script nomodule async src="https://cdn.ampproject.org/v0/bento-base-carousel-1.0.js"></script>
+
+    <style>
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        .spinner {
+            border: 4px solid rgba(0, 0, 0, 0.1);
+            border-left-color: #7986cb;
+            border-radius: 50%;
+            width: 24px;
+            height: 24px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto;
+        }
+
+        .result-element {
+            transition: opacity 0.5s ease-in;
+        }
+
+        bento-inline-gallery,
+        bento-inline-gallery-pagination,
+        bento-inline-gallery-thumbnails {
+            display: block;
+        }
+
+        bento-inline-gallery {
+            contain: layout;
+        }
+
+        bento-inline-gallery-pagination,
+        bento-inline-gallery-thumbnails {
+            overflow: hidden;
+            position: relative;
+        }
+
+        bento-accordion {
+            display: block;
+            contain: layout;
+        }
+
+        bento-accordion,
+        bento-accordion > section,
+        bento-accordion > section > :first-child {
+            margin: 0;
+        }
+
+        bento-accordion > section > * {
+            display: block;
+            float: none;
+            overflow: hidden;
+            /* clearfix */
+            position: relative;
+        }
+
+        @media (min-width: 1px) {
+            :where(bento-accordion > section) > :first-child {
+                cursor: pointer;
+                background-color: #efefef;
+                padding-right: 20px;
+                border: 1px solid #dfdfdf;
+            }
+        }
+
+        .i-amphtml-accordion-header {
+            cursor: pointer;
+            background-color: #efefef;
+            padding-right: 20px;
+            border: 1px solid #dfdfdf;
+        }
+
+        bento-accordion > section:not([expanded]) > :last-child:not(.i-amphtml-animating),
+        bento-accordion > section:not([expanded]) > :last-child:not(.i-amphtml-animating) * {
+            display: none !important;
+        }
+
+        .theme-toggle {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            z-index: 1000;
+        }
+    </style>
+</head>
+
+<body class="bg-gray-100 font-sans">
+<nav class="navbar shadow-lg bg-base-100">
+    <div class="flex-1">
+        <a class="btn btn-ghost normal-case text-xl">AUTOCLIENT<span class="text-gray-500">.AI</span></a>
+    </div>
+    <div class="flex-none">
+        <ul class="menu menu-horizontal px-1">
+            <li><a href="#">Home</a></li>
+            <li><a href="#">About</a></li>
+            <li><a href="#">Contact</a></li>
+        </ul>
+    </div>
+</nav>
+
+<section class="bg-gray-200 py-8">
+    <div class="container mx-auto px-4 grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div class="card bg-base-100 shadow-md">
+            <div class="card-body">
+                <h2 class="card-title">Email Search</h2>
+                <form id="searchForm" class="mb-6">
+                    <label for="searchTerm" class="sr-only">Search Term</label>
+                    <input type="text" id="searchTerm" placeholder="Enter Search Term"
+                           class="input input-bordered w-full">
+                    <label for="emailQuantitySlider" class="sr-only">Emails</label>
+                    <input type="range" id="emailQuantitySlider" name="emailQuantity" min="1" max="50" value="10"
+                           class="range w-full mt-2">
+                    <span id="emailQuantityDisplay" class="ml-2">10</span><br><br>
+                    <input type="hidden" id="numResults" name="numResults" value="10">
+                    <button type="submit"
+                            class="btn btn-primary w-full">Start Search</button>
+                </form>
+                <button id="showModal"
+                        class="btn btn-warning w-full">Show Results</button>
+            </div>
+        </div>
+
+        <div class="card bg-base-100 shadow-md overflow-scroll relative" style="height: 500px;">
+            <div class="card-body">
+                <h2 class="card-title">Potential Customer Leads</h2>
+                <p>AI Extractor of <strong class="text-blue-600">Potential Customer</strong> Contact (emails/phone/info)
+                    their emails & phones in 1 Click</p>
+                <p>Send Bulk Emails To All of them with our <strong class="text-blue-600">CustomAIL®</strong>
+                    Technology</p>
+                <div id="resultsemail"></div>
+                <div class="overflow-y-auto h-72 max-h-full">
+                    <div class="relative">
+                        <div class="grid grid-cols-1 gap-4 mt-6" id="modalContent"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="py-8">
+    <div class="container mx-auto px-4">
+        <h2 class="text-2xl font-bold text-center mb-6">Features</h2>
+        <bento-accordion id="features-accordion" animate expand-single-section>
+            <section>
+                <h3 class="text-xl font-bold">AI-Powered Email Generation</h3>
+                <div>
+                    Efficiently create personalized emails using advanced AI algorithms.
+                </div>
+            </section>
+            <section>
+                <h3 class="text-xl font-bold">Web Scraping</h3>
+                <div>
+                    Automatically extract relevant business information, emails, and phone numbers from web pages.
+                </div>
+            </section>
+            <section>
+                <h3 class="text-xl font-bold">Email AI Crawling</h3>
+                <div>
+                    Automatically extract emails from relevant web pages using AI technology.
+                </div>
+            </section>
+        </bento-accordion>
+    </div>
+</section>
+
+<section class="py-8 dark:bg-gray-700 bg-gray-200">
+    <div class="container mx-auto px-4">
+        <h2 class="text-2xl font-bold text-center mb-6">Benefits</h2>
+        <bento-inline-gallery style="height: 300px;">
+            <bento-inline-gallery-thumbnails loop></bento-inline-gallery-thumbnails>
+            <bento-base-carousel visible-count="2" loop>
+                <div class="flex items-center bg-base-100 p-4 rounded-lg shadow-md">
+                    <div class="w-12 h-12 flex-shrink-0 mr-4">
+                        <img src="https://source.unsplash.com/64x64/?chart" alt="Increased Efficiency"
+                             class="rounded-full w-full h-full object-cover">
+                    </div>
+                    <div class="flex-1">
+                        <p class="font-semibold">Increased Efficiency</p>
+                        <p class="text-gray-600 dark:text-gray-300">Save time and resources by automating the email
+                            marketing process.</p>
+                    </div>
+                </div>
+                <div class="flex items-center bg-base-100 p-4 rounded-lg shadow-md">
+                    <div class="w-12 h-12 flex-shrink-0 mr-4">
+                        <img src="https://source.unsplash.com/64x64/?network" alt="Enhanced Outreach"
+                             class="rounded-full w-full h-full object-cover">
+                    </div>
+                    <div class="flex-1">
+                        <p class="font-semibold">Enhanced Outreach</p>
+                        <p class="text-gray-600 dark:text-gray-300">Reach out to a wider audience and expand your client
+                            base effortlessly.</p>
+                    </div>
+                </div>
+            </bento-base-carousel>
+            <bento-inline-gallery-pagination></bento-inline-gallery-pagination>
+        </bento-inline-gallery>
+    </div>
+</section>
+
+<footer class="footer bg-base-300 text-base-content">
+    <div class="container mx-auto">
+        <p>&copy; 2024 AutoClient AI.</p>
+        <ul class="menu menu-horizontal space-x-4">
+            <li><a href="#" class="hover:text-gray-400">Privacy Policy</a></li>
+            <li><a href="#" class="hover:text-gray-400">Terms of Service</a></li>
+            <li><a href="#" class="hover:text-gray-400">Contact Us</a></li>
+        </ul>
+    </div>
+</footer>
+
+<!-- Floating theme toggle button -->
+<div class="theme-toggle">
+    <button class="btn btn-secondary" onclick="toggleTheme()">Toggle Theme</button>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.0.1/socket.io.js"></script>
+<script src="/static/main.js"></script>
+
+<script>
+    $(document).ready(function () {
+        var socketProtocol = window.location.protocol.startsWith('https') ? 'https://' : 'http://';
+        var socket = io.connect(socketProtocol + document.domain + ':' + location.port);
+
+        $('#searchForm').submit(function (event) {
+            event.preventDefault();
+            var searchQuery = $('#searchTerm').val();
+            var numResults = $('#emailQuantitySlider').val();
+            $('#results').empty();
+            $('#modalContent').empty();
+            socket.emit('start_search', {search_query: searchQuery, num_ults: numResults});
+        });
+
+        socket.on('new_email', function (data) {
+            var resultElement = $('<div class="card bg-base-100 shadow-md p-4 rounded-lg mb-4">');
+            resultElement.append($('<p>').text("Search Term: " + data.search_query));
+            resultElement.append($('<p>').text("Email: " + data.email));
+            resultElement.append($('<p>').text("Page Title: " + data.page_title));
+            resultElement.append($('<a>').attr('href', data.url).attr('target', '_blank').text(data.url));
+
+            var copyButton = $('<button>').addClass('btn btn-outline').text('Copy');
+            copyButton.click(function () {
+                var tempInput = $('<input>').val(data.email).appendTo('body').select();
+                document.execCommand('copy');
+                tempInput.remove();
+            });
+            copyButton.prepend($('<span>').addClass('text-xs').text('📋'));
+            resultElement.append(copyButton);
+            $('#modalContent').append(resultElement);
+        });
+
+        $('#showModal').click(function () {
+            $('#modal').show();
+        });
+
+        $('#closeModal').click(function () {
+            $('#modal').hide();
+        });
+
+        $('#downloadCSV').click(function () {
+            var csvContent = '';
+            $('#modalContent div').each(function (index, card) {
+                $(card).find('p').each(function (index, column) {
+                    csvContent += $(column).text() + ',';
+                });
+                csvContent += '\n';
+            });
+            var encodedUri = encodeURI('data:text/csv;charset=utf-8,' + csvContent);
+            var link = document.createElement('a');
+            link.setAttribute('href', encodedUri);
+            link.setAttribute('download', 'emails.csv');
+            document.body.appendChild(link);
+            link.click();
+        });
+    });
+
+    function toggleTheme() {
+        document.documentElement.classList.toggle('dark');
+    }
+</script>
+
+</body>
+</html>

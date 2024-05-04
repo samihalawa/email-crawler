@@ -86,7 +86,7 @@ def background_search(search_query, num_results):
 
 @app.route('/')
 def index():
-    return render_template('index.html')
+    return render_template('index_bento.html')
 
 @app.route('/api/readData', methods=['GET'])
 def read_data():
