@@ -1,0 +1,65 @@
+      <!DOCTYPE html>
+      <html lang="en">
+      <head>
+          <meta charset="UTF-8">
+          <meta name="viewport" content="width=device-width, initial-scale=1.0">
+          <title>AutoClient AI</title>
+          <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+          <style>
+              .spinner {
+                  border: 4px solid rgba(0, 0, 0, 0.1);
+                  border-left-color: #7986cb;
+                  border-radius: 50%;
+                  width: 24px;
+                  height: 24px;
+                  animation: spin 1s linear infinite;
+                  margin: 0 auto;
+              }
+              @keyframes spin {
+                  to { transform: rotate(360deg); }
+              }
+          </style>
+      </head>
+      <body class="bg-gray-100 font-sans">
+      <nav class="bg-white dark:bg-gray-900 shadow-lg">
+          <div class="container mx-auto px-4 py-3">
+              <a href="#" class="text-xl font-bold text-gray-800 dark:text-white">AutoClient AI</a>
+          </div>
+      </nav>
+      <div id="content" class="container mx-auto px-4 py-8">
+          <div class="max-w-md mx-auto">
+              <h4 class="text-3xl font-bold text-center mb-6">AutoClient<span>®</span> AI</h4>
+              <form id="searchForm" class="mb-6">
+                  <input type="text" id="searchTerm" placeholder="Enter Search Term" class="w-full px-4 py-2 mb-4 rounded-lg shadow-md focus:outline-none">
+                  <input type="range" id="emailQuantitySlider" name="emailQuantity" min="1" max="50" value="10" class="w-full">
+                  <div>
+                      <label><input type="checkbox" id="dataTypeEmails" name="dataType" value="emails" checked> Emails</label>
+                      <label><input type="checkbox" id="dataTypeWeixin" name="dataType" value="weixin"> Chinese Weixin</label>
+                      <label><input type="checkbox" id="dataTypeEmailsPhones" name="dataType" value="emails_phones"> Emails and Phones</label>
+                  </div>
+                  <button type="submit" class="w-full px-4 py-2 bg-blue-500 text-white rounded-lg shadow-md hover:bg-blue-600">Start Search</button>
+              </form>
+          </div>
+      </div>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.0.1/socket.io.js"></script>
+      <script>
+      document.addEventListener('DOMContentLoaded', function () {
+          var socket = io.connect(window.location.origin);
+          var form = document.getElementById('searchForm');
+          form.onsubmit = function(e) {
+              e.preventDefault();
+              var searchTerm = document.getElementById('searchTerm').value;
+              var quantity = document.getElementById('emailQuantitySlider').value;
+              var dataTypes = [];
+              document.querySelectorAll("input[name='dataType']:checked").forEach((elem) => {
+                  dataTypes.push(elem.value);
+              });
+              socket.emit('start_search', { search_query: searchTerm, num_results: quantity, data_type: dataTypes.join('_') });
+          };
+          socket.on('new_contact', function(data) {
+              alert('New contact found: ' + data.contact);
+          });
+      });
+      </script>
+      </body>
+      </html>

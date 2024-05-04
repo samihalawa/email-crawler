@@ -50,7 +50,7 @@ def background_search(search_query):
 
 @app.route('/')
 def index():
-    return render_template('index5.html')
+    return render_template('indexBuenoChino.html')
 
     @app.route('/get_emails')
     def get_emails():

@@ -1,65 +1,159 @@
-      <!DOCTYPE html>
-      <html lang="en">
-      <head>
-          <meta charset="UTF-8">
-          <meta name="viewport" content="width=device-width, initial-scale=1.0">
-          <title>AutoClient AI</title>
-          <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
-          <style>
-              .spinner {
-                  border: 4px solid rgba(0, 0, 0, 0.1);
-                  border-left-color: #7986cb;
-                  border-radius: 50%;
-                  width: 24px;
-                  height: 24px;
-                  animation: spin 1s linear infinite;
-                  margin: 0 auto;
-              }
-              @keyframes spin {
-                  to { transform: rotate(360deg); }
-              }
-          </style>
-      </head>
-      <body class="bg-gray-100 font-sans">
-      <nav class="bg-white dark:bg-gray-900 shadow-lg">
-          <div class="container mx-auto px-4 py-3">
-              <a href="#" class="text-xl font-bold text-gray-800 dark:text-white">AutoClient AI</a>
-          </div>
-      </nav>
-      <div id="content" class="container mx-auto px-4 py-8">
-          <div class="max-w-md mx-auto">
-              <h4 class="text-3xl font-bold text-center mb-6">AutoClient<span>®</span> AI</h4>
-              <form id="searchForm" class="mb-6">
-                  <input type="text" id="searchTerm" placeholder="Enter Search Term" class="w-full px-4 py-2 mb-4 rounded-lg shadow-md focus:outline-none">
-                  <input type="range" id="emailQuantitySlider" name="emailQuantity" min="1" max="50" value="10" class="w-full">
-                  <div>
-                      <label><input type="checkbox" id="dataTypeEmails" name="dataType" value="emails" checked> Emails</label>
-                      <label><input type="checkbox" id="dataTypeWeixin" name="dataType" value="weixin"> Chinese Weixin</label>
-                      <label><input type="checkbox" id="dataTypeEmailsPhones" name="dataType" value="emails_phones"> Emails and Phones</label>
-                  </div>
-                  <button type="submit" class="w-full px-4 py-2 bg-blue-500 text-white rounded-lg shadow-md hover:bg-blue-600">Start Search</button>
-              </form>
-          </div>
-      </div>
-      <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.0.1/socket.io.js"></script>
-      <script>
-      document.addEventListener('DOMContentLoaded', function () {
-          var socket = io.connect(window.location.origin);
-          var form = document.getElementById('searchForm');
-          form.onsubmit = function(e) {
-              e.preventDefault();
-              var searchTerm = document.getElementById('searchTerm').value;
-              var quantity = document.getElementById('emailQuantitySlider').value;
-              var dataTypes = [];
-              document.querySelectorAll("input[name='dataType']:checked").forEach((elem) => {
-                  dataTypes.push(elem.value);
-              });
-              socket.emit('start_search', { search_query: searchTerm, num_results: quantity, data_type: dataTypes.join('_') });
-          };
-          socket.on('new_contact', function(data) {
-              alert('New contact found: ' + data.contact);
-          });
-      });
-      </script>
-      </body>
-      </html>
+<html lang="en"><head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AutoClient AI</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <!-- Add Font Awesome -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+    <style>/* Add Tailwind CSS classes for spinner animation */
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.spinner {
+  border: 4px solid rgba(0, 0, 0, 0.1);
+  border-left-color: #7986cb;
+  border-radius: 50%;
+  width: 24px;
+  height: 24px;
+  animation: spin 1s linear infinite;
+  margin: 0 auto;
+}
+
+/* Transition for result elements */
+.result-element {
+  transition: opacity 0.5s ease-in;
+}
+</style>
+</head>
+<body class="bg-gray-100 font-sans">
+<nav class="bg-white dark:bg-gray-900 shadow-lg">
+        <div class="container mx-auto px-4 py-3">
+            <div class="flex justify-between items-center">
+                <a href="#" class="text-xl font-bold text-gray-800 dark:text-white">AutoClient AI</a>
+                <button class="md:hidden text-gray-800 dark:text-white focus:outline-none">
+                    <i class="fas fa-bars"></i>
+                </button>
+                <ul class="hidden md:flex space-x-4">
+                    <li><a href="#" class="text-gray-800 dark:text-white hover:text-gray-600">Home</a></li>
+                    <li><a href="#" class="text-gray-800 dark:text-white hover:text-gray-600">About</a></li>
+                    <li><a href="#" class="text-gray-800 dark:text-white hover:text-gray-600">Contact</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+<div id="content" class="container mx-auto px-4 py-8">
+    <div class="max-w-md mx-auto">
+        <h4 class="text-3xl font-bold text-center mb-6">AutoClient<span>®</span> AI</h4><h4>
+        </h4><h2 class="text-lg font-semibold text-center mb-4">The Ultimate Marketing Tool</h2>
+        <ul class="list-disc list-inside mb-4">
+            <li><i class="far fa-envelope mr-2"></i>Collect emails from potential customers.</li>
+            <li><i class="far fa-download mr-2"></i>Download data with one click.</li>
+            <li><i class="far fa-paper-plane mr-2"></i>Automatically send marketing emails.</li>
+            <li><i class="far fa-address-card mr-2"></i>Distribute your CV to thousands.</li>
+        </ul>
+      <form id="searchForm" class="mb-6">
+            <label for="searchTerm" class="sr-only">Search Term</label>
+            <input type="text" id="searchTerm" placeholder="Enter Search Term" class="w-full px-4 py-2 mb-4 rounded-lg shadow-md focus:outline-none focus:ring focus:ring-blue-400">
+            <label for="emailQuantitySlider" class="sr-only">Emails</label>
+            <input type="range" id="emailQuantitySlider" name="emailQuantity" min="1" max="50" value="10" class="w-full mt-2">
+            <span id="emailQuantityDisplay" class="ml-2">10</span><br><br>
+            <!-- Agrega un campo oculto para enviar el número de resultados -->
+            <input type="hidden" id="numResults" name="numResults" value="10">
+            <button type="submit" class="block w-full px-4 py-2 bg-blue-500 text-white rounded-lg shadow-md hover:bg-blue-600 focus:outline-none focus:ring focus:ring-blue-400">Start Search</button>
+        </form>
+        
+        <button id="showModal" class="block w-full px-4 py-2 bg-yellow-500 text-white rounded-lg shadow-md hover:bg-yellow-600 focus:outline-none focus:ring focus:ring-yellow-400 mb-4">Show Results</button>
+        <div id="resultsemail"></div>
+        <div id="modal" class="fixed top-0 left-0 w-full h-full bg-gray-800 bg-opacity-50 hidden">
+            <div style="max-height:90%" class="absolute  top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-white p-8 rounded-lg shadow-md max-w-lg overflow-scroll">
+                <h2 class="text-xl font-bold mb-4">Search Results</h2>
+                <table class="w-full">
+                    <thead>
+                        <tr>
+                            <th class="px-4 py-2 border">Search Term</th>
+                            <th class="px-4 py-2 border">Email</th>
+                            <th class="px-4 py-2 border">Page Title</th>
+                            <th class="px-4 py-2 border">URL</th>
+                            <th class="px-4 py-2 border">Copy</th>
+                        </tr>
+                    </thead>
+                    <tbody id="modalContent"></tbody>
+                </table>
+                <div class="flex justify-end mt-4">
+                    <button id="downloadCSV" class="px-4 py-2 bg-blue-500 text-white rounded-lg shadow-md hover:bg-blue-600 focus:outline-none focus:ring focus:ring-blue-400 mr-4">Download Emails</button>
+                    <button id="closeModal" class="px-4 py-2 bg-blue-500 text-white rounded-lg shadow-md hover:bg-blue-600 focus:outline-none focus:ring focus:ring-blue-400">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.0.1/socket.io.js"></script>
+    <script src="/static/main.js"></script>
+    <script>
+       $(document).ready(function() {
+    var socketProtocol = window.location.protocol.startsWith('https') ? 'https://' : 'http://';
+    var socket = io.connect(socketProtocol + document.domain + ':' + location.port);
+    
+ $('#searchForm').submit(function(event) {
+        event.preventDefault();
+        var searchQuery = $('#searchTerm').val();
+        var numResults = $('#emailQuantitySlider').val(); // Obtén el valor del deslizador
+        $('#results').empty(); // Clear previous results
+        $('#modalContent').empty(); // Clear previous modal content
+        // Envía el número de resultados junto con la consulta de búsqueda
+        socket.emit('start_search', {search_query: searchQuery, num_ults: numResults});
+    });
+    
+
+    socket.on('new_email', function(data) {
+        var resultElement = $('<tr>');
+        resultElement.append($('<td>').addClass('px-4 py-2 border').text(data.search_query));
+        resultElement.append($('<td>').addClass('px-4 py-2 border').text(data.email));
+        resultElement.append($('<td>').addClass('px-4 py-2 border').text(data.page_title));
+        resultElement.append($('<td>').addClass('px-4 py-2 border').text(data.url));
+        var copyButton = $('<button>').addClass('px-2 py-1 bg-blue-500 text-white rounded-lg shadow-md hover:bg-blue-600 focus:outline-none focus:ring focus:ring-blue-400').text('Copy');
+        copyButton.click(function() {
+            var tempInput = $('<input>').val(data.email).appendTo('body').select();
+            document.execCommand('copy');
+            tempInput.remove();
+        });
+        copyButton.prepend($('<span>').addClass('text-xs').text('📋')); // Small copy icon
+        resultElement.append($('<td>').addClass('px-4 py-2 border').append(copyButton));
+        $('#modalContent').append(resultElement);
+    });
+
+    $('#showModal').click(function() {
+        $('#modal').show();
+    });
+
+    $('#closeModal').click(function() {
+        $('#modal').hide();
+    });
+
+    $('#downloadCSV').click(function() {
+        var csvContent = '';
+        $('#modalContent tr').each(function(index, row) {
+            $(row).find('td').each(function(index, column) {
+                csvContent += $(column).text() + ',';
+            });
+            csvContent += '\n';
+        });
+        var encodedUri = encodeURI('data:text/csv;charset=utf-8,' + csvContent);
+        var link = document.createElement('a');
+        link.setAttribute('href', encodedUri);
+        link.setAttribute('download', 'emails.csv');
+        document.body.appendChild(link);
+        link.click();
+    });
+});
+
+    </script>
+
+
+                   
+                </body></html>

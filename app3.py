@@ -63,7 +63,7 @@ class ContactCrawler:
 
 @app.route('/')
 def index():
-    return render_template('index0000.html')
+    return render_template('indexBuenoChino.html')
 
 @socketio.on('start_search')
 def handle_start_search(json):
