@@ -8,6 +8,6 @@ services:
   region: oregon
   buildCommand: pip install -r requirements.txt
   startCommand: python3 app.py
-  autoDeploy: false
+  autoDeploy: true
   pullRequestPreviewsEnabled: true
 version: "1"

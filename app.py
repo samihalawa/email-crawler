@@ -1,5 +1,4 @@
-
-from flask import Flask, render_template
+from flask import Flask, render_template, jsonify
 from flask_socketio import SocketIO, emit
 import threading
 import requests
@@ -52,6 +51,30 @@ def background_search(search_query, num_results):
 @app.route('/')
 def index():
     return render_template('index.html')
+
+@app.route('/api/readData', methods=['GET'])
+def read_data():
+    data = []
+    try:
+        with open('emails.csv', newline='', encoding='utf-8') as csvfile:
+            reader = csv.DictReader(csvfile)
+            for row in reader:
+                data.append(row)
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500  # Provide error message if something goes wrong
+    return jsonify(data)
+
+
+@app.route('/csv-table')
+def csv_table():
+    return render_template('csv-table.html')
+
+    
+    @app.route('/table')
+    def csv_table():
+        return render_template('table.html')
+    
+
 
 @socketio.on('start_search')
 def handle_start_search(json):
