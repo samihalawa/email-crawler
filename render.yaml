@@ -1,0 +1,13 @@
+# Exported from Render on 2024-05-04T16:46:02Z
+services:
+- type: web
+  name: autoclient
+  runtime: python
+  repo: https://github.com/samihalawa/email-crawler
+  plan: free
+  region: oregon
+  buildCommand: pip install -r requirements.txt
+  startCommand: python3 app.py
+  autoDeploy: false
+  pullRequestPreviewsEnabled: true
+version: "1"
