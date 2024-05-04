@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Saved Emails Table</title>
+
+    <!-- Include Tabulator CSS -->
+    <link href="https://unpkg.com/tabulator-tables@4.9.3/dist/css/tabulator.min.css" rel="stylesheet">
+
+    <!-- Include Tabulator JS -->
+    <script src="https://unpkg.com/tabulator-tables@4.9.3/dist/js/tabulator.min.js"></script>
+</head>
+<body>
+
+<div id="emails-table"></div>
+
+<script>
+    // Load data into Tabulator
+    var data = {{ data|tojson }};
+    var table = new Tabulator("#emails-table", {
+        data: data,
+        layout: "fitColumns",
+        columns: [
+            { title: "Name", field: 0, headerFilter: true },
+            { title: "Email", field: 1, headerFilter: true },
+            // Add more columns as needed
+        ],
+        initialSort: [
+            { column: "Name", dir: "asc" }
+        ]
+    });
+</script>
+
+</body>
+</html>

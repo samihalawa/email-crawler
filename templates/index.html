@@ -1,60 +1,65 @@
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AutoClient AI</title>
-    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
-    <style>
-        @keyframes spin {
-            to { transform: rotate(360deg); }
-        }
-        .spinner {
-            border: 4px solid rgba(0, 0, 0, 0.1);
-            border-left-color: #7986cb;
-            border-radius: 50%;
-            width: 24px;
-            height: 24px;
-            animation: spin 1s linear infinite;
-            margin: 0 auto;
-        }
-        .result-element {
-            transition: opacity 0.5s ease-in; }
-       
-</head>
-<body class="bg-gray-100 font-sans">
-<nav class="bg-white dark:bg-gray-900 shadow-lg">
-    <div class="container mx-auto px-4 py-3">
-        <div class="flex justify-between items-center">
-            <a href="#" class="text-xl font-bold text-gray-800 dark:text-white">AutoClient AI</a>
-        </div>
-    </div>
-</nav>
-<div id="content" class="container mx-auto px-4 py-8">
-    <div class="max-w-md mx-auto">
-        <h4 class="text-3xl font-bold text-center mb-6">AutoClient<span>®</span> AI</h4>
-        <h2 class="text-lg font-semibold text-center mb-4">The Ultimate Marketing Tool</h2>
-        <ul class="list-disc list-inside mb-4">
-            <li><i class="far fa-envelope mr-2"></i>Collect emails from potential customers.</li>
-            <li><i class="far fa-download mr-2"></i>Download data with one click.</li>
-            <li><i class="far fa-paper-plane mr-2"></i>Automatically send marketing emails.</li>
-            <li><i class="far fa-address-card mr-2"></i>Distribute your CV to thousands.</li>
-        </ul>
-        <form id="searchForm" class="mb-6">
-            <input type="text" id="searchTerm" placeholder="Enter Search Term" class="w-full px-4 py-2 mb-4 rounded-lg shadow-md focus:outline-none focus:ring focus:ring-blue-400">
-            <input type="range" id="emailQuantitySlider" name="emailQuantity" min="1" max="50" value="10" class="w-full mt-2">
-            <span id="emailQuantityDisplay" class="ml-2">10</span><br><br>
-            <label><input type="checkbox" id="dataTypeEmails" name="dataType" value="emails" checked> Emails</label>
-            <label><input type="checkbox" id="dataTypeWeixin" name="dataType" value="weixin"> Chinese Weixin</label>
-            <label><input type="checkbox" id="dataTypeEmailsPhones" name="dataType" value="emails_phones"> Emails and Phones</label>
-            <button type="submit" class="block w-full px-4 py-2 bg-blue-500 text-white rounded-lg shadow-md hover:bg-blue-600 focus:outline-none focus:ring focus:ring-blue-400">Start Search</button>
-        </form>
-    </div>
-</div>
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.0.1/socket.io.js"></script>
-<script src="/static/main.js"></script>
-</body>
-</html>
-
-
+      <!DOCTYPE html>
+      <html lang="en">
+      <head>
+          <meta charset="UTF-8">
+          <meta name="viewport" content="width=device-width, initial-scale=1.0">
+          <title>AutoClient AI</title>
+          <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+          <style>
+              .spinner {
+                  border: 4px solid rgba(0, 0, 0, 0.1);
+                  border-left-color: #7986cb;
+                  border-radius: 50%;
+                  width: 24px;
+                  height: 24px;
+                  animation: spin 1s linear infinite;
+                  margin: 0 auto;
+              }
+              @keyframes spin {
+                  to { transform: rotate(360deg); }
+              }
+          </style>
+      </head>
+      <body class="bg-gray-100 font-sans">
+      <nav class="bg-white dark:bg-gray-900 shadow-lg">
+          <div class="container mx-auto px-4 py-3">
+              <a href="#" class="text-xl font-bold text-gray-800 dark:text-white">AutoClient AI</a>
+          </div>
+      </nav>
+      <div id="content" class="container mx-auto px-4 py-8">
+          <div class="max-w-md mx-auto">
+              <h4 class="text-3xl font-bold text-center mb-6">AutoClient<span>®</span> AI</h4>
+              <form id="searchForm" class="mb-6">
+                  <input type="text" id="searchTerm" placeholder="Enter Search Term" class="w-full px-4 py-2 mb-4 rounded-lg shadow-md focus:outline-none">
+                  <input type="range" id="emailQuantitySlider" name="emailQuantity" min="1" max="50" value="10" class="w-full">
+                  <div>
+                      <label><input type="checkbox" id="dataTypeEmails" name="dataType" value="emails" checked> Emails</label>
+                      <label><input type="checkbox" id="dataTypeWeixin" name="dataType" value="weixin"> Chinese Weixin</label>
+                      <label><input type="checkbox" id="dataTypeEmailsPhones" name="dataType" value="emails_phones"> Emails and Phones</label>
+                  </div>
+                  <button type="submit" class="w-full px-4 py-2 bg-blue-500 text-white rounded-lg shadow-md hover:bg-blue-600">Start Search</button>
+              </form>
+          </div>
+      </div>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.0.1/socket.io.js"></script>
+      <script>
+      document.addEventListener('DOMContentLoaded', function () {
+          var socket = io.connect(window.location.origin);
+          var form = document.getElementById('searchForm');
+          form.onsubmit = function(e) {
+              e.preventDefault();
+              var searchTerm = document.getElementById('searchTerm').value;
+              var quantity = document.getElementById('emailQuantitySlider').value;
+              var dataTypes = [];
+              document.querySelectorAll("input[name='dataType']:checked").forEach((elem) => {
+                  dataTypes.push(elem.value);
+              });
+              socket.emit('start_search', { search_query: searchTerm, num_results: quantity, data_type: dataTypes.join('_') });
+          };
+          socket.on('new_contact', function(data) {
+              alert('New contact found: ' + data.contact);
+          });
+      });
+      </script>
+      </body>
+      </html>

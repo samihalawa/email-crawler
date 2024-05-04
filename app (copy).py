@@ -52,19 +52,6 @@ def background_search(search_query, num_results):
 def index():
     return render_template('index.html')
 
-
-@app.route('/saved-emails')
-def saved_emails():
-    data = []
-
-    # Read the CSV file and parse its content
-    with open('emails.csv', 'r') as file:
-        csv_reader = csv.reader(file)
-        for row in csv_reader:
-            data.append(row)
-    return render_template('saved_emails.html', data=data)
-
-
 @socketio.on('start_search')
 def handle_start_search(json):
     global seen_emails, domains_seen

@@ -8,7 +8,8 @@ The crawler is designed to assist in gathering email contacts related to various
 - **Dynamic Search**: Users can input search terms directly in the terminal, making the process flexible and user-friendly.
 - **Continuous Operation**: The script runs in a loop, allowing for multiple searches until the user decides to exit.
 - **Duplicate Avoidance**: The script prevents the duplication of email addresses by checking against the existing list before appending.
-- **Graceful Termination**: Users can exit the program at any time by typing 'exit' or using the `Ctrl + C` keyboard interrupt.
+- **Graceful Termination**: Users can exit the program at any time by typing 'exit' or using the `Ctrl + C` keyboard interrupt. no
+  
 
 ## Installation
 
