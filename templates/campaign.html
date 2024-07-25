@@ -1,0 +1,140 @@
+            <div class="mb-4">
+                <label for="emailTemplate" class="block text-gray-700">Email Template:</label>
+                <textarea id="emailTemplate" class="w-full px-4 py-2 border rounded"></textarea>
+                <small>Use placeholders like &lt;name&gt;, &lt;company&gt;, &lt;url&gt;</small>
+            </div>
+            <button type="submit" class="px-4 py-2 bg-blue-500 text-white rounded">Save Campaign</button>
+        </form>
+        <div id="campaignStatus" class="mt-4"></div>
+        <div id="campaignList" class="mt-8">
+            <!-- Campaigns will be listed here -->
+        </div>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="/static/main.js"></script>
+    <script>
+        $(document).ready(function () {
+            const socket = io();
+            
+            // Function to fetch and display search queries
+            const fetchSearchQueries = () => {
+                $.get('/api/search_queries', function(data) {
+                    const searchQuerySelect = $('#searchQuery');
+                    searchQuerySelect.empty();
+                    data.data.forEach(query => {
+                        searchQuerySelect.append(`<option value="${query.query}">${query.query} (${query.total_contacts})</option>`);
+                    });
+                });
+            };
+
+            // Function to fetch and display campaigns
+            const fetchCampaigns = () => {
+                $.get('/api/campaigns', function(data) {
+                    const campaignList = $('#campaignList');
+                    campaignList.empty();
+                    data.data.forEach(campaign => {
+                        campaignList.append(`
+                            <div class="border p-4 mb-4">
+                                <p><strong>Campaign Name:</strong> ${campaign.name}</p>
+                                <p><strong>Search Query:</strong> ${campaign.search_query}</p>
+                                <p><strong>Email Template:</strong> ${campaign.email_template}</p>
+                                <p><strong>Created At:</strong> ${campaign.created_at}</p>
+                                <button class="px-4 py-2 bg-green-500 text-white rounded editCampaign" data-id="${campaign.id}">Edit</button>
+                                <button class="px-4 py-2 bg-red-500 text-white rounded deleteCampaign" data-id="${campaign.id}">Delete</button>
+                                <button class="px-4 py-2 bg-blue-500 text-white rounded sendCampaign" data-id="${campaign.id}">Send</button>
+                            </div>
+                        `);
+                    });
+                });
+            };
+
+            // Fetch search queries and campaigns on page load
+            fetchSearchQueries();
+            fetchCampaigns();
+
+            // Handle form submission to create/update campaigns
+            $('#campaignForm').submit(function (event) {
+                event.preventDefault();
+                const campaignId = $(this).data('id');
+                const campaignName = $('#campaignName').val();
+                const searchQuery = $('#searchQuery').val();
+                const emailTemplate = $('#emailTemplate').val();
+
+                if (campaignId) {
+                    // Update existing campaign
+                    $.ajax({
+                        url: '/api/campaigns',
+                        type: 'PUT',
+                        contentType: 'application/json',
+                        data: JSON.stringify({
+                            id: campaignId,
+                            name: campaignName,
+                            search_query: searchQuery,
+                            email_template: emailTemplate
+                        }),
+                        success: function () {
+                            $('#campaignStatus').text('Campaign updated successfully');
+                            fetchCampaigns();
+                            $('#campaignForm').removeData('id');  // Reset form state
+                        }
+                    });
+                } else {
+                    // Create new campaign
+                    $.ajax({
+                        url: '/api/campaigns',
+                        type: 'POST',
+                        contentType: 'application/json',
+                        data: JSON.stringify({
+                            name: campaignName,
+                            search_query: searchQuery,
+                            email_template: emailTemplate
+                        }),
+                        success: function () {
+                            $('#campaignStatus').text('Campaign created successfully');
+                            fetchCampaigns();
+                        }
+                    });
+                }
+            });
+
+            // Handle edit button click
+            $(document).on('click', '.editCampaign', function () {
+                const campaignId = $(this).data('id');
+                $.get(`/api/campaigns?id=${campaignId}`, function (data) {
+                    const campaign = data.data[0];
+                    $('#campaignName').val(campaign.name);
+                    $('#searchQuery').val(campaign.search_query);
+                    $('#emailTemplate').val(campaign.email_template);
+                    $('#campaignForm').data('id', campaign.id);  // Set form state for editing
+                });
+            });
+
+            // Handle delete button click
+            $(document).on('click', '.deleteCampaign', function () {
+                const campaignId = $(this).data('id');
+                $.ajax({
+                    url: `/api/campaigns?id=${campaignId}`,
+                    type: 'DELETE',
+                    success: function () {
+                        $('#campaignStatus').text('Campaign deleted successfully');
+                        fetchCampaigns();
+                    }
+                });
+            });
+
+            // Handle send button click
+            $(document).on('click', '.sendCampaign', function () {
+                const campaignId = $(this).data('id');
+                socket.emit('send_campaign', { campaign_id: campaignId });
+                $('#campaignStatus').text('Sending campaign emails...');
+            });
+
+            // Display email sent status
+            socket.on('email_sent', function (data) {
+                $('#campaignStatus').append(`<p>Email to ${data.email} - ${data.status}</p>`);
+            });
+        });
+    </script>
+</body>
+</html>

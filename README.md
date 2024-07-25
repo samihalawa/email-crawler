@@ -1,22 +1,82 @@
-# Email Crawler
+# AutoClient AI
 
-A Python-based tool for searching specific terms on Google and scraping email addresses from the resulting web pages. 
-The crawler is designed to assist in gathering email contacts related to various industries or keywords, enhancing outreach and marketing efforts.
+AutoClient AI is a robust solution for web scraping and email marketing. It collects email addresses from websites, stores them in a PostgreSQL database, and facilitates the creation and management of email campaigns using SMTP.
 
-## Features
+## Table of Contents
+1. [Setup Instructions](#setup-instructions)
+2. [Folder Structure](#folder-structure)
+3. [Environment Variables](#environment-variables)
+4. [Dependencies](#dependencies)
+5. [Database Schema](#database-schema)
+6. [Application Overview](#application-overview)
+7. [Frontend](#frontend)
 
-- **Dynamic Search**: Users can input search terms directly in the terminal, making the process flexible and user-friendly.
-- **Continuous Operation**: The script runs in a loop, allowing for multiple searches until the user decides to exit.
-- **Duplicate Avoidance**: The script prevents the duplication of email addresses by checking against the existing list before appending.
-- **Graceful Termination**: Users can exit the program at any time by typing 'exit' or using the `Ctrl + C` keyboard interrupt. no
-  
+## Setup Instructions
+1. **Clone the Repository:**
+    ```sh
+    git clone https://github.com/your_repo/email-crawler.git
+    cd email-crawler
+    ```
+2. **Configure Environment Variables:**
+    
+    Create a `.env` file in the root directory and include the following:
+    
+    ```
+    PGDATABASE=your_db_name
+    PGUSER=your_db_user
+    PGPASSWORD=your_db_password
+    PGHOST=your_db_host
+    PGPORT=your_db_port
+    SMTP_SERVER=your_smtp_server
+    SMTP_PORT=your_smtp_port
+    SMTP_USER=your_smtp_user
+    SMTP_PASSWORD=your_smtp_password
+    ```
+3. **Install Required Dependencies:**
+    
+    ```sh
+    pip install -r requirements.txt
+    ```
+4. **Launch the Application:**
+    
+    ```sh
+    python app.py
+    ```
 
-## Installation
+## Folder Structure
 
-To set up the email crawler, you'll need to have Python installed on your system. This script was built using Python 3.8 but should be compatible with Python 3.x versions.
+email-crawler/
+|-- static/
+|   |-- main.js
+|-- templates/
+|   |-- index.html
+|   |-- csv-table.html
+|   |-- navbar.html
+|   |-- campaign.html
+|   |-- postgres-table.html
+|   |-- view_campaign.html
+|-- .env
+|-- app.py
+|-- requirements.txt
+|-- README.md
 
-1. Clone the repository or download the script to your local machine.
-2. Install the required Python libraries using pip (most of it should be preinstalled on Python 3.8
-3. Run ```python crawl.py```
-4. Enter any keyword to start gathering emails.
-<img width="335" alt="image" src="https://github.com/TheOldHook/email-crawler/assets/71928222/5cf0ffde-a679-41f1-872a-a263526abc93">
+
+## Environment Variables
+
+The following environment variables are used in the application:
+
+- **PGDATABASE**: PostgreSQL database name.
+- **PGUSER**: PostgreSQL database user.
+- **PGPASSWORD**: PostgreSQL database password.
+- **PGHOST**: PostgreSQL database host.
+- **PGPORT**: PostgreSQL database port.
+- **SMTP_SERVER**: Your SMTP server address.
+- **SMTP_PORT**: Your SMTP server port.
+- **SMTP_USER**: Your SMTP username.
+- **SMTP_PASSWORD**: Your SMTP password.
+
+## Dependencies
+
+Install dependencies using `pip`:
+```sh
+pip install -r requirements.txt

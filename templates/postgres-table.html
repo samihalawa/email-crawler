@@ -1,11 +1,13 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Postgres Table</title>
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
 </head>
+
 <body class="bg-gray-100 font-sans">
 
     <!-- Include the common navigation -->
@@ -13,24 +15,112 @@
 
     <div class="container mx-auto px-4 py-8">
         <h1 class="text-2xl font-bold mb-4">Postgres Table</h1>
-        <table class="min-w-full bg-white">
+        <div class="mb-2">
+            <label for="perPage" class="mr-2">Rows per page:</label>
+            <select id="perPage" class="border">
+                <option value="10">10</option>
+                <option value="20">20</option>
+                <option value="50">50</option>
+            </select>
+        </div>
+        <table class="min-w-full bg-white" id="leadsTable">
             <thead>
                 <tr>
-                    <th class="py-2">Email</th>
-                    <th class="py-2">Lead Source</th>
-                    <th class="py-2">URL</th>
+                    <th class="py-2">
+                        <input type="checkbox" id="selectAll">
+                    </th>
+                    <th class="py-2 cursor-pointer" data-sort="email">Email</th>
+                    <th class="py-2 cursor-pointer" data-sort="lead_source">Lead Source</th>
+                    <th class="py-2 cursor-pointer" data-sort="url">URL</th>
+                    <th class="py-2 cursor-pointer" data-sort="page_title">Page Title</th>
+                    <th class="py-2 cursor-pointer" data-sort="meta_description">Meta Description</th>
+                    <th class="py-2 cursor-pointer" data-sort="http_status">HTTP Status</th>
+                    <th class="py-2 cursor-pointer" data-sort="scrape_duration">Scrape Duration</th>
+                    <th class="py-2 cursor-pointer" data-sort="created_at">Created At</th>
                 </tr>
             </thead>
-            <tbody>
-                {% for row in data %}
-                <tr>
-                    <td class="border px-4 py-2">{{ row.email }}</td>
-                    <td class="border px-4 py-2">{{ row.lead_source }}</td>
-                    <td class="border px-4 py-2"><a href="{{ row.url }}" target="_blank">{{ row.url }}</a></td>
-                </tr>
-                {% endfor %}
-            </tbody>
+            <tbody></tbody>
         </table>
+        <div class="mt-4" id="pagination">
+            <button class="border py-1 px-2" id="prevPage">Previous</button>
+            <span id="pageInfo" class="mx-2"></span>
+            <button class="border py-1 px-2" id="nextPage">Next</button>
+        </div>
     </div>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        let currentPage = 1;
+        let perPage = 10;
+        let sortBy = 'created_at';
+        let order = 'desc';
+
+        const fetchLeads = () => {
+            $.get(`/api/readPostgresData?page=${currentPage}&per_page=${perPage}&sort_by=${sortBy}&order=${order}`, function (data) {
+                if (data.error) {
+                    alert(data.error);
+                    return;
+                }
+                const tbody = $('#leadsTable tbody');
+                tbody.empty();
+                data.data.forEach(row => {
+                    const tr = $('<tr>').append(
+                        $('<td>').append($('<input type="checkbox" class="rowCheckbox">')),
+                        $('<td>').text(row.email),
+                        $('<td>').text(row.lead_source),
+                        $('<td>').html(`<a href="${row.url}" target="_blank">${row.url}</a>`),
+                        $('<td>').text(row.page_title),
+                        $('<td>').text(row.meta_description),
+                        $('<td>').text(row.http_status),
+                        $('<td>').text(row.scrape_duration),
+                        $('<td>').text(row.created_at)
+                    );
+                    tbody.append(tr);
+                });
+
+                $('#pageInfo').text(`Page ${data.page} of ${Math.ceil(data.total / data.per_page)}`);
+                $('#prevPage').prop('disabled', data.page === 1);
+                $('#nextPage').prop('disabled', data.page === Math.ceil(data.total / data.per_page));
+            });
+        };
+
+        $(document).ready(function () {
+            fetchLeads();
+
+            $('#perPage').change(function () {
+                perPage = $(this).val();
+                currentPage = 1;
+                fetchLeads();
+            });
+
+            $('#prevPage').click(function () {
+                if (currentPage > 1) {
+                    currentPage--;
+                    fetchLeads();
+                }
+            });
+
+            $('#nextPage').click(function () {
+                currentPage++;
+                fetchLeads();
+            });
+
+            $('#selectAll').change(function () {
+                $('.rowCheckbox').prop('checked', $(this).is(':checked'));
+            });
+
+            $(document).on('click', 'th[data-sort]', function () {
+                const newSortBy = $(this).data('sort');
+                if (sortBy === newSortBy) {
+                    order = (order === 'desc') ? 'asc' : 'desc';
+                } else {
+                    sortBy = newSortBy;
+                    order = 'asc';
+                }
+                fetchLeads();
+            });
+        });
+    </script>
 </body>
+
 </html>
