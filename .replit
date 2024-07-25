@@ -1,8 +1,8 @@
-modules = ["python-3.10:v18-20230807-322e88b"]
-run = "Python app.py"
+modules = ["python-3.12", "web", "c-clang14", "cpp-clang14"]
+run = "python app.py"
 
 [nix]
-channel = "stable-23_05"
+channel = "stable-24_05"
 
 [unitTest]
 language = "python"
@@ -11,9 +11,29 @@ language = "python"
 requiredFiles = [".replit", "replit.nix"]
 
 [deployment]
-run = ["sh", "-c", "Python app.py"]
+run = ["sh", "-c", "python app.py"]
 deploymentTarget = "cloudrun"
 
 [[ports]]
 localPort = 5050
 externalPort = 80
+
+[[ports]]
+localPort = 32963
+externalPort = 3003
+exposeLocalhost = true
+
+[[ports]]
+localPort = 33083
+externalPort = 3001
+exposeLocalhost = true
+
+[[ports]]
+localPort = 41681
+externalPort = 3000
+exposeLocalhost = true
+
+[[ports]]
+localPort = 51657
+externalPort = 3002
+exposeLocalhost = true

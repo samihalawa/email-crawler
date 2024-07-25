@@ -5,57 +5,47 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>CSV Table</title>
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="https://uicdn.toast.com/tui-grid/latest/tui-grid.css">
 </head>
 <body class="bg-gray-100 font-sans">
-    <nav class="bg-white dark:bg-gray-900 shadow-lg">
-        <div class="container mx-auto px-4 py-3">
-            <div class="flex justify-between items-center">
-                <a href="{{ url_for('index') }}" class="text-xl font-bold text-gray-800 dark:text-white">AutoClient AI</a>
-            </div>
-        </div>
-    </nav>
+
+    <!-- Include the common navigation -->
+    {% include 'navbar.html' %}
 
     <div class="container mx-auto px-4 py-8">
         <h1 class="text-2xl font-bold mb-4">CSV Table</h1>
-        <div id="grid"></div>
+        <table id="csvTable" class="min-w-full bg-white">
+            <thead>
+                <tr>
+                    <th class="py-2">Search Term</th>
+                    <th class="py-2">Email</th>
+                    <th class="py-2">Page Title</th>
+                    <th class="py-2">URL</th>
+                </tr>
+            </thead>
+            <tbody></tbody>
+        </table>
     </div>
 
-    <script src="https://uicdn.toast.com/tui-grid/latest/tui-grid.js"></script>
     <script>
-document.addEventListener('DOMContentLoaded', function() {
-    const grid = new tui.Grid({
-        el: document.getElementById('grid'),
-        data: {
-            api: {
-                readData: { url: '/api/readData', method: 'GET' }
-            }
-        },
-        scrollX: true,
-        scrollY: true,
-        rowHeaders: ['checkbox'],
-        pageOptions: {
-            perPage: 10
-        },
-        columns: [
-            { header: 'Search Term', name: 'search_query' },
-            { header: 'Email', name: 'email' },
-            { header: 'Page Title', name: 'page_title' },
-            { header: 'URL', name: 'url' }
-        ]
-    });
-
-    grid.on('response', function(data) {
-        console.log('Data loaded successfully:', data);
-    });
-
-    grid.on('error', function(error) {
-        console.error('Error loading data:', error);
-    });
-});
-
-
-
+        document.addEventListener('DOMContentLoaded', function() {
+            fetch('/api/readData')
+                .then(response => response.json())
+                .then(data => {
+                    const tableBody = document.getElementById('csvTable').querySelector('tbody');
+                    data.forEach(row => {
+                        const tr = document.createElement('tr');
+                        Object.values(row).forEach(cell => {
+                            const td = document.createElement('td');
+                            td.textContent = cell;
+                            tr.appendChild(td);
+                        });
+                        tableBody.appendChild(tr);
+                    });
+                })
+                .catch(error => {
+                    console.error('Error loading data:', error);
+                });
+        });
     </script>
 </body>
 </html>
