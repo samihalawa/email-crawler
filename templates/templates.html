@@ -1,0 +1,72 @@
+<!-- Adjust index.html to improve feedback and error handling -->
+<script>
+    $(document).ready(function() {
+        var socketProtocol = window.location.protocol.startsWith('https') ? 'https://' : 'http://';
+        var socket = io.connect(socketProtocol + document.domain + ':' + location.port);
+        
+        $('#searchForm').submit(function(event) {
+            event.preventDefault();
+            var searchQuery = $('#searchTerm').val();
+            var numResults = $('#emailQuantitySlider').val();
+            // Display a loading message
+            $('#results').text('Searching, please wait...');
+            $('#modalContent').empty();
+            socket.emit('start_search', { search_query: searchQuery, num_results: numResults });
+
+            // Handle search feedback
+            socket.on('search_status', function(data) {
+                if (data.status === 'done') {
+                    $('#results').text('Search completed.');
+                }
+            });
+
+            // Show feedback on new email found
+            socket.on('new_email', function(data) {
+                var resultElement = $('<tr>');
+                resultElement.append($('<td>').addClass('px-4 py-2 border').text(data.search_query));
+                resultElement.append($('<td>').addClass('px-4 py-2 border').text(data.email));
+                resultElement.append($('<td>').addClass('px-4 py-2 border').text(data.page_title));
+                resultElement.append($('<td>').addClass('px-4 py-2 border').text(data.url));
+                var copyButton = $('<button>').addClass('px-2 py-1 bg-blue-500 text-white rounded-lg shadow-md hover:bg-blue-600 focus:outline-none focus:ring focus:ring-blue-400').text('Copy');
+                copyButton.click(function() {
+                    var tempInput = $('<input>').val(data.email).appendTo('body').select();
+                    document.execCommand('copy');
+                    tempInput.remove();
+                });
+                copyButton.prepend($('<span>').addClass('text-xs').text('📋'));
+                resultElement.append($('<td>').addClass('px-4 py-2 border').append(copyButton));
+                $('#modalContent').append(resultElement);
+            });
+        });
+
+        $('#showModal').click(function() {
+            $('#modal').show();
+        });
+
+        $('#closeModal').click(function() {
+            $('#modal').hide();
+        });
+
+        $('#downloadCSV').click(function() {
+            var csvContent = '';
+            $('#modalContent tr').each(function(index, row) {
+                var rowData = '';
+                $(row).find('td').each(function(index, column) {
+                    rowData += $(column).text() + ',';
+                });
+                csvContent += rowData.slice(0, -1) + '\n'; // Remove the trailing comma
+            });
+            var encodedUri = encodeURI('data:text/csv;charset=utf-8,' + csvContent);
+            var link = document.createElement('a');
+            link.setAttribute('href', encodedUri);
+            link.setAttribute('download', 'emails.csv');
+            document.body.appendChild(link);
+            link.click();
+        });
+
+        // Display feedback on campaign status
+        socket.on('email_sent', function(data) {
+            $('#campaignStatus').append(`<p>Email to ${data.email}: ${data.status}</p>`);
+        });
+    });
+</script>

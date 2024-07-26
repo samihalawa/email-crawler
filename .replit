@@ -1,5 +1,5 @@
-modules = ["python-3.12", "web", "c-clang14", "cpp-clang14"]
-run = "python app.py"
+modules = ["c-clang14", "cpp-clang14", "python-3.10", "python-3.12", "web"]
+run = "python3 app.py"
 
 [nix]
 channel = "stable-24_05"
@@ -11,7 +11,7 @@ language = "python"
 requiredFiles = [".replit", "replit.nix"]
 
 [deployment]
-run = ["sh", "-c", "python app.py"]
+run = ["sh", "-c", "python3 app.py"]
 deploymentTarget = "cloudrun"
 
 [[ports]]

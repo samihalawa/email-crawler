@@ -1,39 +1,57 @@
-<html lang="en"><head>
+<html lang="en">
 
-<meta charset="utf-8"><meta name="viewport" content="width=device-width">
-<link rel="shortcut icon" href="/favicon.svg"><meta name="twitter:card" content="summary_large_image">
-<title>Autoclient.AI Collect Leads Bulk Campaigns</title><meta name="robots" content="index,follow"><meta name="description" content="The Ultimate Marketing Tool Collect emails from potential customers. Download data with one click. Automatically send marketing emails"><meta property="og:title" content="remoteStorage"><meta property="og:description" content="The Ultimate Marketing Tool Collect emails from potential customers. Download data with one click. Automatically send marketing emails"><meta property="og:url" content="https://remote.storage"><meta property="og:type" content="website"><meta property="og:image" content="https://remote.storage/og.png"><meta property="og:image:alt" content="remoteStorage"><meta name="next-head-count" content="13">
+<head>
+
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width">
+    <link rel="shortcut icon" href="/favicon.svg">
+    <meta name="twitter:card" content="summary_large_image">
+    <title>Autoclient.AI Collect Leads Bulk Campaigns</title>
+    <meta name="robots" content="index,follow">
+    <meta name="description"
+        content="The Ultimate Marketing Tool Collect emails from potential customers. Download data with one click. Automatically send marketing emails">
+    <meta property="og:title" content="remoteStorage">
+    <meta property="og:description"
+        content="The Ultimate Marketing Tool Collect emails from potential customers. Download data with one click. Automatically send marketing emails">
+    <meta property="og:url" content="https://remote.storage">
+    <meta property="og:type" content="website">
+    <meta property="og:image" content="https://remote.storage/og.png">
+    <meta property="og:image:alt" content="remoteStorage">
+    <meta name="next-head-count" content="13">
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
     <!-- Add Font Awesome -->
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
-    <style>/* Add Tailwind CSS classes for spinner animation */
-@keyframes spin {
-  to {
-    transform: rotate(360deg);
-  }
-}
+    <style>
+        /* Add Tailwind CSS classes for spinner animation */
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
 
-.spinner {
-  border: 4px solid rgba(0, 0, 0, 0.1);
-  border-left-color: #7986cb;
-  border-radius: 50%;
-  width: 24px;
-  height: 24px;
-  animation: spin 1s linear infinite;
-  margin: 0 auto;
-}
+        .spinner {
+            border: 4px solid rgba(0, 0, 0, 0.1);
+            border-left-color: #7986cb;
+            border-radius: 50%;
+            width: 24px;
+            height: 24px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto;
+        }
 
-/* Transition for result elements */
-.result-element {
-  transition: opacity 0.5s ease-in;
-}
-</style>
+        /* Transition for result elements */
+        .result-element {
+            transition: opacity 0.5s ease-in;
+        }
+    </style>
 </head>
+
 <body class="bg-gray-100 font-sans">
-<nav class="bg-white dark:bg-gray-900 shadow-lg">
+    <nav class="bg-white dark:bg-gray-900 shadow-lg">
         <div class="container mx-auto px-4 py-3">
             <div class="flex justify-between items-center">
-                <a href="#" class="text-xl text-gray-800 dark:text-white"><b>AUTOCLIENT</b><span class="text-gray-500">.AI</span></a>
+                <a href="#" class="text-xl text-gray-800 dark:text-white"><b>AUTOCLIENT</b><span
+                        class="text-gray-500">.AI</span></a>
                 <button class="md:hidden text-gray-800 dark:text-white focus:outline-none">
                     <i class="fas fa-bars"></i>
                 </button>
@@ -45,45 +63,55 @@
             </div>
         </div>
     </nav>
-<section class="bg-gray-200 dark:bg-gray-700 py-8">
+    <section class="bg-gray-200 dark:bg-gray-700 py-8">
         <div class="container mx-auto px-4 grid grid-cols-1 md:grid-cols-2 gap-6">
             <!-- Left half -->
             <div class="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-md mb-6">
                 <h2 class="text-2xl font-bold mb-4">Email Search</h2>
                 <form id="searchForm" class="mb-6">
-            <label for="searchTerm" class="sr-only">Search Term</label>
-            <input type="text" id="searchTerm" placeholder="Enter Search Term" class="w-full px-4 py-2 mb-4 rounded-lg shadow-md focus:outline-none focus:ring focus:ring-blue-400">
-            <label for="emailQuantitySlider" class="sr-only">Emails</label>
-            <input type="range" id="emailQuantitySlider" name="emailQuantity" min="1" max="50" value="10" class="w-full mt-2">
-            <span id="emailQuantityDisplay" class="ml-2">10</span><br><br>
-            <!-- Agrega un campo oculto para enviar el número de resultados -->
-            <input type="hidden" id="numResults" name="numResults" value="10">
-            <button type="submit" class="block w-full px-4 py-2 bg-blue-500 text-white rounded-lg shadow-md hover:bg-blue-600 focus:outline-none focus:ring focus:ring-blue-400">Start Search</button>
-        </form>
-                <button id="showModal" class="w-full px-4 py-2 bg-yellow-500 text-white rounded-lg shadow-md hover:bg-yellow-600 focus:outline-none focus:ring focus:ring-yellow-400">Show Results</button>
+                    <label for="searchTerm" class="sr-only">Search Term</label>
+                    <input type="text" id="searchTerm" placeholder="Enter Search Term"
+                        class="w-full px-4 py-2 mb-4 rounded-lg shadow-md focus:outline-none focus:ring focus:ring-blue-400">
+                    <label for="emailQuantitySlider" class="sr-only">Emails</label>
+                    <input type="range" id="emailQuantitySlider" name="emailQuantity" min="1" max="50" value="10"
+                        class="w-full mt-2">
+                    <span id="emailQuantityDisplay" class="ml-2">10</span><br><br>
+                    <!-- Agrega un campo oculto para enviar el número de resultados -->
+                    <input type="hidden" id="numResults" name="numResults" value="10">
+                    <button type="submit"
+                        class="block w-full px-4 py-2 bg-blue-500 text-white rounded-lg shadow-md hover:bg-blue-600 focus:outline-none focus:ring focus:ring-blue-400">Start
+                        Search</button>
+                </form>
+                <button id="showModal"
+                    class="w-full px-4 py-2 bg-yellow-500 text-white rounded-lg shadow-md hover:bg-yellow-600 focus:outline-none focus:ring focus:ring-yellow-400">Show
+                    Results</button>
             </div>
             <!-- Right half -->
-            <div class="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-md mb-6 overflow-scroll relative" style="height: 500px;">
+            <div class="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-md mb-6 overflow-scroll relative"
+                style="height: 500px;">
 
                 <h2 class="text-2xl font-bold mb-4">Potential Customer Leads</h2>
-<p class="mb-4">AI Extractor of <strong class="text-blue-600">Potential Customer</strong> Contact (emails/phone/info) their emails&amp;phones in 1 Click</p>
-                <p class="mb-4">Send Bulk Emails To All of them with our <strong class="text-blue-600">CustomAIL®</strong> Technology</p>
+                <p class="mb-4">AI Extractor of <strong class="text-blue-600">Potential Customer</strong> Contact
+                    (emails/phone/info) their emails&amp;phones in 1 Click</p>
+                <p class="mb-4">Send Bulk Emails To All of them with our <strong
+                        class="text-blue-600">CustomAIL®</strong> Technology</p>
 
-                                    <div id="resultsemail"></div>
+                <div id="resultsemail"></div>
 
                 <div class="overflow-y-auto h-72 max-h-full">
                     <!-- Animation of email blocks -->
                     <div class="relative">
-                       <!-- <div class="absolute top-0 left-0 right-0 bg-gradient-to-b from-transparent to-gray-800 h-16"></div>
+                        <!-- <div class="absolute top-0 left-0 right-0 bg-gradient-to-b from-transparent to-gray-800 h-16"></div>
                         <div class="absolute top-0 left-0 right-0 text-white text-center z-10">Scrolling Up</div> -->
                         <div class="grid grid-cols-1 gap-4 mt-6">
                             <!-- Email block -->
-                    <tbody id="modalContent"></tbody>
+                            <tbody id="modalContent"></tbody>
 
-                            
+
                             <div class="flex items-center bg-white dark:bg-gray-800 p-4 rounded-lg shadow-md">
                                 <div class="w-12 h-12 flex-shrink-0 mr-4">
-                                    <img src="https://source.unsplash.com/64x64/?company" alt="Company Logo" class="rounded-full w-full h-full object-cover">
+                                    <img src="https://source.unsplash.com/64x64/?company" alt="Company Logo"
+                                        class="rounded-full w-full h-full object-cover">
                                 </div>
                                 <div class="flex-1">
                                     <p class="font-semibold">Potential Customer</p>
@@ -104,9 +132,10 @@
                                 </div>
                             </div>
                             -->
-                        </div><div class="grid grid-cols-1 gap-4 mt-6">
+                        </div>
+                        <div class="grid grid-cols-1 gap-4 mt-6">
                             <!-- Email block -->
-                            
+
                             <!-- Repeat the above block for each potential customer -->
                             <!-- Example:
                             <div class="flex items-center bg-white dark:bg-gray-800 p-4 rounded-lg shadow-md">
@@ -126,7 +155,7 @@
             </div>
         </div>
     </section>
-    
+
     <!-- Features Section -->
     <section class="py-8">
         <div class="container mx-auto px-4">
@@ -140,7 +169,8 @@
                 <div class="p-6 bg-white dark:bg-gray-800 rounded-lg shadow-md">
                     <i class="fas fa-search text-3xl text-blue-500 mb-4"></i>
                     <h3 class="text-xl font-bold mb-2">Web Scraping</h3>
-                    <p>Automatically extract relevant business information, emails, and phone numbers from web pages.</p>
+                    <p>Automatically extract relevant business information, emails, and phone numbers from web pages.
+                    </p>
                 </div>
                 <div class="p-6 bg-white dark:bg-gray-800 rounded-lg shadow-md">
                     <i class="fas fa-envelope-open-text text-3xl text-blue-500 mb-4"></i>
@@ -173,7 +203,7 @@
     <!-- Footer -->
     <footer class="fixed bottom-0 w-full text-sm bg-gray-300 dark:bg-gray-500 px-3 text-gray-500">
         <div class="container mx-auto px-2  flex justify-between items-center">
-            <p>&copy; 2024 AutoClient AI. 
+            <p>&copy; 2024 AutoClient AI.
             <ul class="flex space-x-4">
                 <li><a href="#" class="hover:text-gray-400">Privacy Policy</a></li>
                 <li><a href="#" class="hover:text-gray-400">Terms of Service</a></li>
@@ -182,8 +212,8 @@
         </div>
     </footer>
 
-<div id="content" class="container mx-auto px-4 py-8">
-   <!-- <div class="max-w-md mx-auto">
+    <div id="content" class="container mx-auto px-4 py-8">
+        <!-- <div class="max-w-md mx-auto">
         <h4 class="text-3xl font-bold text-center mb-6">AutoClient<span>®</span> AI</h4><h4>
         </h4><h2 class="text-lg font-semibold text-center mb-4">The Ultimate Marketing Tool</h2>
         <ul class="list-disc list-inside mb-4">
@@ -202,9 +232,10 @@
             <button type="submit" class="block w-full px-4 py-2 bg-blue-500 text-white rounded-lg shadow-md hover:bg-blue-600 focus:outline-none focus:ring focus:ring-blue-400">Start Search</button>
         </form> <button id="showModal" class="block w-full px-4 py-2 bg-yellow-500 text-white rounded-lg shadow-md hover:bg-yellow-600 focus:outline-none focus:ring focus:ring-yellow-400 mb-4">Show Results</button> </div> -->
 
-        
+
         <div id="modal" class="fixed top-0 left-0 w-full h-full bg-gray-800 bg-opacity-50 hidden">
-            <div style="max-height:90%" class="absolute  top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-white p-8 rounded-lg shadow-md max-w-lg overflow-scroll">
+            <div style="max-height:90%"
+                class="absolute  top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-white p-8 rounded-lg shadow-md max-w-lg overflow-scroll">
                 <h2 class="text-xl font-bold mb-4">Search Results</h2>
                 <table class="w-full">
                     <thead>
@@ -219,77 +250,82 @@
                     <tbody id="modalContent"></tbody>
                 </table>
                 <div class="flex justify-end mt-4">
-                    <button id="downloadCSV" class="px-4 py-2 bg-blue-500 text-white rounded-lg shadow-md hover:bg-blue-600 focus:outline-none focus:ring focus:ring-blue-400 mr-4">Download Emails</button>
-                    <button id="closeModal" class="px-4 py-2 bg-blue-500 text-white rounded-lg shadow-md hover:bg-blue-600 focus:outline-none focus:ring focus:ring-blue-400">Close</button>
+                    <button id="downloadCSV"
+                        class="px-4 py-2 bg-blue-500 text-white rounded-lg shadow-md hover:bg-blue-600 focus:outline-none focus:ring focus:ring-blue-400 mr-4">Download
+                        Emails</button>
+                    <button id="closeModal"
+                        class="px-4 py-2 bg-blue-500 text-white rounded-lg shadow-md hover:bg-blue-600 focus:outline-none focus:ring focus:ring-blue-400">Close</button>
                 </div>
             </div>
         </div>
-</div>
+    </div>
 
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.0.1/socket.io.js"></script>
     <script src="/static/main.js"></script>
     <script>
-       $(document).ready(function() {
-    var socketProtocol = window.location.protocol.startsWith('https') ? 'https://' : 'http://';
-    var socket = io.connect(socketProtocol + document.domain + ':' + location.port);
-    
- $('#searchForm').submit(function(event) {
-        event.preventDefault();
-        var searchQuery = $('#searchTerm').val();
-        var numResults = $('#emailQuantitySlider').val(); // Obtén el valor del deslizador
-        $('#results').empty(); // Clear previous results
-        $('#modalContent').empty(); // Clear previous modal content
-        // Envía el número de resultados junto con la consulta de búsqueda
-        socket.emit('start_search', {search_query: searchQuery, num_ults: numResults});
-    });
-    
+        $(document).ready(function () {
+            var socketProtocol = window.location.protocol.startsWith('https') ? 'https://' : 'http://';
+            var socket = io.connect(socketProtocol + document.domain + ':' + location.port);
 
-    socket.on('new_email', function(data) {
-        var resultElement = $('<tr>');
-        resultElement.append($('<td>').addClass('px-4 py-2 border').text(data.search_query));
-        resultElement.append($('<td>').addClass('px-4 py-2 border').text(data.email));
-        resultElement.append($('<td>').addClass('px-4 py-2 border').text(data.page_title));
-        resultElement.append($('<td>').addClass('px-4 py-2 border').text(data.url));
-        var copyButton = $('<button>').addClass('px-2 py-1 bg-blue-500 text-white rounded-lg shadow-md hover:bg-blue-600 focus:outline-none focus:ring focus:ring-blue-400').text('Copy');
-        copyButton.click(function() {
-            var tempInput = $('<input>').val(data.email).appendTo('body').select();
-            document.execCommand('copy');
-            tempInput.remove();
-        });
-        copyButton.prepend($('<span>').addClass('text-xs').text('📋')); // Small copy icon
-        resultElement.append($('<td>').addClass('px-4 py-2 border').append(copyButton));
-        $('#modalContent').append(resultElement);
-    });
-
-    $('#showModal').click(function() {
-        $('#modal').show();
-    });
-
-    $('#closeModal').click(function() {
-        $('#modal').hide();
-    });
-
-    $('#downloadCSV').click(function() {
-        var csvContent = '';
-        $('#modalContent tr').each(function(index, row) {
-            $(row).find('td').each(function(index, column) {
-                csvContent += $(column).text() + ',';
+            $('#searchForm').submit(function (event) {
+                event.preventDefault();
+                var searchQuery = $('#searchTerm').val();
+                var numResults = $('#emailQuantitySlider').val(); // Obtén el valor del deslizador
+                $('#results').empty(); // Clear previous results
+                $('#modalContent').empty(); // Clear previous modal content
+                // Envía el número de resultados junto con la consulta de búsqueda
+                socket.emit('start_search', {search_query: searchQuery, num_ults: numResults});
             });
-            csvContent += '\n';
+
+
+            socket.on('new_email', function (data) {
+                var resultElement = $('<tr>');
+                resultElement.append($('<td>').addClass('px-4 py-2 border').text(data.search_query));
+                resultElement.append($('<td>').addClass('px-4 py-2 border').text(data.email));
+                resultElement.append($('<td>').addClass('px-4 py-2 border').text(data.page_title));
+                resultElement.append($('<td>').addClass('px-4 py-2 border').text(data.url));
+                var copyButton = $('<button>').addClass('px-2 py-1 bg-blue-500 text-white rounded-lg shadow-md hover:bg-blue-600 focus:outline-none focus:ring focus:ring-blue-400').text('Copy');
+                copyButton.click(function () {
+                    var tempInput = $('<input>').val(data.email).appendTo('body').select();
+                    document.execCommand('copy');
+                    tempInput.remove();
+                });
+                copyButton.prepend($('<span>').addClass('text-xs').text('📋')); // Small copy icon
+                resultElement.append($('<td>').addClass('px-4 py-2 border').append(copyButton));
+                $('#modalContent').append(resultElement);
+            });
+
+            $('#showModal').click(function () {
+                $('#modal').show();
+            });
+
+            $('#closeModal').click(function () {
+                $('#modal').hide();
+            });
+
+            $('#downloadCSV').click(function () {
+                var csvContent = '';
+                $('#modalContent tr').each(function (index, row) {
+                    $(row).find('td').each(function (index, column) {
+                        csvContent += $(column).text() + ',';
+                    });
+                    csvContent += '\n';
+                });
+                var encodedUri = encodeURI('data:text/csv;charset=utf-8,' + csvContent);
+                var link = document.createElement('a');
+                link.setAttribute('href', encodedUri);
+                link.setAttribute('download', 'emails.csv');
+                document.body.appendChild(link);
+                link.click();
+            });
         });
-        var encodedUri = encodeURI('data:text/csv;charset=utf-8,' + csvContent);
-        var link = document.createElement('a');
-        link.setAttribute('href', encodedUri);
-        link.setAttribute('download', 'emails.csv');
-        document.body.appendChild(link);
-        link.click();
-    });
-});
 
     </script>
 
 
-                   
-                </body></html>
-<script>window.scrollTo(0, 241); setTimeout(function() { window.scrollTo(0, 241); },200)</script>
+
+</body>
+
+</html>
+<script>window.scrollTo(0, 241); setTimeout(function () {window.scrollTo(0, 241);}, 200)</script>

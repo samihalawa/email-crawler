@@ -21,10 +21,15 @@
             const fetchSearchQueries = () => {
                 $.get('/api/search_queries', function(data) {
                     const searchQuerySelect = $('#searchQuery');
+                    if (!searchQuerySelect.length) {
+                        return;
+                    }
                     searchQuerySelect.empty();
                     data.data.forEach(query => {
                         searchQuerySelect.append(`<option value="${query.query}">${query.query} (${query.total_contacts})</option>`);
                     });
+                }).fail(function () {
+                    console.error('Failed to fetch search queries');
                 });
             };
 
@@ -32,6 +37,9 @@
             const fetchCampaigns = () => {
                 $.get('/api/campaigns', function(data) {
                     const campaignList = $('#campaignList');
+                    if (!campaignList.length) {
+                        return;
+                    }
                     campaignList.empty();
                     data.data.forEach(campaign => {
                         campaignList.append(`
@@ -46,6 +54,8 @@
                             </div>
                         `);
                     });
+                }).fail(function () {
+                    console.error('Failed to fetch campaigns');
                 });
             };
 
@@ -60,6 +70,11 @@
                 const campaignName = $('#campaignName').val();
                 const searchQuery = $('#searchQuery').val();
                 const emailTemplate = $('#emailTemplate').val();
+
+                if (!campaignName || !searchQuery || !emailTemplate) {
+                    $('#campaignStatus').text('Please fill out all fields');
+                    return;
+                }
 
                 if (campaignId) {
                     // Update existing campaign
@@ -77,6 +92,9 @@
                             $('#campaignStatus').text('Campaign updated successfully');
                             fetchCampaigns();
                             $('#campaignForm').removeData('id');  // Reset form state
+                        },
+                        error: function () {
+                            $('#campaignStatus').text('Failed to update campaign');
                         }
                     });
                 } else {
@@ -93,6 +111,9 @@
                         success: function () {
                             $('#campaignStatus').text('Campaign created successfully');
                             fetchCampaigns();
+                        },
+                        error: function () {
+                            $('#campaignStatus').text('Failed to create campaign');
                         }
                     });
                 }
@@ -107,18 +128,26 @@
                     $('#searchQuery').val(campaign.search_query);
                     $('#emailTemplate').val(campaign.email_template);
                     $('#campaignForm').data('id', campaign.id);  // Set form state for editing
+                }).fail(function () {
+                    console.error('Failed to fetch campaign details');
                 });
             });
 
             // Handle delete button click
             $(document).on('click', '.deleteCampaign', function () {
                 const campaignId = $(this).data('id');
+                if (!confirm('Are you sure you want to delete this campaign?')) {
+                    return;
+                }
                 $.ajax({
                     url: `/api/campaigns?id=${campaignId}`,
                     type: 'DELETE',
                     success: function () {
                         $('#campaignStatus').text('Campaign deleted successfully');
                         fetchCampaigns();
+                    },
+                    error: function () {
+                        $('#campaignStatus').text('Failed to delete campaign');
                     }
                 });
             });
