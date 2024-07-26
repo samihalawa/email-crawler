@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>View Campaign</title>
+</head>
+
+<body>
+    <div>
+        <h2>View Campaign</h2>
+        <div id="campaignDetails">
+            <!-- Dynamic campaign details -->
+        </div>
+    </div>
+    <script>
+        $(document).ready(function () {
+            // Logic to fetch and display campaign details based on campaign ID
+            var campaignId = '{{ campaign_id }}';
+            $.ajax({
+                url: `/api/campaigns/${campaignId}`,
+                method: 'GET',
+                success: function (response) {
+                    // Render the campaign details into the page
+                },
+                error: function (xhr, status, error) {
+                    alert('Error fetching campaign details: ' + error);
+                }
+            });
+        });
+    </script>
+</body>
+
+</html>

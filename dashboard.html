@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AutoClient Dashboard</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="/static/styles.css">
+</head>
+<body class="bg-gray-100 font-sans">
+    <nav class="bg-white dark:bg-gray-900 shadow-lg">
+        <div class="container mx-auto px-4 py-3 flex justify-between items-center">
+            <a href="#" class="text-xl font-bold text-gray-800 dark:text-white">AutoClient AI</a>
+            <ul class="flex space-x-4">
+                <li><a href="#home" class="nav-link text-gray-800 dark:text-white hover:text-gray-600">Home</a></li>
+                <li><a href="#scraping" class="nav-link text-gray-800 dark:text-white hover:text-gray-600">Scraping</a></li>
+                <li><a href="#crm" class="nav-link text-gray-800 dark:text-white hover:text-gray-600">CRM</a></li>
+                <li><a href="#campaigns" class="nav-link text-gray-800 dark:text-white hover:text-gray-600">Campaigns</a></li>
+                <li><a href="#settings" class="nav-link text-gray-800 dark:text-white hover:text-gray-600">Settings</a></li>
+                <li><a href="#analytics" class="nav-link text-gray-800 dark:text-white hover:text-gray-600">Analytics</a></li>
+                <li><a href="#admin" class="nav-link text-gray-800 dark:text-white hover:text-gray-600">Admin</a></li>
+            </ul>
+        </div>
+    </nav>
+    <div id="content" class="container mx-auto px-4 py-8">
+        <div id="home" class="view">
+            <h3 class="mdc-typography--headline3">Welcome to AutoClient Dashboard</h3>
+            <p class="mb-4">AutoClient helps you find and reach potential customers with the power of AI.</p>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+                <div class="bg-white p-4 rounded-lg shadow-md">
+                    <h4 class="text-xl font-bold mb-2">Quick Actions</h4>
+                    <ul class="list-disc list-inside">
+                        <li><a href="#scraping" class="text-blue-500 hover:underline">Start a New Lead Search</a></li>
+                        <li><a href="#crm" class="text-blue-500 hover:underline">View Saved Leads</a></li>
+                        <li><a href="#campaigns" class="text-blue-500 hover:underline">Create a New Email Campaign</a></li>
+                        <li><a href="#analytics" class="text-blue-500 hover:underline">Check Analytics</a></li>
+                    </ul>
+                </div>
+
+                <div class="bg-white p-4 rounded-lg shadow-md">
+                    <h4 class="text-xl font-bold mb-2">Benefits of Using AutoClient</h4>
+                    <ul class="list-disc list-inside">
+                        <li>AI-Powered Lead Generation</li>
+                        <li>Automated CRM Integration</li>
+                        <li>Personalized Email Campaigns</li>
+                        <li>Real-Time Analytics</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div class="bg-white p-4 rounded-lg shadow-md">
+                    <h4 class="text-xl font-bold mb-2">What is AutoClient?</h4>
+                    <p>AutoClient is an AI-driven solution designed to streamline your marketing efforts by scraping the web for potential leads, saving their information in your CRM, and sending highly personalized emails to ensure the highest engagement.</p>
+                </div>
+
+                <div class="bg-white p-4 rounded-lg shadow-md">
+                    <h4 class="text-xl font-bold mb-2">Getting Started Guide</h4>
+                    <ul class="list-inside list-decimal">
+                        <li>Use the navigation menu to explore features and tools.</li>
+                        <li>Start a new lead search to find potential customers.</li>
+                        <li>View and manage your saved leads in the CRM section.</li>
+                        <li>Create and monitor email campaigns for effective outreach.</li>
+                        <li>Check analytics to measure your success and improve strategies.</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="bg-white p-4 mt-4 rounded-lg shadow-md">
+                <h4 class="text-xl font-bold mb-2">Latest Updates</h4>
+                <ul class="list-disc list-inside">
+                    <li>New feature: Real-time lead scoring and prioritization!</li>
+                    <li>Integration with the latest CRM software for seamless data management.</li>
+                    <li>Enhanced email templates for even better engagement rates.</li>
+                </ul>
+            </div>
+
+            <div class="g-signin2 mt-4" data-onsuccess="onSignIn"></div>
+        </div>
+        <div id="scraping" class="view hidden">
+            <h2 class="text-2xl font-bold mb-4">AI-Powered Lead Generation</h2>
+            <p>AutoClient uses advanced AI to find potential customers based on your search criteria.</p>
+            <ul class="list-disc list-inside mb-4">
+                <li>Enter a search term to find potential leads in your industry.</li>
+                <li>Define the number of results you want to retrieve.</li>
+                <li>Email addresses and phone numbers will be saved to the CRM automatically.</li>
+                <li>AI-customized emails will be sent automatically to maximize engagement.</li>
+            </ul>
+            <form id="searchForm" class="mb-6">
+                <label for="searchTerm" class="sr-only">Search Term</label>
+                <input type="text" id="searchTerm" placeholder="Enter Search Term" class="w-full px-4 py-2 mb-4 rounded-lg shadow-md focus:outline-none focus:ring focus:ring-blue-400">
+
+                <label for="emailQuantitySlider" class="sr-only">Lead Quantity</label>
+                <input type="range" id="emailQuantitySlider" name="emailQuantity" min="1" max="50" value="10" class="w-full mt-2">
+                <span id="emailQuantityDisplay" class="ml-2">10</span>
+                <input type="hidden" id="numResults" name="numResults" value="10">
+
+                <button type="submit" class="block w-full px-4 py-2 bg-blue-500 text-white rounded-lg shadow-md hover:bg-blue-600 focus:outline-none focus:ring focus:ring-blue-400">Start Search</button>
+            </form>
+            <div id="results" class="bg-white p-4 rounded-lg shadow-md">
+                <h3 class="text-lg font-semibold mb-2">Search Results</h3>
+                <ul class="list-disc list-inside">
+                    <li>Email: contact@example.com, Phone: 123-456-7890</li>
+                    <li>Email: info@example.com, Phone: 987-654-3210</li>
+                    <li>Email: support@example.com, Phone: 555-555-5555</li>
+                </ul>
+            </div>
+        </div>
+        <div id="crm" class="view hidden">
+            <h2 class="text-2xl font-bold mb-4">Saved Leads</h2>
+            <div id="screenContent">
+                <ul class="mdc-list demo-list mdc-list--two-line">
+                    <li class="mdc-list-item mdc-ripple-upgraded" tabindex="-1">
+                        <span class="mdc-list-item__text">
+                            <span class="mdc-list-item__primary-text">John Doe</span>
+                            <span class="mdc-list-item__secondary-text">john@example.com, Phone: 123-456-7890</span>
+                        </span>
+                    </li>
+                    <li class="mdc-list-item mdc-ripple-upgraded" tabindex="0">
+                        <span class="mdc-list-item__text">
+                            <span class="mdc-list-item__primary-text">Jane Smith</span>
+                            <span class="mdc-list-item__secondary-text">jane@example.com, Phone: 987-654-3210</span>
+                        </span>
+                    </li>
+                    <li class="mdc-list-item mdc-ripple-upgraded" tabindex="0">
+                        <span class="mdc-list-item__text">
+                            <span class="mdc-list-item__primary-text">Richard Roe</span>
+                            <span class="mdc-list-item__secondary-text">richard@example.com, Phone: 555-555-5555</span>
+                        </span>
+                    </li>
+                </ul>
+            </div>
+            <div class="flex justify-between mt-4">
+                <button id="prevPage" class="px-4 py-2 bg-blue-500 text-white rounded-lg shadow-md hover:bg-blue-600 focus:outline-none focus:ring focus:ring-blue-400">Previous</button>
+                <button id="nextPage" class="px-4 py-2 bg-blue-500 text-white rounded-lg shadow-md hover:bg-blue-600 focus:outline-none focus:ring focus:ring-blue-400">Next</button>
+            </div>
+        </div>
+        <div id="campaigns" class="view hidden">
+            <h2 class="text-2xl font-bold mb-4">Email Campaigns</h2>
+            <p>Create and manage your email campaigns effortlessly.</p>
+            <div class="bg-white p-4 rounded-lg shadow-md">
+                <ul class="campaign-list list-disc list-inside">
+                    <li>Campaign 1: New Product Launch - <span class="text-gray-600">Status: Active</span></li>
+                    <li>Campaign 2: Holiday Discounts - <span class="text-gray-600">Status: Scheduled</span></li>
+                    <li>Campaign 3: Newsletter March Edition - <span class="text-gray-600">Status: Draft</span></li>
+                </ul>
+            </div>
+            <button class="mt-4 px-4 py-2 bg-green-500 text-white rounded-lg shadow-md hover:bg-green-600 focus:outline-none focus:ring focus:ring-green-400">Create New Campaign</button>
+        </div>
+        <div id="settings" class="view hidden">
+            <h2 class="text-2xl font-bold mb-4">Settings</h2>
+            <div class="bg-white p-4 rounded-lg shadow-md">
+                <h3 class="text-lg font-semibold mb-2">Profile Settings</h3>
+                <p>Modify your profile information:</p>
+                <ul class="list-inside list-disc">
+                    <li>Name: John Doe</li>
+                    <li>Email: john.doe@example.com</li>
+                    <li>Password: ********</li>
+                </ul>
+                <button class="mt-4 px-4 py-2 bg-yellow-500 text-white rounded-lg shadow-md hover:bg-yellow-600 focus:outline-none focus:ring focus:ring-yellow-400">Edit Profile</button>
+            </div>
+        </div>
+        <div id="analytics" class="view hidden">
+            <h2 class="text-2xl font-bold mb-4">Analytics</h2>
+            <p>View comprehensive analytics about your scraping tasks and email campaigns:</p>
+            <div class="bg-white p-4 rounded-lg shadow-md">
+                <h3 class="text-lg font-semibold mb-2">Scraping Data</h3>
+                <p>Emails Scraped: 120</p>
+                <p>Phone Numbers Scraped: 80</p>
+                <h3 class="text-lg font-semibold mt-4 mb-2">Campaign Performance</h3>
+                <p>Campaign 1: New Product Launch - Emails Sent: 1000, Open Rate: 45%, Click Rate: 10%</p>
+                <p>Campaign 2: Holiday Discounts - Emails Sent: 800, Open Rate: 50%, Click Rate: 15%</p>
+            </div>
+        </div>
+        <div id="admin" class="view hidden">
+            <h2 class="text-2xl font-bold mb-4">Admin</h2>
+            <div class="bg-white p-4 rounded-lg shadow-md">
+                <h3 class="text-lg font-semibold mb-2">User Management</h3>
+                <ul class="list-inside list-disc">
+                    <li>John Doe - Admin</li>
+                    <li>Jane Smith - Moderator</li>
+                    <li>Richard Roe - User</li>
+                </ul>
+                <button class="mt-4 px-4 py-2 bg-red-500 text-white rounded-lg shadow-md hover:bg-red-600 focus:outline-none focus:ring focus:ring-red-400">Add New User</button>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
