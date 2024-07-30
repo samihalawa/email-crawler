@@ -1,4 +1,5 @@
 modules = ["c-clang14", "cpp-clang14", "python-3.10", "python-3.12", "web"]
+
 run = "python app.py"
 
 [nix]
@@ -13,6 +14,7 @@ requiredFiles = [".replit", "replit.nix"]
 [deployment]
 run = ["python app.py"]
 deploymentTarget = "cloudrun"
+build = ["sh", "-c", "pip install -r requirements.txt"]
 
 [[ports]]
 localPort = 5050
