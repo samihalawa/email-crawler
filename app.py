@@ -29,7 +29,7 @@ pg_pool = psycopg2.pool.ThreadedConnectionPool(
 
 # SMTP configurations
 smtp_server = os.getenv('SMTP_SERVER')
-smtp_port = int(os.getenv('SMTP_PORT'))
+smtp_port =  os.getenv('SMTP_PORT')
 smtp_user = os.getenv('SMTP_USER')
 smtp_password = os.getenv('SMTP_PASSWORD')
 
@@ -302,6 +302,10 @@ def csv_table():
 @app.route('/postgres-table')
 def postgres_table():
     return render_template('postgres-table.html')
+    
+@app.route('/start')
+def load_start_page():
+    return render_template('start.html')
 
 
 @app.route('/api/readPostgresData', methods=['GET'])
@@ -370,7 +374,6 @@ def get_search_queries():
         finally:
             release_db_connection(conn)
     return jsonify({'data': data})
-
 
 @app.route('/api/campaigns', methods=['GET', 'POST', 'PUT', 'DELETE'])
 def handle_campaigns():
@@ -478,4 +481,4 @@ def handle_send_campaign(json):
 
 
 if __name__ == '__main__':
-    socketio.run(app, host='0.0.0.0', debug=False, port=5050)
+    socketio.run(app, host='0.0.0.0', port=5050, debug=False)

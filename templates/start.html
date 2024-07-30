@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AutoClient AI - Revolutionize Your Email Marketing with AI</title>
+    <meta name="description" content="Streamline your marketing with AutoClient AI. Discover potential clients and engage with custom, AI-crafted emails.">
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/daisyui@1.12.8/dist/full.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+    <style>
+        /* Modal Styles */
+        .modal-overlay {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 9999;
+        }
+        .modal-content {
+            position: relative;
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            max-width: 90%;
+            max-height: 90%;
+            overflow-y: auto;
+            transition: opacity 1s ease;
+        }
+        .modal-close {
+            position: absolute;
+            top: 0.5rem;
+            right: 0.5rem;
+            cursor: pointer;
+        }
+        /* Spinner Animation */
+        .loader {
+            border: 4px solid #f3f3f3; /* Light grey */
+            border-top: 4px solid #3498db; /* Blue */
+            border-radius: 50%;
+            width: 30px;
+            height: 30px;
+            animation: spin 1s linear infinite;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            opacity: 0; /* Initially hidden */
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+    <body class="bg-gray-100 font-sans">
+
+    <!-- Include the common navigation -->
+    {% include 'navbar.html' %}
+
+    <!-- Hero Section -->
+    <section id="hero" style="background-color:#4a90e2; background: linear-gradient(135deg, #4a90e2, #e94e77) !important;" class="bg-primary text-white text-center py-20">
+        <div class="container mx-auto px-6">
+            <h1 class="text-4xl font-bold mb-4">Revolutionize Your Email Marketing with AI</h1>
+            <p class="text-xl mb-8">Discover potential clients and engage with custom, AI-crafted emails.</p>
+            <a href="#cta" class="bg-white text-primary font-bold py-2 px-4 rounded-full">Get Started</a>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section id="features" class="py-12">
+        <div class="container mx-auto px-4">
+            <h2 class="text-2xl font-bold text-center mb-8">Featured Features</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <!-- Feature 1 -->
+                <div class="p-6 bg-white rounded-lg shadow-md">
+                    <i class="fas fa-chart-line text-primary text-3xl mb-4"></i>
+                    <h3 class="text-xl font-bold mb-2">Data-Driven Insights</h3>
+                    <p class="text-gray-700">Gain valuable insights into your target audience with AI-powered data analytics.</p>
+                </div>
+                <!-- Feature 2 -->
+                <div class="p-6 bg-white rounded-lg shadow-md">
+                    <i class="fas fa-envelope-open-text text-primary text-3xl mb-4"></i>
+                    <h3 class="text-xl font-bold mb-2">Personalized Emails</h3>
+                    <p class="text-gray-700">Craft personalized emails using AI algorithms to engage with potential clients.</p>
+                </div>
+                <!-- Feature 3 -->
+                <div class="p-6 bg-white rounded-lg shadow-md">
+                    <i class="fas fa-tasks text-primary text-3xl mb-4"></i>
+                    <h3 class="text-xl font-bold mb-2">Automated Campaigns</h3>
+                    <p class="text-gray-700">Streamline your marketing efforts with fully automated email campaigns.</p>
+                </div>
+                <!-- Feature 4 -->
+                <div class="p-6 bg-white rounded-lg shadow-md">
+                    <i class="fas fa-chart-pie text-primary text-3xl mb-4"></i>
+                    <h3 class="text-xl font-bold mb-2">Advanced Analytics</h3>
+                    <p class="text-gray-700">Monitor the performance of your campaigns with real-time analytics and reports.</p>
+                </div>
+                <!-- Feature 5 -->
+                <div class="p-6 bg-white rounded-lg shadow-md">
+                    <i class="fas fa-bullseye text-primary text-3xl mb-4"></i>
+                    <h3 class="text-xl font-bold mb-2">Targeted Marketing</h3>
+                    <p class="text-gray-700">Reach the right audience at the right time with AI-powered targeting.</p>
+                </div>
+                <!-- Feature 6 -->
+                <div class="p-6 bg-white rounded-lg shadow-md">
+                    <i class="fas fa-mobile-alt text-primary text-3xl mb-4"></i>
+                    <h3 class="text-xl font-bold mb-2">Responsive Design</h3>
+                    <p class="text-gray-700">Engage your audience with beautifully designed, mobile-responsive emails.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Benefits Section -->
+    <section id="benefits" class="bg-gray-100 py-12">
+        <div class="container mx-auto px-4">
+            <h2 class="text-2xl font-bold text-center mb-8">Benefits</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <!-- Benefit 1 -->
+                <div class="p-6 bg-white rounded-lg shadow-md">
+                    <i class="fas fa-check-circle text-green-500 text-3xl mb-4"></i>
+                    <h3 class="text-xl font-bold mb-2">Increased Efficiency</h3>
+                    <p class="text-gray-700">Save time and resources with automated email marketing campaigns.</p>
+                </div>
+                <!-- Benefit 2 -->
+                <div class="p-6 bg-white rounded-lg shadow-md">
+                    <i class="fas fa-users text-blue-500 text-3xl mb-4"></i>
+                    <h3 class="text-xl font-bold mb-2">Expanded Reach</h3>
+                    <p class="text-gray-700">Reach a wider audience and discover new potential clients effortlessly.</p>
+                </div>
+                <!-- Benefit 3 -->
+                <div class="p-6 bg-white rounded-lg shadow-md">
+                    <i class="fas fa-thumbs-up text-orange-500 text-3xl mb-4"></i>
+                    <h3 class="text-xl font-bold mb-2">Higher Engagement</h3>
+                    <p class="text-gray-700">Engage your audience with personalized and relevant content delivered to their inbox.</p>
+                </div>
+                <!-- Benefit 4 -->
+                <div class="p-6 bg-white rounded-lg shadow-md">
+                    <i class="fas fa-chart-bar text-purple-500 text-3xl mb-4"></i>
+                    <h3 class="text-xl font-bold mb-2">Improved ROI</h3>
+                    <p class="text-gray-700">Maximize your return on investment with data-driven marketing strategies.</p>
+                </div>
+                <!-- Benefit 5 -->
+                <div class="p-6 bg-white rounded-lg shadow-md">
+                    <i class="fas fa-lock text-red-500 text-3xl mb-4"></i>
+                    <h3 class="text-xl font-bold mb-2">Data Security</h3>
+                    <p class="text-gray-700">Protect your data with AI-powered security measures and encryption.</p>
+                </div>
+                <!-- Benefit 6 -->
+                <div class="p-6 bg-white rounded-lg shadow-md">
+                    <i class="fas fa-cogs text-yellow-500 text-3xl mb-4"></i>
+                    <h3 class="text-xl font-bold mb-2">Easy Integration</h3>
+                    <p class="text-gray-700">Integrate seamlessly with your existing tools and platforms.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Call to Action Section -->
+    <section id="cta" class="bg-primary text-white text-center py-12">
+        <div class="container mx-auto px-4">
+            <h2 class="text-3xl font-bold mb-4">Get Started with AutoClient AI Today!</h2>
+            <p class="text-lg mb-8">Sign up now and revolutionize your email marketing strategy with AI.</p>
+            <a href="#" class="bg-white text-primary font-bold py-2 px-4 rounded-full">Sign Up for Free</a>
+        </div>
+    </section>
+
+    <!-- FAQ Section -->
+    <section style="style="background: linear-gradient(135deg, #4a90e2, #e94e77);" id="faq" class="py-12">
+        <div class="container mx-auto px-4">
+            <h2 class="text-2xl font-bold text-center mb-8">Frequently Asked Questions</h2>
+            <div class="space-y-4">
+                <div class="bg-white p-6 rounded-lg shadow-md">
+                    <h3 class="text-xl font-bold mb-2">What is AutoClient AI?</h3>
+                    <p class="text-gray-700">AutoClient AI is an AI-powered email marketing platform that helps you discover potential clients and engage with them through personalized emails.</p>
+                </div>
+                <div class="bg-white p-6 rounded-lg shadow-md">
+                    <h3 class="text-xl font-bold mb-2">How does the AI work?</h3>
+                    <p class="text-gray-700">Our AI algorithms analyze data to provide insights, craft personalized emails, and automate your marketing campaigns for maximum efficiency.</p>
+                </div>
+                <div class="bg-white p-6 rounded-lg shadow-md">
+                    <h3 class="text-xl font-bold mb-2">Is my data secure?</h3>
+                    <p class="text-gray-700">Yes, we prioritize data security and use advanced encryption and security measures to protect your information.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Pricing Section -->
+    <section id="pricing" class="bg-gray-100 py-12">
+        <div class="container mx-auto px-4">
+            <h2 class="text-2xl font-bold text-center mb-8">Pricing</h2>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <!-- Pricing Tier 1 -->
+                <div class="p-6 bg-white rounded-lg shadow-md">
+                    <h3 class="text-xl font-bold mb-4">Basic</h3>
+                    <p class="text-gray-700 mb-4">Ideal for small businesses just getting started with email marketing.</p>
+                    <div class="text-3xl font-bold mb-4">$19/month</div>
+                    <ul class="list-disc list-inside mb-4 text-gray-700">
+                        <li>Up to 1,000 emails per month</li>
+                        <li>Basic analytics</li>
+                        <li>Email support</li>
+                    </ul>
+                    <a href="#" class="bg-primary text-white font-bold py-2 px-4 rounded-full">Get Started</a>
+                </div>
+                <!-- Pricing Tier 2 -->
+                <div class="p-6 bg-white rounded-lg shadow-md">
+                    <h3 class="text-xl font-bold mb-4">Pro</h3>
+                    <p class="text-gray-700 mb-4">For growing businesses needing more advanced features.</p>
+                    <div class="text-3xl font-bold mb-4">$49/month</div>
+                    <ul class="list-disc list-inside mb-4 text-gray-700">
+                        <li>Up to 10,000 emails per month</li>
+                        <li>Advanced analytics</li>
+                        <li>Priority email support</li>
+                    </ul>
+                    <a href="#" class="bg-primary text-white font-bold py-2 px-4 rounded-full">Get Started</a>
+                </div>
+                <!-- Pricing Tier 3 -->
+                <div class="p-6 bg-white rounded-lg shadow-md">
+                    <h3 class="text-xl font-bold mb-4">Enterprise</h3>
+                    <p class="text-gray-700 mb-4">For large organizations with high-volume email marketing needs.</p>
+                    <div class="text-3xl font-bold mb-4 custom-price">Contact Us</div>
+                    <ul class="list-disc list-inside mb-4 text-gray-700">
+                        <li>Unlimited emails per month</li>
+                        <li>Custom analytics and reporting</li>
+                        <li>Dedicated account manager</li>
+                    </ul>
+                    <a href="#contact" class="bg-primary text-white font-bold py-2 px-4 rounded-full">Contact Us</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Testimonials Section -->
+    <section id="testimonials" class="py-12">
+        <div class="container mx-auto px-4">
+            <h2 class="text-2xl font-bold text-center mb-8">Testimonials</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <!-- Testimonial 1 -->
+                <div class="p-6 bg-white rounded-lg shadow-md">
+                    <i class="fas fa-quote-left text-primary text-2xl"></i>
+                    <p class="text-gray-700 mt-2">"AutoClient AI has completely transformed our email marketing strategy. We've seen a significant increase in engagement and conversions since implementing their platform."</p>
+                    <div class="mt-4">
+                        <div class="font-semibold">John Doe</div>
+                        <div class="text-sm text-gray-500">CEO, Example Company</div>
+                    </div>
+                </div>
+                <!-- Testimonial 2 -->
+                <div class="p-6 bg-white rounded-lg shadow-md">
+                    <i class="fas fa-quote-left text-primary text-2xl"></i>
+                    <p class="text-gray-700 mt-2">"I was skeptical at first, but AutoClient AI exceeded my expectations. The level of personalization and automation in their email campaigns is unparalleled."</p>
+                    <div class="mt-4">
+                        <div class="font-semibold">Jane Smith</div>
+                        <div class="text-sm text-gray-500">Marketing Director, Sample Company</div>
+                    </div>
+                </div>
+                <!-- Testimonial 3 -->
+                <div class="p-6 bg-white rounded-lg shadow-md">
+                    <i class="fas fa-quote-left text-primary text-2xl"></i>
+                    <p class="text-gray-700 mt-2">"Using AutoClient AI has made our email marketing efforts more efficient and effective. We couldn't be happier with the results."</p>
+                    <div class="mt-4">
+                        <div class="font-semibold">Alice Johnson</div>
+                        <div class="text-sm text-gray-500">Marketing Specialist, Tech Company</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact Us Section -->
+    <section id="contact" class="bg-gray-100 py-12">
+        <div class="container mx-auto px-4">
+            <h2 class="text-2xl font-bold text-center mb-8">Contact Us</h2>
+            <div class="max-w-xl mx-auto">
+                <div class="bg-white p-6 rounded-lg shadow-md">
+                    <form>
+                        <div class="mb-4">
+                            <label class="block text-gray-700 font-bold mb-2" for="name">Name:</label>
+                            <input type="text" id="name" class="w-full px-3 py-2 border rounded-lg shadow-sm">
+                        </div>
+                        <div class="mb-4">
+                            <label class="block text-gray-700 font-bold mb-2" for="email">Email:</label>
+                            <input type="email" id="email" class="
