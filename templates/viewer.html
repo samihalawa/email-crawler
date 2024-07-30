@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <title>HTMLCompare</title>
@@ -10,6 +11,7 @@
             background-color: #f5f5f5;
             margin: 0;
         }
+
         .navbar {
             width: 100%;
             background: linear-gradient(90deg, #333, #555);
@@ -20,12 +22,14 @@
             justify-content: space-between;
             align-items: center;
         }
+
         .navbar h1 {
             color: #f2f2f2;
             margin: 0;
             padding-left: 20px;
             font-size: 24px;
         }
+
         .navbar button {
             color: #f2f2f2;
             text-align: center;
@@ -37,10 +41,12 @@
             cursor: pointer;
             transition: background-color 0.3s, color 0.3s;
         }
+
         .navbar button:hover {
             background-color: #ddd;
             color: black;
         }
+
         .button-container {
             display: flex;
             justify-content: center;
@@ -48,6 +54,7 @@
             gap: 10px;
             margin-bottom: 20px;
         }
+
         .button-container button {
             padding: 12px 24px;
             font-size: 16px;
@@ -57,10 +64,12 @@
             transition: background-color 0.3s, color 0.3s;
             border-radius: 5px;
         }
+
         .button-container button:hover {
             background-color: #333;
             color: #f2f2f2;
         }
+
         .iframe-container,
         .all-iframes {
             width: 100%;
@@ -68,6 +77,7 @@
             flex-direction: column;
             align-items: center;
         }
+
         .iframe-container iframe,
         .all-iframes iframe {
             width: 100%;
@@ -75,6 +85,7 @@
             border: 1px solid #ccc;
             border-radius: 5px;
         }
+
         .back-button {
             padding: 10px 20px;
             font-size: 16px;
@@ -86,22 +97,26 @@
             transition: background-color 0.3s, color 0.3s;
             border-radius: 5px;
         }
+
         .back-button:hover {
             background-color: #ddd;
             color: black;
         }
+
         .resizer {
             resize: both;
             overflow: auto;
             border-radius: 5px;
             margin-bottom: 20px;
         }
+
         .quick-compare {
             display: flex;
             flex-direction: column;
             align-items: center;
             margin-top: 20px;
         }
+
         .compare-container {
             display: flex;
             width: 100%;
@@ -109,17 +124,20 @@
             flex-wrap: wrap;
             margin-bottom: 20px;
         }
+
         .compare-container div {
             flex: 1 1 48%;
             min-height: 500px;
             position: relative;
         }
+
         .compare-container iframe {
             width: 100%;
             height: 500px;
             border: 1px solid #ccc;
             border-radius: 5px;
         }
+
         .compare-container .close-button {
             position: absolute;
             top: 10px;
@@ -134,12 +152,14 @@
             text-align: center;
             line-height: 24px;
         }
+
         .iframe-pair {
             display: flex;
             flex-direction: column;
             align-items: center;
             width: 48%;
         }
+
         .iframe-pair iframe {
             width: 100%;
             height: 500px;
@@ -147,6 +167,7 @@
             border-radius: 5px;
             margin-top: 5px;
         }
+
         .add-compare {
             display: flex;
             align-items: center;
@@ -154,10 +175,12 @@
             gap: 10px;
             margin-top: 20px;
         }
+
         .add-compare select {
             padding: 10px;
             font-size: 16px;
         }
+
         .add-compare button {
             padding: 10px 20px;
             font-size: 16px;
@@ -168,12 +191,14 @@
             border-radius: 5px;
             transition: background-color 0.3s, color 0.3s;
         }
+
         .add-compare button:hover {
             background-color: #ddd;
             color: black;
         }
     </style>
 </head>
+
 <body>
     <div class="navbar">
         <h1>HTMLCompare</h1>
@@ -182,7 +207,7 @@
             <button onclick="viewAll()">View All</button>
         </div>
     </div>
-    
+
     <div id="viewer-container" class="button-container">
         <!-- File list and iframes will be dynamically generated here -->
     </div>
@@ -209,7 +234,7 @@
     </div>
 
     <script>
-        document.addEventListener("DOMContentLoaded", function() {
+        document.addEventListener("DOMContentLoaded", function () {
             const container = document.getElementById('viewer-container');
             const iframeContainer = document.getElementById('iframe-container');
             const iframe = document.getElementById('file-viewer');
@@ -218,15 +243,7 @@
             const compareContainer = document.getElementById('compare-container');
             const fileSelect = document.getElementById('file-select');
 
-            // JavaScript List of HTML files
-            const htmlFiles = [
-                'index (copy).html',
-                'index.html',
-                'index0.html',
-                'index1.html',
-                'index3.html',
-                'index6.html',
-                'landing.html'
+            // JavaScript List of HTML fil 
             const htmlFiles = [
                 'additional-features-that-may-be-added-to-the-app.html',
                 'campaign.htmla',
@@ -263,13 +280,13 @@
                 'table.html',
                 'templates.html',
                 'unused-crawling-not-working-index_with_feature_benefit_and_details_blocks.html',
-                'view_campaign.html',
-                'viewer.html'
+                'view_campaign.html'
+            ]
 
             function createButton(file) {
                 const button = document.createElement('button');
                 button.textContent = file;
-                button.onclick = function() {
+                button.onclick = function () {
                     viewFile(file);
                 };
                 container.appendChild(button);
@@ -297,11 +314,11 @@
                 iframe.style.width = "100%";
                 iframe.style.height = "500px";
                 div.appendChild(iframe);
-                
+
                 const closeButton = document.createElement('button');
                 closeButton.classList.add('close-button');
                 closeButton.innerHTML = '&times;';
-                closeButton.onclick = function() {
+                closeButton.onclick = function () {
                     div.remove();
                 };
                 div.appendChild(closeButton);
@@ -325,7 +342,7 @@
                 for (let i = 0; i < htmlFiles.length; i += 2) {
                     const pairContainer = document.createElement('div');
                     pairContainer.classList.add('iframe-pair');
-                    
+
                     const label1 = document.createElement('div');
                     label1.textContent = htmlFiles[i];
                     pairContainer.appendChild(label1);
@@ -335,7 +352,7 @@
                     iframe1.style.width = "100%";
                     iframe1.style.height = "500px";
                     pairContainer.appendChild(iframe1);
-                    
+
                     if (i + 1 < htmlFiles.length) {
                         const label2 = document.createElement('div');
                         label2.textContent = htmlFiles[i + 1];
@@ -389,4 +406,5 @@
         }
     </script>
 </body>
+
 </html>
