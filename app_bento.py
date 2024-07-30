@@ -8,7 +8,8 @@ from googlesearch import search
 import csv
 
 app = Flask(__name__)
-socketio = SocketIO(app, cors_allowed_origins="*", engineio_logger=True, logger=True, async_mode='threading')
+socketio = SocketIO(app, cors_allowed_origins="*", allow_unsafe_werkzeug=True,
+engineio_logger=True, logger=True, async_mode='threading')
 
 seen_emails = set()
 domains_seen = set()

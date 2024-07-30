@@ -1,167 +1,116 @@
-            <div class="mb-4">
-                <label for="emailTemplate" class="block text-gray-700">Email Template:</label>
-                <textarea id="emailTemplate" class="w-full px-4 py-2 border rounded"></textarea>
-                <small>Use placeholders like &lt;name&gt;, &lt;company&gt;, &lt;url&gt;</small>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Campaign Manager - AutoClient AI</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/daisyui@4.10.5/dist/full.min.css" rel="stylesheet" type="text/css" />
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 font-sans">
+
+    <!-- Include the common navigation -->
+    {% include 'navbar.html' %}
+
+    <section class="bg-gray-200 py-8">
+        <div class="container mx-auto px-4">
+            <div class="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-md mb-6">
+                <h2 class="text-2xl font-bold mb-4">Campaign Manager</h2>
+                <ul id="campaignList" class="list-disc list-inside mb-6">
+                    <!-- Dynamic campaign list -->
+                </ul>
+                <button id="createCampaign" class="mt-4 px-4 py-2 bg-green-500 text-white rounded-lg shadow-md hover:bg-green-600 focus:outline-none focus:ring focus:ring-green-400">Create New Campaign</button>
             </div>
-            <button type="submit" class="px-4 py-2 bg-blue-500 text-white rounded">Save Campaign</button>
-        </form>
-        <div id="campaignStatus" class="mt-4"></div>
-        <div id="campaignList" class="mt-8">
-            <!-- Campaigns will be listed here -->
         </div>
-    </div>
+    </section>
+
+    <footer class="fixed bottom-0 w-full text-sm bg-gray-300 dark:bg-gray-500 px-3 py-1 text-gray-500">
+        <div class="container mx-auto px-2 flex justify-between items-center">
+            <p>&copy; 2024 AutoClient AI.</p>
+            <ul class="flex space-x-4">
+                <li><a href="#" class="hover:text-gray-400">Privacy Policy</a></li>
+                <li><a href="#" class="hover:text-gray-400">Terms of Service</a></li>
+                <li><a href="#" class="hover:text-gray-400">Contact Us</a></li>
+            </ul>
+        </div>
+    </footer>
 
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script src="/static/main.js"></script>
     <script>
         $(document).ready(function () {
-            const socket = io();
-            
-            // Function to fetch and display search queries
-            const fetchSearchQueries = () => {
-                $.get('/api/search_queries', function(data) {
-                    const searchQuerySelect = $('#searchQuery');
-                    if (!searchQuerySelect.length) {
-                        return;
-                    }
-                    searchQuerySelect.empty();
-                    data.data.forEach(query => {
-                        searchQuerySelect.append(`<option value="${query.query}">${query.query} (${query.total_contacts})</option>`);
-                    });
-                }).fail(function () {
-                    console.error('Failed to fetch search queries');
-                });
-            };
-
-            // Function to fetch and display campaigns
-            const fetchCampaigns = () => {
-                $.get('/api/campaigns', function(data) {
-                    const campaignList = $('#campaignList');
-                    if (!campaignList.length) {
-                        return;
-                    }
-                    campaignList.empty();
-                    data.data.forEach(campaign => {
-                        campaignList.append(`
-                            <div class="border p-4 mb-4">
-                                <p><strong>Campaign Name:</strong> ${campaign.name}</p>
-                                <p><strong>Search Query:</strong> ${campaign.search_query}</p>
-                                <p><strong>Email Template:</strong> ${campaign.email_template}</p>
-                                <p><strong>Created At:</strong> ${campaign.created_at}</p>
-                                <button class="px-4 py-2 bg-green-500 text-white rounded editCampaign" data-id="${campaign.id}">Edit</button>
-                                <button class="px-4 py-2 bg-red-500 text-white rounded deleteCampaign" data-id="${campaign.id}">Delete</button>
-                                <button class="px-4 py-2 bg-blue-500 text-white rounded sendCampaign" data-id="${campaign.id}">Send</button>
-                            </div>
-                        `);
-                    });
-                }).fail(function () {
-                    console.error('Failed to fetch campaigns');
-                });
-            };
-
-            // Fetch search queries and campaigns on page load
-            fetchSearchQueries();
-            fetchCampaigns();
-
-            // Handle form submission to create/update campaigns
-            $('#campaignForm').submit(function (event) {
-                event.preventDefault();
-                const campaignId = $(this).data('id');
-                const campaignName = $('#campaignName').val();
-                const searchQuery = $('#searchQuery').val();
-                const emailTemplate = $('#emailTemplate').val();
-
-                if (!campaignName || !searchQuery || !emailTemplate) {
-                    $('#campaignStatus').text('Please fill out all fields');
-                    return;
-                }
-
-                if (campaignId) {
-                    // Update existing campaign
-                    $.ajax({
-                        url: '/api/campaigns',
-                        type: 'PUT',
-                        contentType: 'application/json',
-                        data: JSON.stringify({
-                            id: campaignId,
-                            name: campaignName,
-                            search_query: searchQuery,
-                            email_template: emailTemplate
-                        }),
-                        success: function () {
-                            $('#campaignStatus').text('Campaign updated successfully');
-                            fetchCampaigns();
-                            $('#campaignForm').removeData('id');  // Reset form state
-                        },
-                        error: function () {
-                            $('#campaignStatus').text('Failed to update campaign');
-                        }
-                    });
-                } else {
-                    // Create new campaign
-                    $.ajax({
-                        url: '/api/campaigns',
-                        type: 'POST',
-                        contentType: 'application/json',
-                        data: JSON.stringify({
-                            name: campaignName,
-                            search_query: searchQuery,
-                            email_template: emailTemplate
-                        }),
-                        success: function () {
-                            $('#campaignStatus').text('Campaign created successfully');
-                            fetchCampaigns();
-                        },
-                        error: function () {
-                            $('#campaignStatus').text('Failed to create campaign');
-                        }
-                    });
-                }
-            });
-
-            // Handle edit button click
-            $(document).on('click', '.editCampaign', function () {
-                const campaignId = $(this).data('id');
-                $.get(`/api/campaigns?id=${campaignId}`, function (data) {
-                    const campaign = data.data[0];
-                    $('#campaignName').val(campaign.name);
-                    $('#searchQuery').val(campaign.search_query);
-                    $('#emailTemplate').val(campaign.email_template);
-                    $('#campaignForm').data('id', campaign.id);  // Set form state for editing
-                }).fail(function () {
-                    console.error('Failed to fetch campaign details');
-                });
-            });
-
-            // Handle delete button click
-            $(document).on('click', '.deleteCampaign', function () {
-                const campaignId = $(this).data('id');
-                if (!confirm('Are you sure you want to delete this campaign?')) {
-                    return;
-                }
+            // Load campaigns
+            function loadCampaigns() {
                 $.ajax({
-                    url: `/api/campaigns?id=${campaignId}`,
-                    type: 'DELETE',
-                    success: function () {
-                        $('#campaignStatus').text('Campaign deleted successfully');
-                        fetchCampaigns();
+                    url: '/api/campaigns',
+                    method: 'GET',
+                    success: function (response) {
+                        var campaigns = response.data;
+                        $('#campaignList').empty();
+                        campaigns.forEach(function (campaign) {
+                            var campaignItem = `<li>
+                                <p>${campaign.name}</p>
+                                <p>Search Query: ${campaign.search_query}</p>
+                                <button class="send-campaign px-4 py-2 bg-blue-500 text-white rounded-lg shadow-md hover:bg-blue-600 focus:outline-none focus:ring focus:ring-blue-400" data-id="${campaign.id}">Send Campaign</button>
+                                <button class="view-campaign px-4 py-2 bg-yellow-500 text-white rounded-lg shadow-md hover:bg-yellow-600 focus:outline-none focus:ring focus:ring-yellow-400" data-id="${campaign.id}">View Campaign</button>
+                            </li>`;
+                            $('#campaignList').append(campaignItem);
+                        });
                     },
-                    error: function () {
-                        $('#campaignStatus').text('Failed to delete campaign');
+                    error: function (xhr, status, error) {
+                        alert('Error loading campaigns: ' + error);
+                    }
+                });
+            }
+            loadCampaigns();
+
+            // Create new campaign
+            $('#createCampaign').click(function () {
+                var campaignName = prompt('Enter campaign name:');
+                if (!campaignName) return;
+
+                var searchQuery = prompt('Enter search query:');
+                if (!searchQuery) return;
+
+                var emailTemplate = prompt('Enter email template:');
+                if (!emailTemplate) return;
+
+                $.ajax({
+                    url: '/api/campaigns',
+                    method: 'POST',
+                    contentType: 'application/json',
+                    data: JSON.stringify({ name: campaignName, search_query: searchQuery, email_template: emailTemplate }),
+                    success: function () {
+                        alert('Campaign created successfully!');
+                        loadCampaigns();
+                    },
+                    error: function (xhr, status, error) {
+                        alert('Error creating campaign: ' + error);
                     }
                 });
             });
 
-            // Handle send button click
-            $(document).on('click', '.sendCampaign', function () {
-                const campaignId = $(this).data('id');
+            // Send campaign emails
+            $(document).on('click', '.send-campaign', function () {
+                var campaignId = $(this).data('id');
                 socket.emit('send_campaign', { campaign_id: campaignId });
-                $('#campaignStatus').text('Sending campaign emails...');
+                alert('Campaign emails are being sent.');
+                
+                // Capture real-time status updates
+                socket.on('email_sent', function (data) {
+                    if (data.status === 'SENT') {
+                        alert(`Email to ${data.email} sent successfully!`);
+                    } else {
+                        alert(`Failed to send email to ${data.email}.`);
+                    }
+                });
             });
 
-            // Display email sent status
-            socket.on('email_sent', function (data) {
-                $('#campaignStatus').append(`<p>Email to ${data.email} - ${data.status}</p>`);
+            // View campaign details
+            $(document).on('click', '.view-campaign', function () {
+                var campaignId = $(this).data('id');
+                window.location.href = '/campaigns/' + campaignId;
             });
         });
     </script>

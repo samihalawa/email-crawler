@@ -1,0 +1,355 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>HTMLCompare</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+            background-color: #f5f5f5;
+            margin: 0;
+        }
+        .navbar {
+            width: 100%;
+            background: linear-gradient(90deg, #333, #555);
+            overflow: hidden;
+            margin-bottom: 10px;
+            padding: 10px 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .navbar h1 {
+            color: #f2f2f2;
+            margin: 0;
+            padding-left: 20px;
+            font-size: 24px;
+        }
+        .navbar button {
+            color: #f2f2f2;
+            text-align: center;
+            padding: 10px 20px;
+            text-decoration: none;
+            font-size: 16px;
+            border: none;
+            background: none;
+            cursor: pointer;
+            transition: background-color 0.3s, color 0.3s;
+        }
+        .navbar button:hover {
+            background-color: #ddd;
+            color: black;
+        }
+        .button-container {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+        .button-container button {
+            padding: 12px 24px;
+            font-size: 16px;
+            border: 2px solid #333;
+            background-color: #f2f2f2;
+            cursor: pointer;
+            transition: background-color 0.3s, color 0.3s;
+            border-radius: 5px;
+        }
+        .button-container button:hover {
+            background-color: #333;
+            color: #f2f2f2;
+        }
+        .iframe-container,
+        .all-iframes {
+            width: 100%;
+            display: none;
+            flex-direction: column;
+            align-items: center;
+        }
+        .iframe-container iframe,
+        .all-iframes iframe {
+            width: 100%;
+            height: 500px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        .back-button {
+            padding: 10px 20px;
+            font-size: 16px;
+            border: none;
+            background-color: #333;
+            color: #f2f2f2;
+            cursor: pointer;
+            margin-bottom: 10px;
+            transition: background-color 0.3s, color 0.3s;
+            border-radius: 5px;
+        }
+        .back-button:hover {
+            background-color: #ddd;
+            color: black;
+        }
+        .resizer {
+            resize: both;
+            overflow: auto;
+            border-radius: 5px;
+            margin-bottom: 20px;
+        }
+        .quick-compare {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-top: 20px;
+        }
+        .compare-container {
+            display: flex;
+            width: 100%;
+            gap: 10px;
+            flex-wrap: wrap;
+            margin-bottom: 20px;
+        }
+        .compare-container div {
+            flex: 1 1 48%;
+            min-height: 500px;
+            position: relative;
+        }
+        .compare-container iframe {
+            width: 100%;
+            height: 500px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        .compare-container .close-button {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background-color: red;
+            color: white;
+            border: none;
+            border-radius: 50%;
+            cursor: pointer;
+            width: 24px;
+            height: 24px;
+            text-align: center;
+            line-height: 24px;
+        }
+        .iframe-pair {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 48%;
+        }
+        .iframe-pair iframe {
+            width: 100%;
+            height: 500px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            margin-top: 5px;
+        }
+        .add-compare {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            margin-top: 20px;
+        }
+        .add-compare select {
+            padding: 10px;
+            font-size: 16px;
+        }
+        .add-compare button {
+            padding: 10px 20px;
+            font-size: 16px;
+            border: none;
+            background-color: #333;
+            color: #f2f2f2;
+            cursor: pointer;
+            border-radius: 5px;
+            transition: background-color 0.3s, color 0.3s;
+        }
+        .add-compare button:hover {
+            background-color: #ddd;
+            color: black;
+        }
+    </style>
+</head>
+<body>
+    <div class="navbar">
+        <h1>HTMLCompare</h1>
+        <div>
+            <button onclick="showList()">Home</button>
+            <button onclick="viewAll()">View All</button>
+        </div>
+    </div>
+    
+    <div id="viewer-container" class="button-container">
+        <!-- File list and iframes will be dynamically generated here -->
+    </div>
+
+    <div class="iframe-container resizer" id="iframe-container">
+        <button class="back-button" onclick="goBack()">Back</button>
+        <iframe id="file-viewer" src=""></iframe>
+    </div>
+
+    <div class="all-iframes" id="all-iframes">
+        <!-- All iframes will be dynamically generated here -->
+    </div>
+
+    <div class="quick-compare" id="quick-compare">
+        <div class="compare-container" id="compare-container">
+            <!-- Quick compare iframes will be dynamically generated here -->
+        </div>
+        <div class="add-compare">
+            <select id="file-select">
+                <!-- Options will be dynamically generated here -->
+            </select>
+            <button onclick="addCompare()">+ Choose file</button>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            const container = document.getElementById('viewer-container');
+            const iframeContainer = document.getElementById('iframe-container');
+            const iframe = document.getElementById('file-viewer');
+            const allIframesContainer = document.getElementById('all-iframes');
+            const quickCompareContainer = document.getElementById('quick-compare');
+            const compareContainer = document.getElementById('compare-container');
+            const fileSelect = document.getElementById('file-select');
+
+            // JavaScript List of HTML files
+            const htmlFiles = [
+                'index (copy).html',
+                'index.html',
+                'index0.html',
+                'index1.html',
+                'index3.html',
+                'index6.html',
+                'landing.html'
+            ];
+
+            function createButton(file) {
+                const button = document.createElement('button');
+                button.textContent = file;
+                button.onclick = function() {
+                    viewFile(file);
+                };
+                container.appendChild(button);
+                const option = document.createElement('option');
+                option.value = file;
+                option.textContent = file;
+                fileSelect.appendChild(option);
+            }
+
+            function createIframe(src) {
+                const iframe = document.createElement('iframe');
+                iframe.src = src;
+                iframe.style.borderRadius = "5px";
+                iframe.style.width = "100%";
+                iframe.style.height = "500px";
+                iframe.style.marginBottom = "10px";
+                allIframesContainer.appendChild(iframe);
+            }
+
+            function createQuickCompare(src) {
+                const div = document.createElement('div');
+                const iframe = document.createElement('iframe');
+                iframe.src = src;
+                iframe.style.borderRadius = "5px";
+                iframe.style.width = "100%";
+                iframe.style.height = "500px";
+                div.appendChild(iframe);
+                
+                const closeButton = document.createElement('button');
+                closeButton.classList.add('close-button');
+                closeButton.innerHTML = '&times;';
+                closeButton.onclick = function() {
+                    div.remove();
+                };
+                div.appendChild(closeButton);
+
+                compareContainer.appendChild(div);
+            }
+
+            function viewFile(file) {
+                container.style.display = 'flex';
+                allIframesContainer.style.display = 'flex';
+                quickCompareContainer.style.display = 'none';
+                iframeContainer.style.display = 'flex';
+                iframe.src = file;
+            }
+
+            function viewAll() {
+                container.style.display = 'none';
+                iframeContainer.style.display = 'none';
+                quickCompareContainer.style.display = 'none';
+                allIframesContainer.innerHTML = '<button class="back-button" onclick="goBack()">Back</button>';
+                for (let i = 0; i < htmlFiles.length; i += 2) {
+                    const pairContainer = document.createElement('div');
+                    pairContainer.classList.add('iframe-pair');
+                    
+                    const label1 = document.createElement('div');
+                    label1.textContent = htmlFiles[i];
+                    pairContainer.appendChild(label1);
+                    const iframe1 = document.createElement('iframe');
+                    iframe1.src = htmlFiles[i];
+                    iframe1.style.borderRadius = "5px";
+                    iframe1.style.width = "100%";
+                    iframe1.style.height = "500px";
+                    pairContainer.appendChild(iframe1);
+                    
+                    if (i + 1 < htmlFiles.length) {
+                        const label2 = document.createElement('div');
+                        label2.textContent = htmlFiles[i + 1];
+                        pairContainer.appendChild(label2);
+                        const iframe2 = document.createElement('iframe');
+                        iframe2.src = htmlFiles[i + 1];
+                        iframe2.style.borderRadius = "5px";
+                        iframe2.style.width = "100%";
+                        iframe2.style.height = "500px";
+                        pairContainer.appendChild(iframe2);
+                    }
+
+                    allIframesContainer.appendChild(pairContainer);
+                }
+                allIframesContainer.style.display = 'flex';
+            }
+
+            function showQuickCompare() {
+                container.style.display = 'none';
+                iframeContainer.style.display = 'none';
+                allIframesContainer.style.display = 'none';
+                quickCompareContainer.style.display = 'flex';
+            }
+
+            function addCompare() {
+                const selectedFile = fileSelect.value;
+                if (selectedFile) {
+                    createQuickCompare(selectedFile);
+                }
+            }
+
+            htmlFiles.forEach(file => {
+                createButton(file);
+                createIframe(file);  // Create iframes in default view
+            });
+        });
+
+        function showList() {
+            document.getElementById('viewer-container').style.display = 'flex';
+            document.getElementById('iframe-container').style.display = 'none';
+            document.getElementById('all-iframes').style.display = 'flex';  // Show iframes in default view
+            document.getElementById('quick-compare').style.display = 'none';
+        }
+
+        function goBack() {
+            showList();
+            document.getElementById('file-viewer').src = "";
+            document.getElementById('all-iframes').innerHTML = '';
+            document.getElementById('quick-compare').style.display = 'none';
+            document.getElementById('compare-container').innerHTML = '';
+        }
+    </script>
+</body>
+</html>

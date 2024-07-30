@@ -1,34 +1,79 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
-    <title>View Campaign</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>View Campaign - AutoClient AI</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/daisyui@4.10.5/dist/full.min.css" rel="stylesheet" type="text/css" />
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
 </head>
+<body class="bg-gray-100 font-sans">
 
-<body>
-    <div>
-        <h2>View Campaign</h2>
-        <div id="campaignDetails">
-            <!-- Dynamic campaign details -->
+    <!-- Include the common navigation -->
+    {% include 'navbar.html' %}
+
+    <section class="bg-gray-200 py-8">
+        <div class="container mx-auto px-4">
+            <div class="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-md mb-6">
+                <h2 class="text-2xl font-bold mb-4">View Campaign</h2>
+                <div id="campaignDetails" class="overflow-x-auto">
+                    <!-- Dynamic campaign details will be injected here -->
+                </div>
+            </div>
         </div>
-    </div>
+    </section>
+
+    <footer class="fixed bottom-0 w-full text-sm bg-gray-300 dark:bg-gray-500 px-3 py-1 text-gray-500">
+        <div class="container mx-auto px-2 flex justify-between items-center">
+            <p>&copy; 2024 AutoClient AI.</p>
+            <ul class="flex space-x-4">
+                <li><a href="#" class="hover:text-gray-400">Privacy Policy</a></li>
+                <li><a href="#" class="hover:text-gray-400">Terms of Service</a></li>
+                <li><a href="#" class="hover:text-gray-400">Contact Us</a></li>
+            </ul>
+        </div>
+    </footer>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script>
         $(document).ready(function () {
-            // Logic to fetch and display campaign details based on campaign ID
-            var campaignId = '{{ campaign_id }}';
+            var campaignId = '{{ campaign_id }}'; // placeholder for the campaign ID
             $.ajax({
                 url: `/api/campaigns/${campaignId}`,
                 method: 'GET',
                 success: function (response) {
-                    // Render the campaign details into the page
+                    var campaign = response.data;
+                    $('#campaignDetails').html(`
+                        <p><strong>Campaign Name:</strong> ${campaign.name}</p>
+                        <p><strong>Search Query:</strong> ${campaign.search_query}</p>
+                        <p><strong>Email Template:</strong></p>
+                        <pre>${campaign.email_template}</pre>
+                        <button class="send-campaign px-4 py-2 bg-blue-500 text-white rounded-lg shadow-md hover:bg-blue-600 focus:outline-none focus:ring focus:ring-blue-400" data-id="${campaign.id}">Send Campaign</button>
+                    `);
                 },
                 error: function (xhr, status, error) {
                     alert('Error fetching campaign details: ' + error);
                 }
             });
+
+            // Send campaign emails
+            $(document).on('click', '.send-campaign', function () {
+                var campaignId = $(this).data('id');
+                socket.emit('send_campaign', { campaign_id: campaignId });
+                alert('Campaign emails are being sent.');
+
+                // Capture real-time status updates
+                socket.on('email_sent', function (data) {
+                    if (data.status === 'SENT') {
+                        alert(`Email to ${data.email} sent successfully!`);
+                    } else {
+                        alert(`Failed to send email to ${data.email}.`);
+                    }
+                });
+            });
         });
     </script>
 </body>
-
 </html>

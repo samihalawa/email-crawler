@@ -275,6 +275,7 @@ def campaigns():
     return render_template('campaign.html')
 
 
+
 @app.route('/campaigns/<int:campaign_id>')
 def view_campaign(campaign_id):
     return render_template('view_campaign.html', campaign_id=campaign_id)
@@ -477,4 +478,4 @@ def handle_send_campaign(json):
 
 
 if __name__ == '__main__':
-    socketio.run(app, host='0.0.0.0', debug=True, port=5050)
+    socketio.run(app, host='0.0.0.0', debug=False, port=5050)
