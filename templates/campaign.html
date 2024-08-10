@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -10,16 +11,17 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="manifest" href="/manifest.json">
     <script>
-      if ("serviceWorker" in navigator) {
-        window.addEventListener("load", function() {
-          navigator.serviceWorker.register("/service-worker.js")
-            .then(reg => console.log("Service Worker registered with scope:", reg.scope))
-            .catch(err => console.error("Service Worker registration failed:", err));
-        });
-      }
+        if ("serviceWorker" in navigator) {
+            window.addEventListener("load", function () {
+                navigator.serviceWorker.register("/service-worker.js")
+                    .then(reg => console.log("Service Worker registered with scope:", reg.scope))
+                    .catch(err => console.error("Service Worker registration failed:", err));
+            });
+        }
     </script>
 
 </head>
+
 <body class="bg-gray-100 font-sans">
 
     <!-- Include the common navigation -->
@@ -32,7 +34,19 @@
                 <ul id="campaignList" class="list-disc list-inside mb-6">
                     <!-- Dynamic campaign list -->
                 </ul>
-                <button id="createCampaign" class="mt-4 px-4 py-2 bg-green-500 text-white rounded-lg shadow-md hover:bg-green-600 focus:outline-none focus:ring focus:ring-green-400">Create New Campaign</button>
+                <button id="showForm" class="mt-4 px-4 py-2 bg-green-500 text-white rounded-lg shadow-md hover:bg-green-600 focus:outline-none focus:ring focus:ring-green-400">Create New Campaign</button>
+                <div id="campaignForm" class="hidden">
+                  <h3>Create Campaign</h3>
+                  <form id="newCampaign">
+                    <label for="name">Campaign Name:</label>
+                    <input type="text" id="name" name="name" required><br>
+                    <label for="search_query">Search Query:</label>
+                    <input type="text" id="search_query" name="search_query" required><br>
+                    <label for="email_template">Email Template:</label>
+                    <textarea id="email_template" name="email_template" required></textarea><br>
+                    <button type="submit" class="mt-4 px-4 py-2 bg-blue-500 text-white rounded-lg shadow-md hover:bg-blue-600 focus:outline-none focus:ring focus:ring-blue-400">Submit</button>
+                  </form>
+                </div>
             </div>
         </div>
     </section>
@@ -76,28 +90,32 @@
             }
             loadCampaigns();
 
+            // Show the form when button is clicked
+            $('#showForm').click(function () {
+                $('#campaignForm').toggleClass('hidden');
+            });
+
             // Create new campaign
-            $('#createCampaign').click(function () {
-                var campaignName = prompt('Enter campaign name:');
-                if (!campaignName) return;
-
-                var searchQuery = prompt('Enter search query:');
-                if (!searchQuery) return;
-
-                var emailTemplate = prompt('Enter email template:');
-                if (!emailTemplate) return;
-
+            $('#newCampaign').submit(function (e) {
+                e.preventDefault();
+                const campaignData = {
+                    name: $('#name').val(),
+                    search_query: $('#search_query').val(),
+                    email_template: $('#email_template').val()
+                };
                 $.ajax({
                     url: '/api/campaigns',
                     method: 'POST',
                     contentType: 'application/json',
-                    data: JSON.stringify({ name: campaignName, search_query: searchQuery, email_template: emailTemplate }),
+                    data: JSON.stringify(campaignData),
                     success: function () {
                         alert('Campaign created successfully!');
                         loadCampaigns();
+                        $('#newCampaign')[0].reset(); // Clear form
+                        $('#campaignForm').addClass('hidden'); // Hide form
                     },
                     error: function (xhr, status, error) {
-                        alert('Error creating campaign: ' + error);
+                        alert('Error creating campaign: ' + xhr.responseText);
                     }
                 });
             });
@@ -105,9 +123,9 @@
             // Send campaign emails
             $(document).on('click', '.send-campaign', function () {
                 var campaignId = $(this).data('id');
-                socket.emit('send_campaign', { campaign_id: campaignId });
+                socket.emit('send_campaign', {campaign_id: campaignId});
                 alert('Campaign emails are being sent.');
-                
+
                 // Capture real-time status updates
                 socket.on('email_sent', function (data) {
                     if (data.status === 'SENT') {

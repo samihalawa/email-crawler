@@ -45,21 +45,16 @@ typo_domains = ["gmil.com", "gmal.com", "gmaill.com", "gnail.com"]
 MIN_EMAIL_LENGTH = 6
 MAX_EMAIL_LENGTH = 254
 
-
 def get_db_connection():
     try:
         return pg_pool.getconn()
     except psycopg2.OperationalError as e:
-        print(
-            f"Error: Could not connect to the PostgreSQL database. Detail: {e}"
-        )
+        print(f"Error: Could not connect to the PostgreSQL database. Detail: {e}")
         return None
-
 
 def release_db_connection(conn):
     if conn:
         pg_pool.putconn(conn)
-
 
 def is_valid_email(email):
     if len(email) < MIN_EMAIL_LENGTH or len(email) > MAX_EMAIL_LENGTH:
@@ -72,7 +67,6 @@ def is_valid_email(email):
         return False
     return True
 
-
 def find_emails(text):
     email_regex = re.compile(
         r'\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,7}\b')
@@ -80,15 +74,12 @@ def find_emails(text):
     valid_emails = {email for email in all_emails if is_valid_email(email)}
     return valid_emails
 
-
 def get_page_title(soup):
     return soup.title.string if soup.title else 'No Title Found'
-
 
 def get_meta_description(soup):
     description = soup.find('meta', attrs={'name': 'description'})
     return description['content'] if description else 'No Description Found'
-
 
 def crawl_website(url, search_query, auto_send=False, email_template=''):
     global seen_emails, domain_counts
@@ -196,7 +187,6 @@ def crawl_website(url, search_query, auto_send=False, email_template=''):
             finally:
                 release_db_connection(conn)
 
-
 def send_email(recipient_email, subject, body):
     msg = MIMEMultipart()
     msg['From'] = smtp_user
@@ -209,12 +199,10 @@ def send_email(recipient_email, subject, body):
         server.login(smtp_user, smtp_password)
         server.send_message(msg)
 
-
 def customize_email(template, contact_info):
     return template.replace('<name>', contact_info['name']) \
                    .replace('<company>', contact_info['company']) \
                    .replace('<url>', contact_info['url'])
-
 
 def send_campaign_email(campaign_id):
     conn = get_db_connection()
@@ -256,14 +244,12 @@ def send_campaign_email(campaign_id):
         finally:
             release_db_connection(conn)
 
-
 def background_search(search_query,
                       num_results,
                       auto_send=False,
                       email_template=''):
     for url in search(search_query, num_results=int(num_results)):
         crawl_website(url, search_query, auto_send, email_template)
-
 
 @app.route('/')
 def index():
@@ -281,11 +267,9 @@ def service_worker():
 def campaigns():
     return render_template('campaign.html')
 
-
 @app.route('/campaigns/<int:campaign_id>')
 def view_campaign(campaign_id):
     return render_template('view_campaign.html', campaign_id=campaign_id)
-
 
 @app.route('/api/readData', methods=['GET'])
 def read_data():
@@ -299,21 +283,17 @@ def read_data():
         return jsonify({"error": str(e)}), 500
     return jsonify(data)
 
-
 @app.route('/csv-table')
 def csv_table():
     return render_template('csv-table.html')
-
 
 @app.route('/postgres-table')
 def postgres_table():
     return render_template('postgres-table.html')
 
-
 @app.route('/start')
 def load_start_page():
     return render_template('start.html')
-
 
 @app.route('/api/readPostgresData', methods=['GET'])
 def read_postgres_data():
@@ -359,7 +339,6 @@ def read_postgres_data():
         'per_page': per_page
     })
 
-
 @app.route('/api/search_queries', methods=['GET'])
 def get_search_queries():
     data = []
@@ -382,7 +361,6 @@ def get_search_queries():
             release_db_connection(conn)
     return jsonify({'data': data})
 
-
 @app.route('/api/campaigns', methods=['GET', 'POST', 'PUT', 'DELETE'])
 def handle_campaigns():
     if request.method == 'POST':
@@ -390,6 +368,10 @@ def handle_campaigns():
         campaign_name = data.get("name")
         search_query = data.get("search_query")
         email_template = data.get("email_template")
+
+        # Input validation
+        if not all([campaign_name, search_query, email_template]):
+            return jsonify({'error': 'All fields (name, search_query, email_template) are required.'}), 400
 
         conn = get_db_connection()
         if conn:
@@ -399,12 +381,18 @@ def handle_campaigns():
                     """
                     INSERT INTO campaigns (name, search_query, email_template)
                     VALUES (%s, %s, %s)
-                """, (campaign_name, search_query, email_template))
+                    """, (campaign_name, search_query, email_template))
                 conn.commit()
                 cur.close()
+                return jsonify({'status': 'Campaign created successfully'})
+            except Exception as e:
+                # Log the exception and return an error response
+                print(f"Error occurred: {e}")
+                return jsonify({'error': 'Failed to create campaign. Please try again later.'}), 500
             finally:
                 release_db_connection(conn)
-            return jsonify({'status': 'Campaign created successfully'})
+        else:
+            return jsonify({'error': 'Failed to connect to the database.'}), 500
 
     elif request.method == 'PUT':
         data = request.json
@@ -422,7 +410,7 @@ def handle_campaigns():
                     UPDATE campaigns
                     SET name = %s, search_query = %s, email_template = %s, updated_at = NOW()
                     WHERE id = %s
-                """,
+                    """,
                     (campaign_name, search_query, email_template, campaign_id))
                 conn.commit()
                 cur.close()
@@ -467,6 +455,7 @@ def handle_campaigns():
                 release_db_connection(conn)
         return jsonify({'data': data})
 
+    return jsonify({'error': 'Unsupported request method.'}), 405
 
 @socketio.on('start_search')
 def handle_start_search(json):
@@ -481,12 +470,11 @@ def handle_start_search(json):
                      args=(search_query, num_results, auto_send,
                            email_template)).start()
 
-
 @socketio.on('send_campaign')
 def handle_send_campaign(json):
     campaign_id = json['campaign_id']
-    threading.Thread(target=send_campaign_email, args=(campaign_id, )).start()
+    threading.Thread(target=send_campaign_email, args=(campaign_id,)).start()
 
 
 if __name__ == '__main__':
-    socketio.run(app, host='0.0.0.0', port=5050, debug=False)
+    app.run(host='0.0.0.0', debug=True, port=5050)
