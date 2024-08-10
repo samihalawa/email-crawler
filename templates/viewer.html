@@ -197,6 +197,17 @@
             color: black;
         }
     </style>
+    <link rel="manifest" href="/manifest.json">
+    <script>
+      if ("serviceWorker" in navigator) {
+        window.addEventListener("load", function() {
+          navigator.serviceWorker.register("/service-worker.js")
+            .then(reg => console.log("Service Worker registered with scope:", reg.scope))
+            .catch(err => console.error("Service Worker registration failed:", err));
+        });
+      }
+    </script>
+
 </head>
 
 <body>

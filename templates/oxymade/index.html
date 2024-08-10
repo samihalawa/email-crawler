@@ -44,6 +44,17 @@ html { font-size: 62.5%; } body { font-size: 1.7rem; }
 			</script>
 			<link rel='stylesheet' id='oxygen-universal-styles-css' href='//monster.oxymade.com/wp-content/uploads/oxygen/css/universal.css?cache=1700974635&#038;ver=6.4.4' media='all' />
 <!-- END OF WP_HEAD() -->
+    <link rel="manifest" href="/manifest.json">
+    <script>
+      if ("serviceWorker" in navigator) {
+        window.addEventListener("load", function() {
+          navigator.serviceWorker.register("/service-worker.js")
+            .then(reg => console.log("Service Worker registered with scope:", reg.scope))
+            .catch(err => console.error("Service Worker registration failed:", err));
+        });
+      }
+    </script>
+
 </head>
 <body class="page-template-default page page-id-895  wp-embed-responsive oxygen-body" >
 

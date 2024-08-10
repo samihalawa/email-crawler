@@ -1,14 +1,46 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>AutoClient AI - Revolutionize Your Email Marketing with AI</title>
-    <meta name="description" content="Streamline your marketing with AutoClient AI. Discover potential clients and engage with custom, AI-crafted emails.">
+    <meta name="description"
+        content="Streamline your marketing with AutoClient AI. Discover potential clients and engage with custom, AI-crafted emails.">
+
+    <!-- SEO -->
+    <meta name="robots" content="index, follow">
+    <meta property="og:title" content="AutoClient AI - Revolutionize Your Email Marketing with AI">
+    <meta property="og:description"
+        content="Streamline your marketing with AutoClient AI. Discover potential clients and engage with custom, AI-crafted emails.">
+    <meta property="og:url" content="https://yourwebsite.com/landing-page-url">
+    <meta property="og:type" content="website">
+    <meta property="og:image" content="https://yourwebsite.com/images/og-image.jpg">
+    <meta property="twitter:card" content="summary_large_image">
+    <meta property="twitter:title" content="AutoClient AI - Revolutionize Your Email Marketing with AI">
+    <meta property="twitter:description"
+        content="Streamline your marketing with AutoClient AI. Discover potential clients and engage with custom, AI-crafted emails.">
+    <meta property="twitter:image" content="https://yourwebsite.com/images/og-image.jpg">
+    <link rel="canonical" href="https://yourwebsite.com/landing-page-url">
+
+    <!-- Favicon -->
+    <link rel="icon" href="https://yourwebsite.com/favicon.ico" type="image/x-icon">
+
+    <!-- CSS -->
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/daisyui@1.12.8/dist/full.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="preload" href="path/to/your/fonts.woff2" as="font" type="font/woff2" crossorigin="anonymous">
+
+    <!-- Additional CSS for custom styling -->
     <style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+
         /* Modal Styles */
         .modal-overlay {
             display: flex;
@@ -22,6 +54,7 @@
             background-color: rgba(0, 0, 0, 0.5);
             z-index: 9999;
         }
+
         .modal-content {
             position: relative;
             background-color: #fff;
@@ -32,16 +65,20 @@
             overflow-y: auto;
             transition: opacity 1s ease;
         }
+
         .modal-close {
             position: absolute;
             top: 0.5rem;
             right: 0.5rem;
             cursor: pointer;
         }
+
         /* Spinner Animation */
         .loader {
-            border: 4px solid #f3f3f3; /* Light grey */
-            border-top: 4px solid #3498db; /* Blue */
+            border: 4px solid #f3f3f3;
+            /* Light grey */
+            border-top: 4px solid #3498db;
+            /* Blue */
             border-radius: 50%;
             width: 30px;
             height: 30px;
@@ -50,25 +87,45 @@
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
-            opacity: 0; /* Initially hidden */
+            opacity: 0;
+            /* Initially hidden */
         }
+
         @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
+            0% {
+                transform: rotate(0deg);
+            }
+
+            100% {
+                transform: rotate(360deg);
+            }
         }
     </style>
-</head>
-    <body class="bg-gray-100 font-sans">
+    <link rel="manifest" href="/manifest.json">
+    <script>
+      if ("serviceWorker" in navigator) {
+        window.addEventListener("load", function() {
+          navigator.serviceWorker.register("/service-worker.js")
+            .then(reg => console.log("Service Worker registered with scope:", reg.scope))
+            .catch(err => console.error("Service Worker registration failed:", err));
+        });
+      }
+    </script>
 
+</head>
+
+<body class="bg-gray-100 font-sans">
     <!-- Include the common navigation -->
     {% include 'navbar.html' %}
-
+ 
     <!-- Hero Section -->
-    <section id="hero" style="background-color:#4a90e2; background: linear-gradient(135deg, #4a90e2, #e94e77) !important;" class="bg-primary text-white text-center py-20">
+    <section id="hero"
+        style="background-color:#4a90e2; background: linear-gradient(135deg, #4a90e2, #e94e77) !important;"
+        class="bg-primary text-white text-center py-20">
         <div class="container mx-auto px-6">
             <h1 class="text-4xl font-bold mb-4">Revolutionize Your Email Marketing with AI</h1>
             <p class="text-xl mb-8">Discover potential clients and engage with custom, AI-crafted emails.</p>
-            <a href="#cta" class="bg-white text-primary font-bold py-2 px-4 rounded-full">Get Started</a>
+            <a href="#cta" class="bg-white text-black font-bold py-2 px-4 rounded-full">Get Started</a>
         </div>
     </section>
 
@@ -81,13 +138,15 @@
                 <div class="p-6 bg-white rounded-lg shadow-md">
                     <i class="fas fa-chart-line text-primary text-3xl mb-4"></i>
                     <h3 class="text-xl font-bold mb-2">Data-Driven Insights</h3>
-                    <p class="text-gray-700">Gain valuable insights into your target audience with AI-powered data analytics.</p>
+                    <p class="text-gray-700">Gain valuable insights into your target audience with AI-powered data
+                        analytics.</p>
                 </div>
                 <!-- Feature 2 -->
                 <div class="p-6 bg-white rounded-lg shadow-md">
                     <i class="fas fa-envelope-open-text text-primary text-3xl mb-4"></i>
                     <h3 class="text-xl font-bold mb-2">Personalized Emails</h3>
-                    <p class="text-gray-700">Craft personalized emails using AI algorithms to engage with potential clients.</p>
+                    <p class="text-gray-700">Craft personalized emails using AI algorithms to engage with potential
+                        clients.</p>
                 </div>
                 <!-- Feature 3 -->
                 <div class="p-6 bg-white rounded-lg shadow-md">
@@ -99,7 +158,8 @@
                 <div class="p-6 bg-white rounded-lg shadow-md">
                     <i class="fas fa-chart-pie text-primary text-3xl mb-4"></i>
                     <h3 class="text-xl font-bold mb-2">Advanced Analytics</h3>
-                    <p class="text-gray-700">Monitor the performance of your campaigns with real-time analytics and reports.</p>
+                    <p class="text-gray-700">Monitor the performance of your campaigns with real-time analytics and
+                        reports.</p>
                 </div>
                 <!-- Feature 5 -->
                 <div class="p-6 bg-white rounded-lg shadow-md">
@@ -111,7 +171,8 @@
                 <div class="p-6 bg-white rounded-lg shadow-md">
                     <i class="fas fa-mobile-alt text-primary text-3xl mb-4"></i>
                     <h3 class="text-xl font-bold mb-2">Responsive Design</h3>
-                    <p class="text-gray-700">Engage your audience with beautifully designed, mobile-responsive emails.</p>
+                    <p class="text-gray-700">Engage your audience with beautifully designed, mobile-responsive emails.
+                    </p>
                 </div>
             </div>
         </div>
@@ -138,13 +199,15 @@
                 <div class="p-6 bg-white rounded-lg shadow-md">
                     <i class="fas fa-thumbs-up text-orange-500 text-3xl mb-4"></i>
                     <h3 class="text-xl font-bold mb-2">Higher Engagement</h3>
-                    <p class="text-gray-700">Engage your audience with personalized and relevant content delivered to their inbox.</p>
+                    <p class="text-gray-700">Engage your audience with personalized and relevant content delivered to
+                        their inbox.</p>
                 </div>
                 <!-- Benefit 4 -->
                 <div class="p-6 bg-white rounded-lg shadow-md">
                     <i class="fas fa-chart-bar text-purple-500 text-3xl mb-4"></i>
                     <h3 class="text-xl font-bold mb-2">Improved ROI</h3>
-                    <p class="text-gray-700">Maximize your return on investment with data-driven marketing strategies.</p>
+                    <p class="text-gray-700">Maximize your return on investment with data-driven marketing strategies.
+                    </p>
                 </div>
                 <!-- Benefit 5 -->
                 <div class="p-6 bg-white rounded-lg shadow-md">
@@ -163,7 +226,8 @@
     </section>
 
     <!-- Call to Action Section -->
-    <section id="cta" class="bg-primary text-white text-center py-12">
+    <section style="background: linear-gradient(135deg, #4a90e2, #e94e77);" id="cta"
+        class="bg-primary text-white text-center py-12">
         <div class="container mx-auto px-4">
             <h2 class="text-3xl font-bold mb-4">Get Started with AutoClient AI Today!</h2>
             <p class="text-lg mb-8">Sign up now and revolutionize your email marketing strategy with AI.</p>
@@ -172,21 +236,24 @@
     </section>
 
     <!-- FAQ Section -->
-    <section style="style="background: linear-gradient(135deg, #4a90e2, #e94e77);" id="faq" class="py-12">
+    <section id="faq" class="py-12">
         <div class="container mx-auto px-4">
             <h2 class="text-2xl font-bold text-center mb-8">Frequently Asked Questions</h2>
             <div class="space-y-4">
                 <div class="bg-white p-6 rounded-lg shadow-md">
                     <h3 class="text-xl font-bold mb-2">What is AutoClient AI?</h3>
-                    <p class="text-gray-700">AutoClient AI is an AI-powered email marketing platform that helps you discover potential clients and engage with them through personalized emails.</p>
+                    <p class="text-gray-700">AutoClient AI is an AI-powered email marketing platform that helps you
+                        discover potential clients and engage with them through personalized emails.</p>
                 </div>
                 <div class="bg-white p-6 rounded-lg shadow-md">
                     <h3 class="text-xl font-bold mb-2">How does the AI work?</h3>
-                    <p class="text-gray-700">Our AI algorithms analyze data to provide insights, craft personalized emails, and automate your marketing campaigns for maximum efficiency.</p>
+                    <p class="text-gray-700">Our AI algorithms analyze data to provide insights, craft personalized
+                        emails, and automate your marketing campaigns for maximum efficiency.</p>
                 </div>
                 <div class="bg-white p-6 rounded-lg shadow-md">
                     <h3 class="text-xl font-bold mb-2">Is my data secure?</h3>
-                    <p class="text-gray-700">Yes, we prioritize data security and use advanced encryption and security measures to protect your information.</p>
+                    <p class="text-gray-700">Yes, we prioritize data security and use advanced encryption and security
+                        measures to protect your information.</p>
                 </div>
             </div>
         </div>
@@ -200,7 +267,8 @@
                 <!-- Pricing Tier 1 -->
                 <div class="p-6 bg-white rounded-lg shadow-md">
                     <h3 class="text-xl font-bold mb-4">Basic</h3>
-                    <p class="text-gray-700 mb-4">Ideal for small businesses just getting started with email marketing.</p>
+                    <p class="text-gray-700 mb-4">Ideal for small businesses just getting started with email marketing.
+                    </p>
                     <div class="text-3xl font-bold mb-4">$19/month</div>
                     <ul class="list-disc list-inside mb-4 text-gray-700">
                         <li>Up to 1,000 emails per month</li>
@@ -245,7 +313,9 @@
                 <!-- Testimonial 1 -->
                 <div class="p-6 bg-white rounded-lg shadow-md">
                     <i class="fas fa-quote-left text-primary text-2xl"></i>
-                    <p class="text-gray-700 mt-2">"AutoClient AI has completely transformed our email marketing strategy. We've seen a significant increase in engagement and conversions since implementing their platform."</p>
+                    <p class="text-gray-700 mt-2">"AutoClient AI has completely transformed our email marketing
+                        strategy. We've seen a significant increase in engagement and conversions since implementing
+                        their platform."</p>
                     <div class="mt-4">
                         <div class="font-semibold">John Doe</div>
                         <div class="text-sm text-gray-500">CEO, Example Company</div>
@@ -254,7 +324,8 @@
                 <!-- Testimonial 2 -->
                 <div class="p-6 bg-white rounded-lg shadow-md">
                     <i class="fas fa-quote-left text-primary text-2xl"></i>
-                    <p class="text-gray-700 mt-2">"I was skeptical at first, but AutoClient AI exceeded my expectations. The level of personalization and automation in their email campaigns is unparalleled."</p>
+                    <p class="text-gray-700 mt-2">"I was skeptical at first, but AutoClient AI exceeded my expectations.
+                        The level of personalization and automation in their email campaigns is unparalleled."</p>
                     <div class="mt-4">
                         <div class="font-semibold">Jane Smith</div>
                         <div class="text-sm text-gray-500">Marketing Director, Sample Company</div>
@@ -263,7 +334,8 @@
                 <!-- Testimonial 3 -->
                 <div class="p-6 bg-white rounded-lg shadow-md">
                     <i class="fas fa-quote-left text-primary text-2xl"></i>
-                    <p class="text-gray-700 mt-2">"Using AutoClient AI has made our email marketing efforts more efficient and effective. We couldn't be happier with the results."</p>
+                    <p class="text-gray-700 mt-2">"Using AutoClient AI has made our email marketing efforts more
+                        efficient and effective. We couldn't be happier with the results."</p>
                     <div class="mt-4">
                         <div class="font-semibold">Alice Johnson</div>
                         <div class="text-sm text-gray-500">Marketing Specialist, Tech Company</div>
@@ -286,4 +358,33 @@
                         </div>
                         <div class="mb-4">
                             <label class="block text-gray-700 font-bold mb-2" for="email">Email:</label>
-                            <input type="email" id="email" class="
+                            <input type="email" id="email" class="w-full px-3 py-2 border rounded-lg shadow-sm">
+                        </div>
+                        <div class="mb-4">
+                            <label class="block text-gray-700 font-bold mb-2" for="message">Message:</label>
+                            <textarea id="message" class="w-full px-3 py-2 border rounded-lg shadow-sm"></textarea>
+                        </div>
+                        <div class="text-center">
+                            <button style="background:lightgray" type="submit"
+                                class="bg-primary text-black font-bold py-4 px-12 rounded-full">Send</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer style="background-color:#4a90e2; background: linear-gradient(135deg, #7a90e2, #e94e77) !important;"
+        class="bg-dark text-white py-4">
+        <div class="container mx-auto text-center">
+            <p>&copy; 2024 AutoClient AI. All rights reserved.</p>
+            <div class="mt-2">
+                <a href="#" class="text-white hover:text-gray-200 mx-2">Privacy Policy</a>
+                <a href="#" class="text-white hover:text-gray-200 mx-2">Terms of Service</a>
+            </div>
+        </div>
+    </footer>
+</body>
+
+</html>

@@ -1,6 +1,6 @@
 import psycopg2
 from psycopg2 import pool
-from flask import Flask, render_template, jsonify, request
+from flask import Flask, render_template, send_from_directory, jsonify, request
 from flask_socketio import SocketIO
 import threading
 import requests
@@ -29,7 +29,7 @@ pg_pool = psycopg2.pool.ThreadedConnectionPool(
 
 # SMTP configurations
 smtp_server = os.getenv('SMTP_SERVER')
-smtp_port =  os.getenv('SMTP_PORT')
+smtp_port = os.getenv('SMTP_PORT')
 smtp_user = os.getenv('SMTP_USER')
 smtp_password = os.getenv('SMTP_PASSWORD')
 
@@ -269,11 +269,17 @@ def background_search(search_query,
 def index():
     return render_template('index.html')
 
+@app.route('/manifest.json')
+def manifest():
+    return send_from_directory(app.static_folder, 'manifest.json')
+
+@app.route('/service-worker.js')
+def service_worker():
+    return send_from_directory(app.static_folder, 'service-worker.js')
 
 @app.route('/campaigns')
 def campaigns():
     return render_template('campaign.html')
-
 
 
 @app.route('/campaigns/<int:campaign_id>')
@@ -302,7 +308,8 @@ def csv_table():
 @app.route('/postgres-table')
 def postgres_table():
     return render_template('postgres-table.html')
-    
+
+
 @app.route('/start')
 def load_start_page():
     return render_template('start.html')
@@ -374,6 +381,7 @@ def get_search_queries():
         finally:
             release_db_connection(conn)
     return jsonify({'data': data})
+
 
 @app.route('/api/campaigns', methods=['GET', 'POST', 'PUT', 'DELETE'])
 def handle_campaigns():

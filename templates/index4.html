@@ -56,6 +56,17 @@
             100% { transform: rotate(360deg); }
         }
     </style>
+    <link rel="manifest" href="/manifest.json">
+    <script>
+      if ("serviceWorker" in navigator) {
+        window.addEventListener("load", function() {
+          navigator.serviceWorker.register("/service-worker.js")
+            .then(reg => console.log("Service Worker registered with scope:", reg.scope))
+            .catch(err => console.error("Service Worker registration failed:", err));
+        });
+      }
+    </script>
+
 </head>
 <body class="bg-gray-100 font-sans">
     <div id="content" class="container mx-auto px-4 py-8">
