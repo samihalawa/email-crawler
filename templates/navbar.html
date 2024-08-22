@@ -1,12 +1,15 @@
 <nav class="bg-white dark:bg-gray-900 shadow-lg">
     <div class="container mx-auto px-4 py-3 flex justify-between items-center">
-        <a href="{{ url_for('index') }}" class="text-xl font-bold text-gray-800 dark:text-white">AutoClient AI</a>
+        <a href="{{ url_for('index') }}" class="text-3xl text-gray-800 dark:text-white flex items-center">
+            <img src="{{ url_for('static', filename='icons/icon-512x512.png') }}" alt="App Icon" class="w-8 h-8 mr-2">
+            <b>Auto</b><span class="opacity-90 weight-normal">Client </span><span class="text-blue-600">AI</span>
+        </a>
         <ul class="hidden lg:flex space-x-4">
-            <li><a href=/start" class="text-gray-800 dark:text-white hover:text-gray-600">Dashboard</a></li>
-            <li><a href="{{ url_for('csv_table') }}" class="text-gray-800 dark:text-white hover:text-gray-600">CSV Database</a></li>
-            <li><a href="{{ url_for('postgres_table') }}" class="text-gray-800 dark:text-white hover:text-gray-600">Postgres Database</a></li>
-            <li><a href="{{ url_for('campaigns') }}" class="text-gray-800 dark:text-white hover:text-gray-600">Campaign Manager</a></li>
-            <li><a href="/start" class="text-gray-800 dark:text-white hover:text-gray-600">Home</a></li>
+            <li><a href="/" class="text-gray-800 dark:text-white hover:text-gray-600">Dashboard</a></li>
+           <!-- <li><a href="{{ url_for('csv_table') }}" class="text-gray-800 dark:text-white hover:text-gray-600">CSV Database</a></li> -->
+            <li><a href="{{ url_for('postgres_table') }}" class="text-gray-800 dark:text-white hover:text-gray-600">Collected Leads</a></li>
+            <li><a href="{{ url_for('campaigns') }}" class="text-gray-800 dark:text-white hover:text-gray-600">Email Campaigns</a></li>
+            <li><a href="/start" class="text-gray-800 dark:text-white hover:text-gray-600">Feature Introduction</a></li>
         </ul>
         <button class="lg:hidden text-gray-800 dark:text-white" id="nav-toggle">
             <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
@@ -15,11 +18,11 @@
         </button>
     </div>
     <ul class="lg:hidden hidden" id="nav-menu">
-        <li><a href="{{ url_for('index') }}" class="block px-4 py-2 text-gray-800 dark:text-white">Dashboard</a></li>
-        <li><a href="{{ url_for('csv_table') }}" class="block px-4 py-2 text-gray-800 dark:text-white">CSV Database</a></li>
-        <li><a href="{{ url_for('postgres_table') }}" class="block px-4 py-2 text-gray-800 dark:text-white">Postgres Database</a></li>
-        <li><a href="{{ url_for('campaigns') }}" class="block px-4 py-2 text-gray-800 dark:text-white">Campaign Manager</a></li>
-        <li><a href="/start" class="block px-4 py-2 text-gray-800 dark:text-white">Home</a></li>
+        <li><a href="/" class="text-gray-800 dark:text-white hover:text-gray-600 block px-4 py-2">Dashboard</a></li>
+        <!-- <li><a href="{{ url_for('csv_table') }}" class="text-gray-800 dark:text-white hover:text-gray-600 block px-4 py-2">CSV Database</a></li> -->
+        <li><a href="{{ url_for('postgres_table') }}" class="text-gray-800 dark:text-white hover:text-gray-600 block px-4 py-2">Collected Leads</a></li>
+        <li><a href="{{ url_for('campaigns') }}" class="text-gray-800 dark:text-white hover:text-gray-600 block px-4 py-2">Email Campaigns</a></li>
+        <li><a href="/start" class="text-gray-800 dark:text-white hover:text-gray-600 block px-4 py-2">Feature Introduction</a></li>
     </ul>
     <script>
         document.getElementById('nav-toggle').addEventListener('click', function() {

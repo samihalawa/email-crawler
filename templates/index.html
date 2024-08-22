@@ -1,149 +1,590 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AutoClient AI</title>
-    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
-    <link href="https://cdn.jsdelivr.net/npm/daisyui@4.10.5/dist/full.min.css" rel="stylesheet" type="text/css" />
-    
-    <link rel="manifest" href="{{ url_for('static', filename='manifest.json') }}">
-    <script>
-      if ('serviceWorker' in navigator) {
-        window.addEventListener('load', function() {
-          navigator.serviceWorker.register('{{ url_for('static', filename='service-worker.js') }}')
-            .then(registration => console.log('Service Worker registered with scope:', registration.scope))
-            .catch(error => console.error('Service Worker registration failed:', error));
-        });
-      }
-    </script>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
-</head>
-</head>
-<body class="bg-gray-100 font-sans">
+    <!DOCTYPE html>
+    <html lang="en">
 
-    <!-- Include the common navigation -->
-    {% include 'navbar.html' %}
+    <head>
+        <link rel="icon" type="image/x-icon" href="{{ url_for('static', filename='icons/favicon.ico') }}">
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>AutoClient AI | Find and Reach Potential Customers Online</title>
+        <meta name="description" content="AutoClient AI helps you find and reach potential customers with ease using AI technology.">
+        <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+        <meta name="keywords" content="AI, customer finder, email extractor, potential customers, marketing automation">
+        <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+        <link href="https://cdn.jsdelivr.net/npm/daisyui@4.10.5/dist/full.min.css" rel="stylesheet" type="text/css" />
+        <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
 
-    <section class="bg-gray-200 py-8">
-        <div class="container mx-auto px-4 grid grid-cols-1 md:grid-cols-2 gap-6">
-            <!-- Left half -->
-            <div class="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-md mb-6">
-                <h2 class="text-2xl font-bold mb-4">Email Search</h2>
-                <form id="searchForm" class="mb-6">
-                    <label for="searchTerm" class="sr-only">Search Term</label>
-                    <input type="text" id="searchTerm" placeholder="Enter Search Term" class="w-full px-4 py-2 mb-4 rounded-lg shadow-md focus:outline-none focus:ring focus:ring-blue-400">
-                    <label for="emailQuantitySlider" class="sr-only">Emails</label>
-                    <input type="range" id="emailQuantitySlider" name="emailQuantity" min="1" max="50" value="10" class="w-full mt-2">
-                    <span id="emailQuantityDisplay" class="ml-2">10</span><br><br>
-                    <input type="hidden" id="numResults" name="numResults" value="10">
-                    <button type="submit" class="block w-full px-4 py-2 bg-blue-500 text-white rounded-lg shadow-md hover:bg-blue-600 focus:outline-none focus:ring focus:ring-blue-400">Start Search</button>
-                </form>
-                <button id="showModal" class="w-full px-4 py-2 bg-yellow-500 text-white rounded-lg shadow-md hover:bg-yellow-600 focus:outline-none focus:ring focus:ring-yellow-400">Show Results</button>
-            </div>
+        <link rel="manifest" href="{{ url_for('static', filename='manifest.json') }}">
 
-            <!-- Right half -->
-            <div class="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-md mb-6">
-                <h2 class="text-2xl font-bold mb-4">Potential Customer Leads</h2>
-                <p class="mb-4">AI Extractor of <strong class="text-blue-600">Potential Customer</strong> Contact (emails/phone/info) in 1 Click</p>
-                <p class="mb-4">Send Bulk Emails with our <strong class="text-blue-600">CustomAIL®</strong> Technology</p>
-                <div id="resultsemail" class="overflow-y-auto h-72"></div>
-            </div>
-        </div>
-    </section>
+        <!-- Open Graph Meta Tags -->
+        <meta property="og:title" content="AutoClient AI | Find and Reach Potential Customers Online">
+        <meta property="og:description" content="AutoClient AI helps you find and reach potential customers with ease using AI technology.">
+        <meta property="og:image" content="{{ url_for('static', filename='images/og-image.png') }}">
+        <meta property="og:url" content="{{ request.url }}">
+        <meta property="og:type" content="website">
 
-    <footer class="fixed bottom-0 w-full text-sm bg-gray-300 dark:bg-gray-500 px-3 py-1 text-gray-500 dark:text-gray-300"">
-        <div class="container mx-auto px-2 flex justify-between items-center">
-            <p>&copy; 2024 AutoClient AI.</p>
-            <ul class="flex space-x-4">
-                <li><a href="#" class="hover:text-gray-400">Privacy Policy</a></li>
-                <li><a href="#" class="hover:text-gray-400">Terms of Service</a></li>
-                <li><a href="#" class="hover:text-gray-400">Contact Us</a></li>
-            </ul>
-        </div>
-    </footer>
-
-    <div id="modal" class="fixed top-0 left-0 w-full h-full bg-gray-800 bg-opacity-50 hidden">
-        <div class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-white p-8 rounded-lg shadow-md max-w-lg overflow-scroll">
-            <h2 class="text-xl font-bold mb-4">Search Results</h2>
-            <table class="w-full">
-                <thead>
-                    <tr>
-                        <th class="px-4 py-2 border">Search Term</th>
-                        <th class="px-4 py-2 border">Email</th>
-                        <th class="px-4 py-2 border">Page Title</th>
-                        <th class="px-4 py-2 border">URL</th>
-                        <th class="px-4 py-2 border">Copy</th>
-                    </tr>
-                </thead>
-                <tbody id="modalContent"></tbody>
-            </table>
-            <div class="flex justify-end mt-4">
-                <button id="downloadCSV" class="px-4 py-2 bg-blue-500 text-white rounded-lg shadow-md hover:bg-blue-600 focus:outline-none focus:ring focus:ring-blue-400 mr-4">Download Emails</button>
-                <button id="closeModal" class="px-4 py-2 bg-blue-500 text-white rounded-lg shadow-md hover:bg-blue-600 focus:outline-none focus:ring focus:ring-blue-400">Close</button>
-            </div>
-        </div>
-    </div>
-
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.0.1/socket.io.js"></script>
-    <script src="/static/main.js"></script>
-    <script>
-        $(document).ready(function() {
-            var socketProtocol = window.location.protocol.startsWith('https') ? 'https://' : 'http://';
-            var socket = io.connect(socketProtocol + document.domain + ':' + location.port);
-            
-            $('#searchForm').submit(function(event) {
-                event.preventDefault();
-                var searchQuery = $('#searchTerm').val();
-                var numResults = $('#emailQuantitySlider').val();
-                $('#results').empty();
-                $('#modalContent').empty();
-                socket.emit('start_search', { search_query: searchQuery, num_results: numResults });
-            });
-
-            socket.on('new_email', function(data) {
-                var resultElement = $('<tr>');
-                resultElement.append($('<td>').addClass('px-4 py-2 border').text(data.search_query));
-                resultElement.append($('<td>').addClass('px-4 py-2 border').text(data.email));
-                resultElement.append($('<td>').addClass('px-4 py-2 border').text(data.page_title));
-                resultElement.append($('<td>').addClass('px-4 py-2 border').text(data.url));
-                var copyButton = $('<button>').addClass('px-2 py-1 bg-blue-500 text-white rounded-lg shadow-md hover:bg-blue-600 focus:outline-none focus:ring focus:ring-blue-400').text('Copy');
-                copyButton.click(function() {
-                    var tempInput = $('<input>').val(data.email).appendTo('body').select();
-                    document.execCommand('copy');
-                    tempInput.remove();
+        <script>
+            if ('serviceWorker' in navigator) {
+                window.addEventListener('load', function() {
+                    navigator.serviceWorker.register('{{ url_for('static', filename='service - worker.js') }}')
+                        .then(registration => console.log('Service Worker registered with scope:', registration.scope))
+                        .catch(error => console.error('Service Worker registration failed:', error));
                 });
-                copyButton.prepend($('<span>').addClass('text-xs').text('📋'));
-                resultElement.append($('<td>').addClass('px-4 py-2 border').append(copyButton));
-                $('#modalContent').append(resultElement);
-            });
+            }
+        </script>
+        <script src="https://cdn.tailwindcss.com"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/js/all.min.js"></script>
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Gabarito:wght@400..900&family=Radio+Canada+Big:ital,wght@0,400..700;1,400..700&display=swap" rel="stylesheet">
 
-            $('#showModal').click(function() {
-                $('#modal').show();
-            });
+        <style>
+            body {
+                font-family: 'Radio Canada Big', 'Helvetica' !important;
+                font-size: 18px; /* Increase the base font size */
+            }
 
-            $('#closeModal').click(function() {
-                $('#modal').hide();
-            });
+            .icon-grid-container {
+                position: absolute;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                overflow: hidden;
+                z-index: 0;
+                pointer-events: none;
+            }
 
-            $('#downloadCSV').click(function() {
-                var csvContent = '';
-                $('#modalContent tr').each(function(index, row) {
-                    $(row).find('td').each(function(index, column) {
-                        csvContent += $(column).text() + ',';
-                    });
-                    csvContent += '\n';
-                });
-                var encodedUri = encodeURI('data:text/csv;charset=utf-8,' + csvContent);
-                var link = document.createElement('a');
-                link.setAttribute('href', encodedUri);
-                link.setAttribute('download', 'emails.csv');
-                document.body.appendChild(link);
-                link.click();
-            });
+            .icon-grid {
+                width: 200%;
+                height: 200%;
+                display: flex;
+                flex-wrap: wrap;
+                opacity: 0.6;
+                animation: pan 120s linear infinite;
+            }
+
+            .icon-grid .icon {
+                flex: 0 0 20%;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                font-size: 5rem;
+            }
+
+            @keyframes pan {
+                0% {
+                    transform: translate(0, 0);
+                }
+
+                100% {
+                    transform: translate(-50%, -50%);
+                }
+            }
+
+            #customerLeadsContainer {
+                position: relative;
+                overflow: hidden;
+                height: 100%;
+            }
+
+            #resultsemail {
+                position: relative;
+                height: 72vh;
+                overflow: hidden;
+            }
+
+            .result-email {
+                position: absolute;
+                width: 100%;
+                display: flex;
+                flex-direction: column;
+                animation: panVertical 60s linear infinite;
+                opacity: 0.8;
+            }
+
+            .result-email .email-row {
+                position: relative;
+                padding: 13px;
+                background: white;
+                box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
+                margin-bottom: 16px;
+                border-radius: 8px;
+                font-size: 1.8em;
+                opacity: 0;
+                transition: opacity 2s ease-in-out;
+            }
+
+            .result-email .email-row.visible {
+                opacity: 0.8;
+            }
+
+            .result-email .email-row:hover {
+                opacity: 0.9;
+            }
+
+            @keyframes panVertical {
+                0% {
+                    transform: translateY(30%);
+                }
+
+                100% {
+                    transform: translateY(-100%);
+                }
+            }
+
+            /* Gradient Fade-Out Effect */
+            #fade-out-zone {
+                position: absolute;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 20%;
+                
+                z-index: 1;
+            }
+            body.dark-mode #fade-out-zone {
+                
+            }
+
+            /* Flexbox for equal height */
+            .flex-container {
+                display: flex;
+                flex-direction: column;
+                height: calc(100vh - 100px);
+            }
+
+            .flex-item {
+                flex: 1;
+                overflow: auto;
+            }
+
+            /* Adjusted */
+            .bg-gray-100 {
+                height: 100%;
+            }
+
+            #analytics {
+                background: white;
+                color: black;
+                padding: 20px;
+                border-radius: 10px;
+                box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+                margin: 20px 0;
+            }
+
+            #analytics h2 {
+                font-size: 2rem;
+                margin-bottom: 20px;
+            }
+
+            .chart {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                height: 400px;
+                background-color: #e2e8f0;
+                margin-bottom: 10px;
+                border-radius: 10px;
+            }
+
+            .chart-container {
+                position: relative;
+                width: 75%;
+                margin: auto;
+            }
+
+            .tag {
+                background-color: #e0e0e0;
+                border-radius: 0.375rem;
+                padding: 0.2rem 0.6rem;
+                margin-right: 0.5rem;
+                font-size: 1rem;
+                color: #333;
+                display: inline-block;
+                float: left;
+            }
+
+            .slider {
+                appearance: none;
+                width: 100%;
+                height: 0.5rem;
+                background: #c4c4c4;
+                outline: none;
+                border-radius: 0.25rem;
+            }
+
+            .slider::-webkit-slider-thumb {
+                appearance: none;
+                width: 1rem;
+                height: 1rem;
+                background: #007bff;
+                cursor: pointer;
+                border-radius: 50%;
+            }
+
+            .slider::-moz-range-thumb {
+                width: 1rem;
+                height: 1rem;
+                background: #007bff;
+                cursor: pointer;
+                border-radius: 50%;
+            }
+
+            .choice-card {
+                transition: background-color 0.3s ease;
+            }
+
+            .choice-card:hover {
+                background-color: #e2e8f0;
+                cursor: pointer;
+            }
+
+            .info-to-collect {
+                font-size: 1rem;
+            }
+
+            .info-to-collect label {
+                margin-bottom: 0.5rem;
+            }
+        </style>
+    </head>
+
+    <body class="bg-gray-100 font-sans">
+        <!-- Include the common navigation -->
+        {% include 'navbar.html' %}
+        <section class="bg-gray-200 py-8">
+            <div class="container mx-auto px-4 grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div class="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-md mb-6 flex-item">
+    <h2 class="text-3xl font-bold mb-6">Potential Customer AI Finder</h2>
+    <form id="searchForm" class="mb-6">
+        <label for="searchTerm" class="sr-only">Search Term</label>
+        <input type="text" id="searchTerm" placeholder="Potential Customers in Madrid"
+               class="w-full px-4 py-2 mb-4 rounded-lg shadow-md focus:outline-none focus:ring focus:ring-blue-400 text-lg">
+        <!-- Last Searches and Leads Collected Tags -->
+        <div class="mb-4">
+            <p class="text-lg font-semibold mb-2">Recent Runs:</p>
+            <div class="text-lg flex flex-wrap gap-2 overflow-hidden" id="lastSearchesContainer">
+                <span class="tag bg-gray-300 dark:bg-gray-600 text-gray-700 dark:text-gray-300 px-2 py-1 rounded-full" data-search="Tech Entrepreneurs in SF"><i class="fas fa-user"></i> Potential Customers <b>4092 <i class="fas fa-user"></i></b></span> <span class="tag bg-gray-300 dark:bg-gray-600 text-gray-700 dark:text-gray-300 px-2 py-1 rounded-full" data-search="Upper-class Men in Madrid">Upper-class Households <b>1220 <i class="fas fa-user"></i></b></span> 
+            </div>
+        </div>
+        <div class="flex items-start mb-4">
+            <div class="border border-green-400 rounded-lg p-2 shadow-md text-green-700 flex flex-col space-y-2 w-full">
+                <label for="aiContextPro" class="text-green-700 text-base flex items-center">
+                    <i class="fas fa-check-circle text-green-700 text-2xl mr-2"></i>
+                    <strong>OPTIMIZE WITH AUTOCLIENT AI (Active)</strong>.
+                </label>
+                <div class="text-green-700 text-base">
+                    Tailor your strategy and profile. Upload files (PDFs, text, catalogs, screenshots) to enable AutoClient AI to find ideal users.
+                    <br>
+                    <a href="#" class="underline italic">Edit My Context Data</a>
+                </div>
+            </div>
+        </div>
+        <!-- Choice Cards -->
+        <div class="mb-4">
+            <label class="block text-lg font-bold text-gray-700 dark:text-gray-300 mb-2">Select Contact Types:</label>
+            <div class="flex justify-between">
+                <div id="emailChoice" class="choice-card p-4 border-2 rounded-lg shadow-md cursor-pointer transition-colors duration-300 bg-blue-100 hover:bg-blue-200 dark:bg-gray-700 dark:hover:bg-gray-600" onclick="toggleChoice(this)">
+                    <i class="fas fa-envelope text-xl mb-2 text-gray-900 dark:text-gray-300"></i> Email
+                </div>
+                <div id="phoneWhatsappChoice" class="choice-card p-4 border-2 rounded-lg shadow-md cursor-pointer transition-colors duration-300 hover:bg-blue-200 dark:bg-gray-700 dark:hover:bg-gray-600" onclick="toggleChoice(this)">
+                    <i class="fas fa-phone text-xl mb-2 text-gray-900 dark:text-gray-300"></i> Phone & WhatsApp
+                </div>
+                <div id="wechatChoice" class="choice-card p-4 border-2 rounded-lg shadow-md cursor-pointer transition-colors duration-300 hover:bg-blue-200 dark:bg-gray-700 dark:hover:bg-gray-600" onclick="toggleChoice(this)">
+                    <i class="fab fa-weixin text-xl mb-2 text-gray-900 dark:text-gray-300"></i> WeChat
+                </div>
+                <div id="otherChoice" class="choice-card p-4 border-2 rounded-lg shadow-md cursor-pointer transition-colors duration-300 hover:bg-blue-200 dark:bg-gray-700 dark:hover:bg-gray-600" onclick="toggleChoice(this)">
+                    <i class="fas fa-ellipsis-h text-xl mb-2 text-gray-900 dark:text-gray-300"></i> Other
+                </div>
+            </div>
+        </div>
+        <script>
+            // Function to toggle the selection of choice cards
+            function toggleChoice(element) {
+                element.classList.toggle('bg-blue-200');
+                element.classList.toggle('bg-blue-100');
+                element.classList.toggle('dark:bg-gray-600');
+                element.classList.toggle('dark:bg-gray-700');
+            }
+        </script>
+        <!-- Slider for Number of Emails -->
+        <label for="emailQuantitySlider" class="sr-only">Emails</label>
+        <div class="flex items-center mb-4">
+            <input type="range" id="emailQuantitySlider" name="emailQuantity" min="1" max="1000" value="50"
+                   class="slider flex-grow mr-4" oninput="updateRangeValue(this.value)">
+            <span id="rangeValue" class="text-lg font-bold bg-gray-200 p-2 rounded-lg shadow-md">50</span>
+        </div>
+
+        <!-- Submit Button -->
+        <button style="font-size: 1.3em !important;" type="submit"
+                class="block text-2xl w-full px-4 py-2 bg-blue-500 text-white rounded-lg shadow-md hover:bg-blue-600 focus:outline-none focus:ring focus:ring-blue-400 text-lg">
+            Find Customers with AI
+        </button>
+    </form>
+
+<script>
+    // Function to update range value display
+    function updateRangeValue(value) {
+        document.getElementById('rangeValue').textContent = value;
+    }
+
+    // Add event listeners for last search tags
+    document.querySelectorAll('#lastSearchesContainer .tag').forEach(tag => {
+        tag.addEventListener('click', function() {
+            document.getElementById('searchTerm').value = tag.dataset.search;
         });
-    </script>
-</body>
-</html>
+    });
+</script>
+    <!-- Modal Trigger Button -->
+    <button id="showModal" class="w-full px-4 py-2 bg-gray-600 text-white rounded-lg shadow-md hover:bg-gray-700 focus:ring-yellow-300">
+        Collected Emails & Phones
+    </button>
+</div> 
+
+                <div class="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-md mb-6 flex-item" id="customerLeadsContainer">
+                    <div class="icon-grid-container" id="iconGridContainer">
+                        <div class="icon-grid" id="iconGrid">
+                        </div>```
+                    </div>
+                    <h2 class="text-3xl font-bold mb-6">Potential Customer Leads</h2>
+                    <p class="mb-6 text-lg">AI Extractor of <strong class="text-blue-600">Potential Customer</strong> Contact (emails/phone/info) in 1 Click</p>
+                    <p class="mb-6 text-lg">Send Bulk Emails with our <strong class="text-blue-600">CustomAIL®</strong> Technology</p>
+                    <div class="mt-4 flex justify-between">
+                        <button id="sendAllEmails" class="px-4 py-2 bg-gray-600 text-white rounded-lg shadow-md hover:bg-gray-700 focus:ring-gray-300">
+                            Bulk Send Email
+                        </button>
+                        <button id="saveToCrm" class="px-4 py-2 bg-gray-600 text-white rounded-lg shadow-md hover:bg-gray-700 focus:ring-purple-300">
+                            Save to CRM
+                        </button>
+                    </div>
+                    <div id="resultsemail">
+                        <div class="result-email" id="simulatedResults">
+                        </div>
+                        <div id="fade-out-zone" class="bg-gradient-to-b from-[rgb(33,41,55)] to-transparent dark:bg-gradient-to-b dark:from-gray-800 dark:to-transparent"></div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- <section class="bg-gray-200 py-8">
+            <div class="container mx-auto px-4">
+                <div id="analytics">
+                    <h2 style="font-size: 3rem">Analytics</h2>
+                    <div class="chart-container">
+                        <canvas id="myChart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </section> -->
+
+        <footer class="fixed bottom-0 w-full text-sm bg-gray-300 dark:bg-gray-500 px-3 py-1 text-gray-500 dark:text-gray-300">
+            <div class="container mx-auto px-2 flex justify-between items-center">
+                <p>&copy; 2024 AutoClient AI.</p>
+                <ul class="flex space-x-4">
+                    <li><a href="#" class="hover:text-gray-400">Privacy Policy</a></li>
+                    <li><a href="#" class="hover:text-gray-400">Terms of Service</a></li>
+                    <li><a href="#" class="hover:text-gray-400">Contact Us</a></li>
+                </ul>
+            </div>
+        </footer>
+
+        <div id="modal" class="fixed top-0 left-0 w-full h-full bg-gray-800 bg-opacity-50 hidden">
+            <div class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-white p-8 rounded-lg shadow-md max-w-lg overflow-scroll">
+                <h2 class="text-xl font-bold mb-4">Search Results</h2>
+                <table class="w-full">
+                    <thead>
+                        <tr>
+                            <th class="px-4 py-2 border">Search Term</th>
+                            <th class="px-4 py-2 border">Email</th>
+                            <th class="px-4 py-2 border">Page Title</th>
+                            <th class="px-4 py-2 border">URL</th>
+                            <th class="px-4 py-2 border">Copy</th>
+                        </tr>
+                    </thead>
+                    <tbody id="modalContent"></tbody>
+                </table>
+                <div class="flex justify-end mt-4">
+                    <button id="downloadCSV" class="px-4 py-2 bg-blue-500 text-white rounded-lg shadow-md hover:bg-blue-600 focus:outline-none focus:ring focus:ring-blue-400 mr-4">Download Emails</button>
+                    <button id="closeModal" class="px-4 py-2 bg-blue-500 text-white rounded-lg shadow-md hover:bg-blue-600 focus:outline-none focus:ring focus:ring-blue-400">Close</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Chart.js CDN -->
+        <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+        <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.0.1/socket.io.js"></script>
+        <script src="/static/main.js"></script>
+        <script>
+            $(document).ready(function() {
+                const names = ["John Doe", "Flora Smith", "Diana Tonks", "Alice Johnson", "Bob Brown", "Charlie Black", "Eve White", "George Green", "Hannah Blue", "Ian Red", "Julia Pink", "Karl Orange", "Linda Purple", "Mike Yellow", "Nina Brown", "Oscar Gray", "Pam Silver", "Quinn Gold", "Rachel Violet", "Sam Copper", "Tina Bronze", "Ulysses Iron", "Vera Zinc", "Walter Nickel"];
+                const domains = ["gmail.com", "gmail.com", "gmail.com", "microsoft.com", "acme.com", "yahoo.com", "acme.com", "potentialsale.ai", "corporate.org", "mailservices.net", "qq.com"];
+                const titles = ["Marketing Specialist", "Sales Lead", "Business Owner", "CEO", "CTO", "Product Manager", "HR Coordinator", "Finance Analyst", "Operations Manager", "Software Developer", "UX Designer", "Content Creator", "Data Analyst", "Project Manager", "Technical Lead", "Account Executive", "Customer Support", "IT Specialist", "Digital Marketer", "Brand Strategist", "Sales Representative", "Business Analyst", "Product Owner", "System Administrator"];
+                const urls = ["potentialcustomer.com", "companyinterested.com", "autoclient.ai", "futuresales.io", "buyerprofile.net", "targetmarket.biz", "leadsgenerator.com", "customerdatabase.io", "salesopportunities.net", "businessleads.com", "marketfinder.org", "contactdiscovery.ai", "growthmachine.io", "salesfunnels.net", "keyclient.biz", "prospectsexplorer.com", "opportunityfinder.io", "contractorleads.com", "clientresources.net", "targetedcustomers.org", "leadswizard.com", "strategicclients.io", "businesstargets.com", "idealprospects.org"];
+
+                function getRandomElement(arr) {
+                    return arr[Math.floor(Math.random() * arr.length)];
+                }
+
+                function createFakeResult(index) {
+                    var name = getRandomElement(names);
+                    var domain = getRandomElement(domains);
+                    var email = name.toLowerCase().replace(/[^a-zA-Z]/g, '') + "@" + domain;
+                    var title = getRandomElement(titles);
+                    var url = getRandomElement(urls);
+                    return {
+                        email: email,
+                        title: title,
+                        url: url,
+                        index: index
+                    };
+                }
+
+                function populateFakeResults() {
+                    var resultsemail = $('#simulatedResults');
+                    var elements = [];
+                    for (var i = 0; i < 20; i++) {
+                        var result = createFakeResult(i);
+                        var resultElement = $('<div class="relative p-4 bg-white shadow-md mb-4 email-row">');
+                        resultElement.append('<p class="text-xl font-bold text-blue-500">' + result.email + '</p>');
+                        resultElement.append('<p class="text-sm italic text-gray-500">' + result.title + '</p>');
+                        resultElement.append('<p class="text-xs text-gray-400">' + result.url + '</p>');
+                        var copyButton = $('<button class="absolute top-0 right-0 mt-1 mr-1 p-1 bg-gray-200 rounded text-gray-600 hover:bg-gray-300 hover:text-gray-800 focus:outline-none">');
+                        copyButton.html('<svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2m-4 0V3H5a2 2 0 00-2 2v12a2 2h2v4l7-5-7-5v4z"></path></svg>');
+                        copyButton.click(function() {
+                            var tempInput = $('<input>').val(result.email).appendTo('body').select();
+                            document.execCommand('copy');
+                            tempInput.remove();
+                        });
+                        resultElement.append(copyButton);
+                        elements.push(resultElement);
+                        resultsemail.append(resultElement); // Pre-render elements
+                    }
+                    return elements;
+                }
+
+                // Pre-render the elements
+                const elements = populateFakeResults();
+
+                // Stagger visibility
+                for (let i = 0; i < elements.length; i++) {
+                    setTimeout(() => {
+                        elements[i].addClass('visible'); // Change class to make visible
+                    }, i * 1000); // Stagger the appearance by 1 second intervals
+                }
+
+                $('#searchForm').submit(function(event) {
+                    event.preventDefault();
+                    var searchQuery = $('#searchTerm').val();
+                    var numResults = $('#emailQuantitySlider').val();
+                    $('#numResults').val(numResults);
+
+                    $('#simulatedResults').empty();
+                    const newElements = [];
+                    for (let i = 0; i < numResults; i++) {
+                        const result = createFakeResult(i);
+                        const resultElement = $('<div class="relative p-4 bg-white shadow-md mb-4 email-row">')
+                            .append('<p class="text-xl font-bold text-blue-500">' + result.email + '</p>')
+                            .append('<p class="text-sm italic text-gray-500">' + result.title)
+                                                .append('<p class="text-xs text-gray-400">' + result.url + '</p>');
+                                            const copyButton = $('<button class="absolute top-0 right-0 mt-1 mr-1 p-1 bg-gray-200 rounded text-gray-600 hover:bg-gray-300 hover:text-gray-800 focus:outline-none">')
+                                                .html('<svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2m-4 0V3H5a2 2 0 00-2 2v12h-2v4l7-5-7-5v4z"></path></svg>');
+                                            copyButton.click(() => {
+                                                const tempInput = $('<input>').val(result.email).appendTo('body').select();
+                                                document.execCommand('copy');
+                                                tempInput.remove();
+                                            });
+                                            resultElement.append(copyButton);
+                                            newElements.push(resultElement);
+                                            $('#simulatedResults').append(resultElement); // Append elements
+                                        }
+
+                                        // Stagger visibility for new elements
+                                        for (let i = 0; i < newElements.length; i++) {
+                                            setTimeout(() => {
+                                                newElements[i].addClass('visible');
+                                            }, i * 1000);
+                                        }
+                                    });
+
+                                    // Show modal with collected emails
+                                    $('#showModal').click(function () {
+                                        $('#modalContent').empty();
+                                        $('#simulatedResults .email-row').each(function (index, element) {
+                                            const email = $(element).find('p.text-xl').text();
+                                            const title = $(element).find('p.text-sm').text();
+                                            const url = $(element).find('p.text-xs').text();
+                                            $('#modalContent').append(`
+                                                <tr>
+                                                    <td class="px-4 py-2 border">${$('#searchTerm').val()}</td>
+                                                    <td class="px-4 py-2 border">${email}</td>
+                                                    <td class="px-4 py-2 border">${title}</td>
+                                                    <td class="px-4 py-2 border">${url}</td>
+                                                    <td class="px-4 py-2 border">
+                                                        <button class="copy-email px-2 py-1 bg-gray-200 rounded text-gray-600 hover:bg-gray-300 hover:text-gray-800 focus:outline-none">Copy</button>
+                                                    </td>
+                                                </tr>
+                                            `);
+                                        });
+                                        $('#modal').removeClass('hidden');
+                                    });
+
+                                    // Copy email from modal
+                                    $('#modalContent').on('click', '.copy-email', function () {
+                                        const email = $(this).closest('tr').find('td:nth-child(2)').text();
+                                        const tempInput = $('<input>').val(email).appendTo('body').select();
+                                        document.execCommand('copy');
+                                        tempInput.remove();
+                                    });
+
+                                    // Close modal
+                                    $('#closeModal').click(function () {
+                                        $('#modal').addClass('hidden');
+                                    });
+
+                                    $('#downloadCSV').click(function () {
+                                        let csvContent = "data:text/csv;charset=utf-8,"
+                                            + "Search Term,Email,Page Title,URL\n";
+                                        $('#modalContent tr').each(function () {
+                                            const searchTerm = $(this).find('td:nth-child(1)').text();
+                                            const email = $(this).find('td:nth-child(2)').text();
+                                            const title = $(this).find('td:nth-child(3)').text();
+                                            const url = $(this).find('td:nth-child(4)').text();
+                                            csvContent += `${searchTerm},${email},${title},${url}\n`;
+                                        });
+                                        const encodedUri = encodeURI(csvContent);
+                                        const link = document.createElement("a");
+                                        link.setAttribute("href", encodedUri);
+                                        link.setAttribute("download", "collected_emails.csv");
+                                        document.body.appendChild(link);
+                                        link.click();
+                                        document.body.removeChild(link);
+                                    });
+                                });
+
+                                // Chart.js setup
+                                const ctx = document.getElementById('myChart').getContext('2d');
+                                const myChart = new Chart(ctx, {
+                                    type: 'bar',
+                                    data: {
+                                        labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
+                                        datasets: [{
+                                            label: 'Collected Emails',
+                                            data: [12, 19, 3, 5, 2, 3, 10, 15, 8, 6, 4, 18],
+                                            backgroundColor: 'rgba(54, 162, 235, 0.2)',
+                                            borderColor: 'rgba(54, 162, 235, 1)',
+                                            borderWidth: 1
+                                        }]
+                                    },
+                                    options: {
+                                        scales: {
+                                            y: {
+                                                beginAtZero: true
+                                            }
+                                        }
+                                    }
+                                });
+                            </script>
+                        </body>
+
+                        </html>
