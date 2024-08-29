@@ -45,3 +45,6 @@ exposeLocalhost = true
 [auth]
 pageEnabled = false
 buttonEnabled = true
+
+[objectStorage]
+defaultBucketID = "replit-objstore-38dc9416-c0ca-410b-a854-e1877879c160"
