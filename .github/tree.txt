@@ -1,0 +1,210 @@
+.
+├── app2.py
+├── app3.py
+├── app4.py
+├── appBackupFunciona.py
+├── app_bento.py
+├── app (copy).py
+├── app.py
+├── appWorks.py
+├── bin
+│   ├── activate
+│   ├── activate.csh
+│   ├── activate.fish
+│   ├── Activate.ps1
+│   ├── flask
+│   ├── normalizer
+│   ├── pip
+│   ├── pip3
+│   └── pip3.12
+├── bluefish
+├── .breakpoints
+├── .cache
+│   ├── nix
+│   ├── pip
+│   ├── replit
+│   ├── typescript
+│   └── YAPF
+├── .ccls-cache
+│   ├── @@home@runner@email-crawler
+│   └── @home@runner@email-crawler
+├── crawl1.py
+├── crawl.py
+├── create each and every file you need with all tis conetnet, odnt ask me all the time
+├── Dockerfile
+├── DockerSnippets.sh
+├── emails.csv
+├── .env
+├── .example.env
+├── favicon.sh
+├── fd.
+├── finalscout
+│   ├── buenos
+│   ├── chrome
+│   ├── .DS_Store
+│   ├── finalscout_extension
+│   ├── finalscout_extension.zip
+│   ├── Scrape _ FinalScout1.html
+│   └── Scrape _ FinalScout.html
+├── .git
+│   ├── branches
+│   ├── COMMIT_EDITMSG
+│   ├── config
+│   ├── description
+│   ├── FETCH_HEAD
+│   ├── HEAD
+│   ├── hooks
+│   ├── index
+│   ├── info
+│   ├── logs
+│   ├── objects
+│   ├── ORIG_HEAD
+│   ├── refs
+│   └── shallow
+├── .gitattributes
+├── .github
+│   └── workflows
+├── .gitignore
+├── googlesearchissuemac.sh
+├── .html
+├── .idea
+│   ├── cody_history.xml
+│   ├── email-crawler.iml
+│   ├── .gitignore
+│   ├── libraries
+│   ├── misc.xml
+│   ├── modules.xml
+│   └── vcs.xml
+├── include
+│   └── site
+├── lib
+│   ├── .DS_Store
+│   └── python3.12
+├── main1.js
+├── MesonAutoclient
+├── paco
+│   ├── .DS_Store
+│   ├── ReactIndex_files
+│   ├── ReactIndex.html
+│   ├── ReactIndexUnified.mht
+│   ├── single-html
+│   ├── TableView_files
+│   └── TableView.html
+├── pwa.sh
+├── __pycache__
+│   └── app.cpython-312.pyc
+├── .pythonlibs
+│   ├── bin
+│   ├── include
+│   └── lib
+├── pyvenv.cfg
+├── README.md
+├── reference-external-projects
+│   ├── PythonAutoEmailScrape-Send_GitFiles
+│   └── ScrapeGraphAI_Examples.ipynb
+├── render.yaml
+├── .replit
+├── replit.nix
+├── requirements.txt
+├── sakai-react
+├── saved_emails.html
+├── screenshot_paco.png
+├── shiny
+│   ├── app.py
+│   ├── .DS_Store
+│   ├── read-csv-test-app
+│   ├── SCR-20240311-jvlz.png
+│   ├── SCR-20240315-locd.png
+│   ├── SCR-20240315-lrcs.png
+│   ├── SCR-20240315-lreq.png
+│   ├── SCR-20240315-lrfw.png
+│   ├── SCR-20240316-hnlh.jpeg
+│   ├── SCR-20240316-jtxr-2.jpeg
+│   ├── SCR-20240316-jtxr.jpeg
+│   └── shinylive.io_all
+├── Shiny for Python - Overview.webarchive
+├── sqlcommands.sql
+├── static
+│   ├── csv-table.js
+│   ├── daisyui.css
+│   ├── icons
+│   ├── js
+│   ├── main1.js
+│   ├── main4.js
+│   ├── main5.js
+│   ├── main.js
+│   ├── mainWorks.js
+│   ├── manifest.json
+│   ├── service-worker.js
+│   ├── styles.css
+│   └── tailwind.css
+├── templates
+│   ├── additional-features-that-may-be-added-to-the-app.html
+│   ├── campaign.html
+│   ├── csv-table.html
+│   ├── dashboard.html
+│   ├── .DS_Store
+│   ├── emailfinder
+│   ├── html01.html
+│   ├── index0000.html
+│   ├── index00.html
+│   ├── index0.html
+│   ├── index10.html
+│   ├── index111.html
+│   ├── index12.html
+│   ├── index13.html
+│   ├── index14.html
+│   ├── index16.html
+│   ├── index17.html
+│   ├── index19.html
+│   ├── index20.html
+│   ├── index2.html
+│   ├── index4.html
+│   ├── index5.html
+│   ├── index7.html
+│   ├── index9.html
+│   ├── index_bento.html
+│   ├── indexBuenoChino.html
+│   ├── index (copy) 1.html
+│   ├── index (copy).html
+│   ├── index.html
+│   ├── indexWorks的副本.html
+│   ├── logs.html
+│   ├── navbar.html
+│   ├── oxymade
+│   ├── postgres-table.html
+│   ├── .Rapp.history
+│   ├── .render_temp_index0.html
+│   ├── .render_temp_index.html
+│   ├── start.html
+│   ├── table.html
+│   ├── templates.html
+│   ├── unused-crawling-not-working-index_with_feature_benefit_and_details_blocks.html
+│   ├── view_campaign.html
+│   └── viewer.html
+├── tree.txt
+├── .upm
+│   └── store.json
+├── venv
+│   ├── bin
+│   ├── .DS_Store
+│   ├── include
+│   ├── lib
+│   └── pyvenv.cfg
+├── venv1
+│   ├── bin
+│   ├── .DS_Store
+│   ├── lib
+│   └── pyvenv.cfg
+├── venv2
+│   ├── bin
+│   ├── .DS_Store
+│   ├── lib
+│   └── pyvenv.cfg
+└── venv3
+    ├── bin
+    ├── .DS_Store
+    ├── lib
+    └── pyvenv.cfg
+
+65 directories, 143 files

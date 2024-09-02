@@ -8,7 +8,7 @@ dnspython==2.6.1
 eventlet==0.35.2
 Flask==3.0.2
 Flask-SocketIO==5.3.6
-googlesearch-python==1.2.3
+# googlesearch-python==1.2.3
 greenlet==3.0.3
 h11==0.14.0
 idna==3.6
@@ -23,5 +23,6 @@ soupsieve==2.5
 urllib3==2.2.1
 Werkzeug==3.0.1
 wsproto==1.2.0
-google-search
+git+https://github.com/Nv7-GitHub/googlesearch.git
 psycopg2-binary==2.9.9
+google-search

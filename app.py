@@ -19,6 +19,7 @@ socketio = SocketIO(app, cors_allowed_origins="*", async_mode='threading')
 
 # Initialize connection pool
 pg_pool = psycopg2.pool.ThreadedConnectionPool(
+    sslmode='require',
     minconn=1,
     maxconn=5,
     dbname=os.getenv('PGDATABASE'),
